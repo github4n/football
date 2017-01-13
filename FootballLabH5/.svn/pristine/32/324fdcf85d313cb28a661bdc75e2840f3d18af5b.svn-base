@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>一场夺分</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/activity.css" rel="stylesheet" />
+	</head> 
+	<body> 
+		<div class="payCon">
+			<div class="left_title titleTxt">*1元=100积分</div>
+			<ul id="ul_grid" class="ul_grid clearfix">
+				<li>
+					<div class="checkBox ">
+						<i>5</i>元
+					</div>
+				</li>
+				<li>
+					<div class="checkBox">
+						<i>10</i>元
+					</div>							
+				</li>
+				<li>
+					<div class="checkBox">
+						<i>50</i>元
+					</div>								
+				</li>   
+				<li>
+					<div class="checkBox active">
+						<i>100</i>元
+					</div>
+				</li>
+				<li>
+					<div class="checkBox">
+						<i>500</i>元
+					</div>								
+				</li>
+				<li>
+					<div class="inptBox">
+						<input class="otherAmount" name="otherAmount" id="otherAmount" placeholder="其他金额" value="" /><i class="pix">元</i>						
+					</div>						
+				</li>    				
+			</ul>
+			<input type="button" id="js-submit" class="betBtn bet-active" value="立即支付">			
+		</div>
+		<script src="js/pay.js"></script>
+	</body>
+</html>

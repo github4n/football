@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>盈利详情</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/iscroll.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+        .round {
+            margin-top: 5px;
+            padding: 5px;
+            width: 100px;
+            height: 30px;
+            border: 1px solid #FF8000;
+            -moz-border-radius: 3px; /* Gecko browsers */
+            -webkit-border-radius: 3px; /* Webkit browsers */
+            border-radius: 3px; /* W3C syntax */
+        }
+        .tishiP {
+            margin-top: 5px;
+            padding: 5px;
+            width: 100px;
+            height: 30px;
+        }
+
+        .jiaobiao {
+            position:absolute;
+            top:0px;
+            right:0px;
+            width:44px;
+            height:44px;
+        }
+    </style>
+</head>
+<body style="padding: 0;">
+    <!--<p class="headerTou" id="pTitle1"></p>-->
+    <input type="hidden" id="isYuYing" value="true"/>
+    <p class="headerTou" id="pGuanZhu" style="background: #fff; color: #000; display: none;">
+        <label style="position: relative; left: 12%; font-size: 1.4rem; color: #000;" id="pTitle2">专家推荐方案详情</label><label class="pull-right round"><a id="aGuanZhu" href="http://mp.weixin.qq.com/s?__biz=MzIxODQ5MTY4Mw==&mid=2247483666&idx=1&sn=2c38aac6da365d49afc1f468d99bff1e&scene=0#wechat_redirect" style="display: initial; color: #FF8000;">+关注</a></label></p>
+    <ul class="list_shigong">
+        <li class="mTop10" onclick="window.open('#','_self')" style="height: 34px; background-color: #d6b947; border: 0;">
+            <div class="content_shigong flexBox clearBoth">
+                <div class="conLeft flexBox_zi1" style="color: #333; line-height: 34px; font-size: 1.2rem;" >
+                    <span class="pull-right" id="lblZTandZJ" style="color: #333; line-height: 34px; display: inline-block; font-size: 1.2rem;">总投:&nbsp;&nbsp;<label id="lblZt" style="color:#000;font-size: 1.2rem;"></label>&nbsp;&nbsp;<i style="color:#000;font-size: 1.2rem;" id="iZj">预奖:</i>&nbsp;&nbsp;<label id="lblZj" style="color:#000;font-size: 1.2rem;"></label> </span><label id="lblTime"style="color:#000;font-size: 1.2rem;"></label>
+                </div>
+            </div>
+            <div style="clear: both;"></div>
+        </li>
+
+    </ul>
+    <div id="wrapper" style="top:50px;bottom:45px;">
+        <div id="scroller">
+            <div class="panel-group panel-group1" id="list" style="margin-top: 0;">
+            </div>
+        </div>
+    </div>
+   <!--  <a class="dbtn dbtn123 ctan" id="aPKbtn" style="width: 100%;height:44px;line-height:44px;font-size:1.3rem; position: fixed; left: 0%; bottom: 0; margin: 0; border-radius: 0;display:none;font-weight:bold;" href="javascript:GoToUrl('pk_index.html')">与专家PK<span id="apkJB" style="position:relative;float:right;display:none;"><img src="img/PKing@3x.png" class="jiaobiao"></span></a>
+    <a class="dbtn dbtn123 ctan" id="aDDbtn" style="width: 100%;height:44px;line-height:44px;font-size:1.3rem; position: fixed; right: 0%; bottom: 0; margin: 0; border-radius: 0;display:none;font-weight:bold;" href="javascript:GoToFanXian()">不盈利双倍返</a>
+    <a class="dbtn dbtn123 ctan" id="aDZbtn" style="width: 100%; position: fixed; left: 0%; bottom: 0; margin: 0; border-radius: 0;display:none;" href="javascript:AddCustomized();">立即定制</a> -->
+    <!--<a class="dbtn dbtn123 ctan" id="aPlan" style="width: 100%; position: fixed; left: 0%; bottom: 0; margin: 0; border-radius: 0;display:none;" href="javascript:GoToUrl('index.html');">今日方案</a>-->
+    <div class="footBoxfixed" id="guessProfit" style="display:none">
+    	<ul>
+    		<li>
+    			<p>今日方案能否盈利?</p>			
+    		</li>
+    		<li>
+    			<a class="dbtn dbtn123 ctan" href="" id="guess">竞猜盈亏</a> 	
+    		</li>
+    	</ul>
+    </div>
+    
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script src="js/bind_data_ep.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        
+        function GoToUrl(url) {
+            location.href = url + "?experts_code=" + getQueryString("experts_code");
+        }
+
+        var memberInfo;
+        $(function () {
+
+            if (getQueryString("experts_code") == "jinghu") {
+                $("#aGuanZhu").attr("href", "http://mp.weixin.qq.com/s?__biz=MzAxMjk1NjYwMA==&mid=2247483654&idx=1&sn=66ed8863ea21271f03880c7338e8bad4&scene=0#wechat_redirect");
+            }
+
+            if (fl_user.focus_status() != 1) {
+                $("#pGuanZhu").show();
+                $("#wrapper").css({"top":130});
+            }
+
+            var d_t_ydm = GetDateStr(0);
+            var d_temp_n = new Date();
+            var is_pk_b = true;
+            if (d_temp_n.getHours() == 11 && d_temp_n.getMinutes() < 30 || d_temp_n.getHours() < 11) {
+                d_t_ydm = GetDateStr(-1);
+                is_pk_b = false;
+            }
+
+            dataUrl = fl_url.singleTimeList;
+            dataParam = {
+                gameDate: getQueryString("gameDate"),
+                companyId: getQueryString("companyId"),
+                type: getQueryString("type"),
+                serviceId: getQueryString("serviceId"),
+                serviceType: getQueryString("serviceType"),
+                service_code: getQueryString("service_code")
+            };
+            $(".timeZtit").text(GetDataYear());
+            // 本地存储
+            sessionStorage.setItem("dataParamPKsel", JSON.stringify(dataParam));
+
+            if (fl_user.IsLogin()) {
+                memberInfo = GetData(fl_url.memberInfo, { phoneNum: fl_user.Mobile(), serviceId: getQueryString("serviceId") });
+                memberInfo = JSON.parse(memberInfo);
+            }
+            if (GetDateDiffDay(getQueryString("gameDate"), d_t_ydm).day == 0 && memberInfo.hasTransaction != "1") {
+                location.href = "expertPlan.html?serviceType=" + dataParam.serviceType + "&type=" + dataParam.type + "&serviceId=" + dataParam.serviceId + "&service_code=" + dataParam.service_code + "&companyId=" + dataParam.companyId + "&experts_code=" + getQueryString("experts_code");
+                return;
+            }
+            
+             var today = GetDateStr(0);
+             var showdd = false;
+             /* if(getQueryString("experts_code")=="caishen" && (memberInfo.member_id=="b962bad7d2894826a7801cefb5ffdc01" || memberInfo.member_id=="5b50d89a93cf40978596cb010ac26c9e" || memberInfo.member_id=="8fef341dbe904aa998ad476de285e736" || memberInfo.member_id=="4d986b867d7042bbab0645ada64bbc05" || memberInfo.member_id=="673ef650bc574c2fb5e4bda382e676e1" || memberInfo.member_id=="1d2519a502544a4e8ae2d4faf474097b")){
+             	showdd = true;
+             }else  */
+             if(getQueryString("experts_code")=="caishen" && (today=="2016-11-18" || today=="2016-11-19" || today=="2016-11-20")){
+            	showdd = true;
+             }
+             
+             
+
+            /* if (is_pk_b && GetDateDiffDay(getQueryString("gameDate"), d_t_ydm).day == 0 && new Date().getHours() < 17 && memberInfo != undefined && memberInfo.hasPK == 0) {
+                switch (getQueryString("service_code")) {
+                    case "JCSPF":// 竞彩胜平负
+                        $("#apkJB").show();
+                    case "JCRQSPF":// 竞彩让球胜平负
+                         if(showdd){//dd
+		                	$("#aPKbtn").css("width","49%");
+		                	$("#aDDbtn").css("width","49%");
+		                	$("#aPKbtn").show();
+		                	$("#aDDbtn").show();
+		                }else{
+		                	$("#aPKbtn").show();
+		                }
+                        break;
+                }
+            }else if(getQueryString("service_code")=="JCSPF" && showdd){
+            	$("#aDDbtn").show();
+            }
+            
+          if (getQueryString("service_code")=="DC" && GetDateDiffDay(getQueryString("gameDate"), d_t_ydm).day == 0 && memberInfo.hasPK == 0) {
+               if(showdd){//dd
+                	$("#aPKbtn").css("width","49%");
+                	$("#aDDbtn").css("width","49%");
+                	$("#aPKbtn").show();
+                	$("#aDDbtn").show();
+                }else{
+                	$("#aPKbtn").show();
+                }
+          }else if(getQueryString("service_code")=="DC" && GetDateDiffDay(getQueryString("gameDate"), d_t_ydm).day == 0 && showdd){
+          		$("#aDDbtn").show();
+          }else if (memberInfo != undefined && memberInfo.hasTransaction == 0) {
+                $("#aDZbtn").show();
+          }
+          
+          if(getQueryString("service_code")=="YP" && showdd){
+          		$("#aDDbtn").show();
+          } */
+          
+            var fenxiang_d = GetDateDiffDay(getQueryString("gameDate"), GetDateYMDHMS());
+            if (fenxiang_d.day == 0 && sessionStorage.selectPlanName == undefined || fenxiang_d.day == 1 && fenxiang_d.hours < 11 && sessionStorage.selectPlanName == undefined || fenxiang_d.day == 1 && fenxiang_d.hours == 11 && fenxiang_d.minutes < 30 && sessionStorage.selectPlanName == undefined) {
+                location.href = "expertPlan.html?serviceType=" + dataParam.serviceType + "&type=" + dataParam.type + "&serviceId=" + dataParam.serviceId + "&service_code=" + dataParam.service_code + "&companyId=" + dataParam.companyId + "&experts_code=" + getQueryString("experts_code");
+                return;
+            }
+            
+            var data = GetData(dataUrl, dataParam);
+            var datas = null;
+            if(getQueryString("service_code")=="DC" || getQueryString("service_code") == "YP"){
+            	datas = JSON.parse(data);
+            }
+
+            $("#lblTime").text(getQueryString("gameDate"));
+
+            // 绑定列表数据
+            BindData(data);
+            loaded();
+            //js中先通过比赛时间判断
+            /* if(getQueryString("service_code")=='DC'){
+	             if(memberInfo.hasPK != 0){
+	                $("#aPKbtn").hide();
+	                if(showdd){//dd
+	                	$("#aDDbtn").css("width","100%");//dd
+	                }
+	                
+	             }else if (typeof (datas) != undefined && datas != null && datas.length > 0) {
+           	 	   if(d_temp_n>new Date(datas[datas.length-1].time.replace(/-/g, "/").substring(0, 18))){//如果当前时间大于最后一场比赛的开始时间 隐藏pk赛
+            	 	 $("#aPKbtn").hide();
+            	 	 if(showdd){//dd
+	                	$("#aDDbtn").css("width","100%");//dd
+	                 }
+            	   }
+           	     }
+            } */
+            var title = "";
+            switch (getQueryString("service_code")) {
+                case "JCECY"://竞彩二串一
+                    sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+                    shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+                    title = "竞彩2串1";
+                    break;
+                case "JCRQECY":// 竞彩让球二串一
+                    sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+                    shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+                    title = "竞彩让球2串1";
+                    break;
+                case "JCSPF":// 竞彩胜平负
+                    sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+                    shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+                    title = "竞彩胜平负";
+                    break;
+                case "JCRQSPF":// 竞彩让球胜平负
+                    sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+                    shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+                    title = "竞彩让球胜平负";
+                    break;
+                case "DC":// 单场
+                    sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+                    shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+                    title = "单场";
+                    break;
+                case "YP":// 亚盘
+                    sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+                    shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+                    title = "亚盘";
+                    break;
+            }
+            
+             if(getQueryString("service_name")!=null && getQueryString("service_name")!="" && getQueryString("service_name")!=undefined &&  getQueryString("service_name")!=title){
+            	 title=getQueryString("service_name");
+            }
+            
+            $("#pTitle1").html("<a href=\"expertPlan.html?serviceType=" + dataParam.serviceType + "&type=" + dataParam.type + "&serviceId=" + dataParam.serviceId + "&service_code=" + dataParam.service_code + "&companyId=" + dataParam.companyId + "&experts_code=" + getQueryString("experts_code") + "\" class=\"pull-left\"></a>" + title + '<img src="img/home.png" onclick="location.href=\'index.html?experts_code=' + getQueryString("experts_code") + '\';" style="float:right;margin-top:10px;width:24px;height:24px;" />');
+            document.title = title;
+           /*  if (GetDateDiffDay(getQueryString("gameDate"), d_t_ydm).day == 0) {
+           		 if (getQueryString("service_code") == "JCSPF" && fl_user.focus_status() == 1 || getQueryString("service_code") == "JCRQSPF" && fl_user.focus_status() == 1) {
+                   	if(d_temp_n.getHours() >= 17){
+                   		alert_error("<lable style=\"color:#000000;font-size:16px;\">温馨提示</lable><br><div style=\"text-align:left;padding-left:10px;color:#000;line-height:24px;\">竞彩胜平负方案仅供参考，若竞彩未对推荐的比赛开售单关投注，则投注时需再全包一场做2串1投注。</div>", "确认", function () { });
+              	    }
+            	 }
+            	if (getQueryString("service_code") == "DC" && fl_user.focus_status() == 1 || getQueryString("service_code") == "YP" && fl_user.focus_status() == 1) {
+	            	
+            	    if (typeof (datas) != undefined && datas != null && datas.length > 0) {
+            	 	   if(new Date(datas[datas.length-1].time.replace(/-/g, "/").substring(0, 18))>d_temp_n){
+	            	 	alert_error("<lable style=\"color:#000000;font-size:16px;\">温馨提示</lable><br><div style=\"text-align:left;padding-left:10px;color:#000;line-height:24px;\">1.由于赔率变化，方案数据可能变化<br/>2.赛前半小时为最终方案数据<br/>3.盈利统计以赛前半小时的方案数据为准</div>", "确认", function () { });
+	            	   }
+            	    }
+                }
+            } */
+            $("#pTitle2").text(title);
+
+            var ispkdata = GetData(fl_url.hasPkBettingGame, { serviceId: getQueryString("serviceId"), serviceType: getQueryString("serviceType"), companyId: getQueryString("companyId") });
+            if (ispkdata.hasPkBettingGame == false) {
+                $("#aPKbtn").hide();
+            }
+
+            Init();
+            if(GetDateDiffDay(getQueryString("gameDate"), d_t_ydm).day == 0){
+            	addVisitInfo();
+            }
+            
+            
+            //2017-01-09 改版
+            var showType = getQueryString("showType");
+            if(showType!=undefined && showType==2){
+            	$("#guessProfit").show();
+            	$("#guess").attr("href","guessProfitPay.html?experts_code="+getQueryString("experts_code")+"&serviceId="+getQueryString("serviceId"));
+            }
+            if(showType != undefined && showType == 3){
+            	$("#follow").show();
+            	$("#followOrder").attr("href","followOrder.html?experts_code="+getQueryString("experts_code")+"&serviceType=" + getQueryString("serviceType") + "&earningRate="+getQueryString("earningRate")+"&endTime="+getQueryString("endDate")  +"&type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&service_code=" + getQueryString("service_code") + "&companyId=" + getQueryString("companyId") + "&service_name=" + getQueryString("service_name"));
+            	
+            }
+        });
+
+        function loaded() {
+            myScroll = new IScroll('#wrapper', { bounceEasing: 'elastic', bounceTime: 1200, click: true });
+            document.addEventListener('touchmove', function (e) {
+                e.preventDefault();
+            }, false);
+        }
+
+        function AddCustomized() {
+            var text = "每17:00";
+            switch (getQueryString("service_code")) {
+                case "YP":// 压盘
+                case "DC":// 单场
+                    text = "将在赛前半小时";
+                    break;
+            }
+
+
+            alert_error("<lable style=\"color:#000000;font-size:16px;\">定制说明</lable><br><div style=\"text-align:left;color:#000;line-height:24px;\">1、定制后，方案策略" + text + "发布；<br>2、每日上午11:30进行赛事更新；<br>3、推荐方案仅供参考，请到正规渠道购彩。</div>", "确定", function () {
+                location.href = "addCustomizedInfo.html?service_code=" + getQueryString("service_code") + "&serviceId=" + getQueryString("serviceId") + "&experts_code=" + getQueryString("experts_code");
+            });
+        }
+
+        // 绑定数据html
+        function BindData(data) {
+            var html = "";
+            data = JSON.parse(data);
+            console.log(data);
+            var zt = 0,zj= 0;
+            if (typeof (data) != undefined && data != null && data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    zt += data[i].num4;
+                    zj += data[i].num3 + data[i].num4;
+                    html += SetHtmlEPByServerCode(getQueryString("service_code"), data[i],i);
+                }
+            } else {
+                html += "";
+            }
+
+            //if (sessionStorage.zj_temp != undefined) {
+            //    zj = zj - sessionStorage.zj_temp;
+            //    zt = zt - sessionStorage.yy_temp;
+            //}
+
+            $("#lblZt").text(zt);
+            $("#lblZj").text(parseInt(zj));
+            $("#profitId").text((parseInt(((parseInt(zj) - zt) / zt ) * 100)));
+
+            $("#list").append(html);
+            if($("#isYuYing").val()=="false"){
+            	 $("#iZj").text("预奖:");
+            }
+        }
+        
+        function GoToFanXian(){
+        
+        	location.href = "duidu_index.html?experts_code=" + getQueryString("experts_code") +"&serviceId=" + getQueryString("serviceId");
+        
+        	/* var param = {memberId:fl_user.MemberId(),serviceId:getQueryString("serviceId")};
+        	var flag = false;
+        
+        	$.ajax({
+		        type: "post",
+		        url: fl_app.AjaxHome+"/webChat/validateMemberCanDuiDu",
+		        data: param,
+		        async: false,
+		        datatype: "json",
+		        success: function (data) {
+		        	var result = JSON.parse(data)
+		        	flag = result.flag;
+		        },
+		    });
+		    if(flag){
+		    	location.href = "duidu_index.html?experts_code=" + getQueryString("experts_code") +"&serviceId=" + getQueryString("serviceId");
+		    }else{
+		    	alert_error("<lable style=\"color:#000000;font-size:16px;\">温馨提示</lable><br><div style=\"text-align:left;color:#000;line-height:24px;margin-left:8px;\">此玩法您已参与，每个玩法当天仅能参与一次，感谢您的参与，请选择其他玩法继续参与！</div>", "确定", function () {});
+		    } */
+        }
+
+    </script>
+        <div class="footBoxfixed" id="follow" style="display:none">
+    	<ul>
+    		<li>
+    			<p>方案预计盈利率<label id="profitId" style="font-size: 1.2rem;"></label>%</p>			
+    		</li>
+    		<li>
+    			<a class="dbtn dbtn123 ctan" href="" id="followOrder">立即跟投</a> 	
+    		</li>
+    	</ul>
+   		
+    </div>
+    
+</body>
+</html>

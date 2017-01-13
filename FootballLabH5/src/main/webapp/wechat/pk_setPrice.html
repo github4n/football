@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>PK赛设置金额</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="js/iscroll.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+    </style>
+</head>
+<body style="background-color: transparent; background-image: url(img/back4.png); background-size: 100%; padding: 0">
+    <!--<p class="headerTou"><a href="javascript:history.go(-1);" class="pull-left"></a>PK赛设置金额<img src="img/home.png" onclick="GoToUrl_T('index.html')" style="float:right;margin-top:10px;width:24px;height:24px;" /></p>-->
+    <p class="yingl"><span class="pull-left" style="color: #fff; font-size: 1.2rem;">选项投注范围：<i class="colorh" style="font-size: 1.2rem;">100</i>-<i class="colorh" style="font-size: 1.2rem;">10000</i></span></p>
+    <div id="wrapper" style="top:50px;bottom:50px;">
+        <ul class="list_shigong list_shigongB100 list_shigong12PK" id="list">
+        </ul>
+    </div>
+    <div style="background: #414141; opacity: 1; height: 40px; position: fixed; bottom: 0; left: 0; width: 100%; z-index: 550;"></div>
+    <footer class="footer footer12 footer13" style="background: none; border: 0;">
+        <ul class="clearfix">
+            <li style="width: 70%">
+
+                <p><span style="display: block; width: 100%; text-align: left;">投注总额：<i class="colorH" id="tzSum">0</i></span></p>
+                <p><span style="display: block; float: none; text-align: left;">预计最高奖金：<i class="colorH" id="yfSum">0</i></span></p>
+            </li>
+            <li class="footer_show open" style="width: 30%; background: #edc33d;">
+                <a href="javascript:SavePK();" style="color: #333">保存方案</a>
+            </li>
+        </ul>
+    </footer>
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        var dataParamPKsel;
+        var selectList;
+        $(function () {
+            dataParamPKsel = JSON.parse(sessionStorage.dataParamPKsel);
+            selectList = JSON.parse(sessionStorage.selectPK);
+            BindData(selectList);
+            loaded();
+        });
+        function GoToUrl_T(u) {
+            location.href = u + "?experts_code=" + getQueryString("experts_code");
+        }
+        function loaded() {
+            myScroll = new IScroll('#wrapper', { bounceEasing: 'elastic', bounceTime: 1200, click: true });
+            //myScroll = new IScroll('#wrapper2', { scrollX: true, scrollY: false, mouseWheel: true });
+            document.addEventListener('touchmove', function (e) {
+                e.preventDefault();
+            }, false);
+        }
+        var tzSumA = new Array();
+        var bidarray = new Array();
+        function BindData(data) {
+            var html = "";
+            console.log(data);
+            for (var i = 0; i < data.length; i++) {
+                html += "<li class=\"mTop10\" id=\"li"+i+"_"+data[i].i+"\">";
+                html += "<div class=\"content_shigong flexBox clearBoth pull-left\">";
+                html += "<span class=\"remove\" onclick=\"deleteSel(" + i + ",'" + i + "_" + data[i].i + "')\"></span>";
+                html += "<div class=\"conLeft flexBox_zi1\">";
+                html += "<h3 class=\"colorh\">";
+                html += "<div style=\"position: relative; width: 90px; float: right;\">";
+                html += "<input type=\"number\" id=\"tr" + i + "_" + data[i].i + "\" value=\"100\" maxlength=\"5\" onblur=\"ChangeNum(this," + i + ",'" + i + "_" + data[i].i + "'," + data[i].o + ")\" class=\"pull-right input\"><span class=\"inPios\"></span>";
+                html += "</div>";
+                html += "" + data[i].h + "&nbsp;&nbsp;主" + data[i].s + "(" + data[i].o + ")</h3>";
+                html += "<p><span class=\"pull-right\">预返：<lable id='yf" + i + "_" + data[i].i + "'>" + returnFloat(100 * data[i].o) + "</lable></span><time class=\"pull-left\">";
+                html += data[i].h + "&nbsp;&nbsp;<i>VS</i>&nbsp;&nbsp;" + data[i].a + "</time></p>";
+                html += "</div>";
+                html += "</div>";
+                html += "<div style=\"background: #414141; opacity: 0.8; height: 60px; position: absolute; bottom: 0; left: 0; width: 100%; z-index: -2;\"></div>";
+                html += "<div style=\"clear: both;\"></div>";
+                html += "</li>";
+                tzSumA.push({ sum: 100, yf: (100 * data[i].o), bid: data[i].bid });
+                if (jQuery.inArray(data[i].bid, bidarray) == -1) {
+                    bidarray.push(data[i].bid);
+                }
+            }
+            var resultSum = GetSum();
+            
+            $("#tzSum").text(resultSum.tzsum);
+            $("#yfSum").text(resultSum.yfsum);
+
+            $("#list").append(html);
+        }
+
+        function deleteSel(i, id) {
+            confirm_error("您确认要删除吗？", function () {
+
+                selectList.splice(i, 1);
+                tzSumA.splice(i, 1);
+                $("#li" + id).remove();
+                
+                if (selectList.length == 0) {
+                    location.href = "pk_select.html?experts_code=" + getQueryString("experts_code");
+                    return;
+                }
+
+                var resultSum = GetSum();
+
+                $("#tzSum").text(resultSum.tzsum);
+                $("#yfSum").text(resultSum.yfsum);
+            }, "确认", "取消");
+        }
+
+        function ChangeNum(obj, i, id, o) {
+
+            if (obj.value.length == 0) {
+                obj.value = "0";
+            }
+
+            var num = parseInt(obj.value);
+            if (num > 10000 || num<100) {
+                tishi_error("投注范围为100-10000");
+                if (num > 10000) {
+                    obj.value = 10000;
+                    num = 10000;
+                }
+                else {
+                    obj.value = 100;
+                    num = 100;
+                }
+            }
+            tzSumA[i].sum = num;
+            tzSumA[i].yf = num * o;
+
+            var resultSum = GetSum();
+
+            $("#tzSum").text(parseInt(resultSum.tzsum));
+            $("#yfSum").text(returnFloat(resultSum.yfsum));
+            $("#yf" + id).text(returnFloat(num*o));
+        }
+
+        // 保存pk数据
+        function SavePK() {
+            if (selectList.length == 0) {
+                tishi_error("您没有选择方案，不可以保存方案");
+                return;
+            }
+
+            var memberInfo;
+            if (fl_user.IsLogin()) {
+                memberInfo = GetData(fl_url.memberInfo, { phoneNum: fl_user.Mobile(), serviceId: dataParamPKsel.serviceId });
+                memberInfo = JSON.parse(memberInfo);
+            }
+            if (memberInfo.hasPK != "0") {
+                tishi_error("您今日已经PK过了，不可以再次进行PK。");
+                return;
+            }
+
+            var pkDetaileList = new Array();
+            for (var i = 0; i < selectList.length; i++) {
+                if ($("#tr" + i + "_" + selectList[i].i).val().length == 0 || $("#tr" + i + "_" + selectList[i].i).val() == "0") {
+                    tishi_error("投注范围为100-10000");
+                    return;
+                }
+
+
+                pkDetaileList.push({
+                    betting_game_id:selectList[i].bid,
+                    betting_strategy: selectList[i].sn,
+                    betting_amount: $("#tr" + i + "_" + selectList[i].i).val(),
+                    company_odds_id: selectList[i].cid
+                    });
+            }
+
+            var result = GetData(fl_url.savePk, {json:JSON.stringify({
+                fk_service_id:dataParamPKsel.serviceId,
+                phoneNum:fl_user.Mobile(),
+                pkDetaileList: pkDetaileList,
+                experts_code: getQueryString("experts_code")
+                })
+            });
+            if (result == "{msg:success}") {
+                confirm_error1("PK方案保存成功！", function () {
+                    location.href = "myPlan.html?experts_code=" + getQueryString("experts_code");
+                }, function () {
+                    location.href = sessionStorage.selectPlanUrl;
+                }, "查看专家方案", "查看我的方案");
+                return;
+            }
+            tishi_error("操作失败");
+        }
+
+        // 计算合计算法
+        function GetSum() {
+            var tzsum = 0, yfsum = 0;
+            for (var j = 0; j < tzSumA.length; j++) {
+                tzsum += tzSumA[j].sum;
+
+            }
+            var yfmax = new Array();
+            for (var n = 0; n < bidarray.length; n++) {
+                yfmax.length = 0;
+
+                for (var m = 0; m < tzSumA.length; m++) {
+                    if (tzSumA[m].bid == bidarray[n]) {
+                        yfmax.push(tzSumA[m].yf);
+                    }
+                }
+
+                if (yfmax.length > 0)
+                    yfsum += Math.max.apply(null, yfmax);;
+            }
+            return { tzsum: tzsum, yfsum: yfsum };
+        }
+    </script>
+</body>
+</html>

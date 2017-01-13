@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ServiceModelMapper">
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select  
+			a.*,b.* ,c.`experts_name`,c.experts_code,b.id as service_id
+		from 
+			`tb_service_models` as a 
+		left join 
+			`tb_service` as b on a.`fk_service_id` = b.id 
+		left join 
+			`tb_experts` as c on c.`experts_id` = b.fk_experts_id
+		where a.id = #{smid}	
+	</select>
+	
+	<!-- 根据serviceid获取是否有审核的模型更换记录 -->
+	<select id="findApproveByServiceId" parameterType="pd" resultType="pd">
+		select  
+			a.*,b.* ,c.`experts_name`,c.experts_code,b.id as service_id
+		from 
+			`tb_service_models` as a 
+		left join 
+			`tb_service` as b on a.`fk_service_id` = b.id 
+		left join 
+			`tb_experts` as c on c.`experts_id` = b.fk_experts_id
+		where a.fk_service_id = #{service_id} and a.status = '1' limit 1	
+	</select>
+	
+	<insert id = "save" parameterType="pd">
+		insert into tb_service_models
+			(id,models_name,begin_date,end_date,add_time,add_user,models_type,fk_models_id,fk_service_id,status) 
+		values
+			(#{id},#{models_name},#{begin_date},#{end_date},#{add_time},#{add_user},#{models_type},#{fk_models_id},#{fk_service_id},#{status})
+	</insert>
+	
+	<update id = "update" parameterType="pd">
+		update  tb_service_models set status = #{status} where fk_service_id = #{fk_service_id}
+	</update>
+	
+	<update id="approve" parameterType="pd">
+	update tb_service_models set
+			status = #{status}
+	where 	id = #{smid}
+	</update>
+	
+	<!-- 通过serviceId 将其他审核状态为3的更新为9 -->
+	<select id="approveByServiceId" parameterType="pd" resultType="pd">
+		update tb_service_models set
+			status = #{status}
+		where fk_service_id = #{service_id}	 and status = '3' 
+	</select>
+</mapper>

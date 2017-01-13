@@ -1,0 +1,401 @@
+package com.visolink.service.football.guessprofit;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import net.sf.json.JSONObject;
+
+import org.springframework.stereotype.Service;
+
+import com.visolink.dao.DaoSupport;
+import com.visolink.entity.AsianVO;
+import com.visolink.entity.GameMapper;
+import com.visolink.entity.MemberGuessInfo;
+import com.visolink.entity.MemberGuessProfitInfo;
+import com.visolink.entity.Page;
+import com.visolink.entity.ServiceProfitHistory;
+import com.visolink.entity.ServiceResultForDays;
+import com.visolink.entity.SingleVO;
+import com.visolink.entity.TwoOnOne;
+import com.visolink.entity.TwoOnOneVO;
+import com.visolink.entity.WxPage;
+import com.visolink.entity.dto.GuessProfitResultDTO;
+import com.visolink.entity.dto.GuessStrategyDTO;
+import com.visolink.service.football.asian.AsianService;
+import com.visolink.service.football.member.MemberService;
+import com.visolink.service.football.points.PointsService;
+import com.visolink.service.football.service.ServiceService;
+import com.visolink.service.football.single.SingleService;
+import com.visolink.service.football.twoonone.TwoOnOneService;
+import com.visolink.util.Const;
+import com.visolink.util.DateUtil;
+import com.visolink.util.JsonUtil;
+import com.visolink.util.PageData;
+import com.visolink.util.RedisUtils;
+import com.visolink.util.Tools;
+import com.visolink.util.UuidUtil;
+
+@Service
+public class GuessProfitService {
+	
+	@Resource(name = "serviceService")
+	private ServiceService serviceService;
+	
+	@Resource(name = "daoSupport")
+	private DaoSupport dao;
+	
+	@Resource(name = "pointsService")
+	private PointsService pointsService;
+	
+	@Resource
+	private SingleService singleService;
+	
+	@Resource
+	private AsianService asianService;
+	
+	@Resource
+	private TwoOnOneService twoOnOneService;
+	
+	@Resource
+	private MemberService memberService;
+	
+	private static Integer REDIS_DB = 1;
+	
+	private static String GUESS_PROFIT_KEY = "guessProfit:";
+	
+	public static long LIVE_TIME = 60 * 60 * 24 * 3;
+	
+	/**
+	 * 获取竞猜盈亏列表
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> getGuessProfitList(PageData pd) throws Exception{
+		
+		List<PageData> result = new ArrayList<PageData>();
+		
+		Map<String, Integer> strategyNumMap = serviceService.getTodayStrategyNum(pd.getString("experts_code"));
+		Map<String, Integer> notStartstrategyNumMap = serviceService.getNotStartStrategyNum(pd.getString("experts_code"));
+		Map<String, List<PageData>> serviceMap = serviceService.findMapByExpert(pd);
+		for (Map.Entry<String,List<PageData>> entry : serviceMap.entrySet()) {
+			List<PageData> list = entry.getValue();
+			for (PageData service : list) {
+				String serviceId  = service.getString("id");
+				Integer strategyNum = strategyNumMap.get(serviceId);
+				Integer notStartstrategyNum = notStartstrategyNumMap.get(serviceId);
+				if(strategyNum==null){
+					continue;
+				}else if(notStartstrategyNum!=null && strategyNum.intValue()!=notStartstrategyNum.intValue()){
+					continue;
+				}
+				result.add(service);
+			}
+		}
+		
+		//1.查询历史盈亏  2.查询第一场比赛比赛时间  3.查询当日预计盈利率
+		for (PageData service : result) {
+			service.putAll(this.getServiceProfitInfo(service.getString("service_code"), service.getString("id")));
+		}
+		
+		Collections.sort(result,new Comparator<PageData>() {
+
+			@Override
+			public int compare(PageData o1, PageData o2) {
+				Double earningRate1 = (Double) o1.get("earningRate");
+				Double earningRate2 = (Double) o2.get("earningRate");
+				return earningRate2.compareTo(earningRate1);
+			}
+		});
+		
+		return result;
+	}
+	
+	/**
+	 * 查询竞猜盈亏service基本信息
+	 * @param serviceCode 
+	 * @param serviceId
+	 * @return Map<String,Object>  profitHistoryList:历史盈亏  firstGameTime:第一场时间 earningRate：当日预计盈利率
+	 * @throws Exception 
+	 */
+	public Map<String,Object> getServiceProfitInfo(String serviceCode,String serviceId) throws Exception{
+		
+		Map<String,Object> result = new HashMap<String,Object>();
+		
+		String guessProfitInfoJson = RedisUtils.getString(GUESS_PROFIT_KEY+serviceId+":"+DateUtil.getGameDate(), REDIS_DB);
+		if(guessProfitInfoJson!=null && guessProfitInfoJson!=""){
+			return (Map<String, Object>) JsonUtil.jsonToBean(guessProfitInfoJson, Map.class);
+		}
+		
+		result.put("profitHistoryList", dao.findForList("ServiceProfitHistoryMapper.getServiceProfitList", serviceId));
+	
+		Integer serviceType = -1;
+		if("DC".equals(serviceCode)){
+			serviceType = 3;
+		}else{
+			if("JCRQSPF".equals(serviceCode)){
+				serviceType = 2;
+			}else{
+				serviceType = 1;
+			}
+		}
+		PageData pdQuery = new PageData();
+		pdQuery.put("beginTime", DateUtil.getSpecifiedDayAfter(DateUtil.getSchemeDate(), -1) + Const.GAME_TIME);
+		pdQuery.put("endTime", DateUtil.getSchemeDate() + Const.GAME_TIME);
+		pdQuery.put("serviceId", serviceId);
+		pdQuery.put("serviceType", serviceType);
+		List<GameMapper> gameList = new ArrayList<GameMapper>();
+		if("DC".equals(serviceCode) || "JCSPF".equals(serviceCode) || "JCRQSPF".equals(serviceCode)){
+			gameList = (List<GameMapper>) dao.findForList("SingleMapper.singleTimeList", pdQuery);
+		}else if("JCECY".equals(serviceCode) || "JCRQSPF".equals(serviceCode)){
+			gameList = (List<GameMapper>) dao.findForList("TwoOnOneMapper.twoOnOneTimeList", pdQuery);
+		}else if("YP".equals(serviceCode)){
+			gameList =  (List<GameMapper>) dao.findForList("AsianMapper.asianTimeList", pdQuery);
+		}
+		
+		if(gameList!=null && gameList.size()>0){
+			result.put("firstGameTime", DateUtil.fomatTime(gameList.get(0).getGame_date_time()).getTime());;
+		}
+		
+		result.put("earningRate", serviceService.getTodayEarningRate(serviceId, serviceCode));
+		
+		RedisUtils.add(GUESS_PROFIT_KEY+serviceId+":"+DateUtil.getGameDate(), JsonUtil.beanToJson(result), LIVE_TIME, REDIS_DB);
+		
+		return result;
+	
+	}
+	
+	/**
+	 * 用户竞猜方案盈亏
+	 * @param memberGuessInfo
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean guessServiceProfit(MemberGuessProfitInfo memberGuessProfitInfo) throws Exception{
+		
+		Integer consumPoint = 0;
+		
+		PageData pd = new PageData();
+		pd.put("MEMBER_ID", memberGuessProfitInfo.getMemberId());
+		
+		//扣用户积分
+		PageData memberInfo = (PageData) dao.findForObject("MemberMapper.findById", pd);
+		Integer memberPoint = (Integer) memberInfo.get("MEMBE_POINT");
+		if(memberPoint>=memberGuessProfitInfo.getInputAmount()){
+			memberPoint = memberPoint-memberGuessProfitInfo.getInputAmount();
+			consumPoint = memberGuessProfitInfo.getInputAmount();
+		}else{
+			return false;
+		}
+		
+		PageData pointInfo = new PageData();
+		pointInfo.put("membe_point", memberPoint);
+		pointInfo.put("member_id", memberGuessProfitInfo.getMemberId());
+		dao.update("MemberMapper.editMemberPoint", pointInfo);
+		
+		//增加积分消费记录
+		PageData pointsConsumptionPd = new PageData();
+		pointsConsumptionPd.put("id", UuidUtil.get32UUID());
+		pointsConsumptionPd.put("member_id", memberGuessProfitInfo.getMemberId());
+		pointsConsumptionPd.put("points_number", consumPoint);
+		pointsConsumptionPd.put("consume_time", Tools.date2Str(new java.util.Date()));
+		pointsConsumptionPd.put("type", 5);
+		pointsConsumptionPd.put("remarks", "竞猜盈亏/"+memberGuessProfitInfo.getGuessDescription());
+		pointsConsumptionPd.put("remain", memberPoint);
+		pointsService.savePointsConsumption(pointsConsumptionPd);
+		
+		memberGuessProfitInfo.setStrategyDate(DateUtil.fomatDate(DateUtil.getGameDate()));
+		memberGuessProfitInfo.setGuessTime(new Date());
+		dao.save("MemberGuessProfitInfoMapper.insertSelective", memberGuessProfitInfo);
+        
+		return true;
+		
+	}
+	
+	/**
+	 * 根据用户id获取竞猜列表
+	 * @param memberId
+	 * @return
+	 * @throws Exception
+	 */
+	public List<MemberGuessProfitInfo> getGuessListByMemberId(WxPage pd) throws Exception{
+		return (List<MemberGuessProfitInfo>) dao.findForList("MemberGuessProfitInfoMapper.getGuessListByMemberId", pd);
+	}
+	
+	/**
+	 * 根据id获取竞猜盈亏详情
+	 * @param id 竞猜盈亏id
+	 * @return
+	 * @throws Exception 
+	 */
+	public MemberGuessProfitInfo getGuessProfitInfoById(String id) throws Exception{
+		return (MemberGuessProfitInfo) dao.findForObject("MemberGuessProfitInfoMapper.getGuessProfitInfoById", id);
+	}
+	
+	/**
+	 * 后台查询用户竞猜列表
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	public List<GuessProfitResultDTO> getMemberGuessProfitList(Page page) throws Exception{
+		return (List<GuessProfitResultDTO>) dao.findForList("MemberGuessProfitInfoMapper.getGuessProfitlistPage", page);
+	}
+	
+	/**
+	 * 每日11：30 发放不盈双倍返补偿积分
+	 * @throws Exception
+	 */
+	//@Scheduled(cron="0 0/5 * * * ? ")
+	public void givePointsByGuessProfitProfit() throws Exception{
+		
+		String beginTime = DateUtil.getGameDate() + Const.GAME_TIME;
+		String endTime = DateUtil.getSpecifiedDayAfter(DateUtil.getGameDate(), 1) + Const.GAME_TIME;
+		PageData pdQuery = new PageData();
+		pdQuery.put("beginTime", beginTime);
+		pdQuery.put("endTime", endTime);
+		
+		Map<String,Object> queryMap = new HashMap<String,Object>();
+		queryMap.put("recordDate", DateUtil.getGameDate());
+		
+		//查询所有在用service
+		List<PageData> serviceList = (List<PageData>) dao.findForList("ServiceMapper.selectAllIsUseService", null);
+		serviceEach:for (PageData service : serviceList) {
+			if(!"76f2c58f839441beac3c34bdc2cfdfc8".equals(service.getString("id"))){
+				continue;
+			}
+			//查询是否有记录 1.查询是否有历史盈利记录  2.查询是否有用户竞猜记录
+			queryMap.put("serviceId", service.get("id"));
+			Integer recordId = (Integer) dao.findForObject("ServiceProfitHistoryMapper.getServiceRecordByRecordDate", queryMap);
+			if(recordId!=null){
+				continue;
+			}
+			
+			Boolean isHasMemberGuess = false;
+			List<MemberGuessProfitInfo> memberGuessList = (List<MemberGuessProfitInfo>) dao.findForList("MemberGuessProfitInfoMapper.getGuessProfitList", queryMap);
+			if(memberGuessList!=null && memberGuessList.size()>0){
+				isHasMemberGuess = true;
+			}
+			
+			pdQuery.put("serviceId", service.get("id"));
+			pdQuery.put("serviceType", service.get("service_type"));
+			
+			ServiceResultForDays serviceResult = new ServiceResultForDays();
+			String serviceCode = service.getString("service_code");
+			
+			int type = (Integer)service.get("service_type")==2?1:2;
+			if("DC".equals(serviceCode)){
+				List<SingleVO> singleVOList = (List<SingleVO>) dao.findForList("SingleMapper.singleDayList", pdQuery);
+				
+				if(singleVOList==null || singleVOList.size()<1){
+					continue;
+				}else{
+					for (SingleVO singleVO : singleVOList) {
+						if(singleVO.getHome_score()==null || singleVO.getAway_score()==null){
+							continue serviceEach;
+						}
+					}
+				}
+				
+				serviceResult = singleService.SingleDay(singleVOList, type, true);
+			}else if("YP".equals(serviceCode)){
+				List<AsianVO> singleVOList = (List<AsianVO>) dao.findForList("AsianMapper.asianDayList", pdQuery);
+				if(singleVOList==null || singleVOList.size()<1){
+					continue;
+				}else{
+					for (AsianVO asianVO : singleVOList) {
+						if(asianVO.getHome_score()==null || asianVO.getAway_score()==null){
+							continue serviceEach;
+						}
+					}
+				}
+			    serviceResult = asianService.asianDay(singleVOList,type);
+			}else if("JCECY".equals(serviceCode)){
+				List<TwoOnOneVO> twoOnOneVOList = (List<TwoOnOneVO>) dao.findForList("TwoOnOneMapper.twoOnOneDayList", pdQuery);
+				if(twoOnOneVOList==null || twoOnOneVOList.size()<1){
+					continue;
+				}else{
+					for (TwoOnOneVO twoOnOneVO : twoOnOneVOList) {
+						if(twoOnOneVO.getHome_score1()==null || twoOnOneVO.getHome_score2()==null || twoOnOneVO.getAway_score1()==null || twoOnOneVO.getAway_score2()==null){
+							continue serviceEach;
+						}
+					}
+				}
+				serviceResult = twoOnOneService.TwoOnOneDay(twoOnOneVOList, type);
+			}else{
+				continue;
+			}
+			
+			Boolean isProfit  = serviceResult.getNumber3()>=0?true:false;
+			
+			//记录盈利信息
+			ServiceProfitHistory serviceProfitHistory = new ServiceProfitHistory();
+			serviceProfitHistory.setServiceId(service.getString("id"));
+			serviceProfitHistory.setExpertId(service.getString("experts_id"));
+			serviceProfitHistory.setIsProfit(isProfit);
+			serviceProfitHistory.setRecordDate(DateUtil.fomatDate(DateUtil.getGameDate()));
+			dao.save("ServiceProfitHistoryMapper.insertSelective", serviceProfitHistory);
+			
+			if(isHasMemberGuess){
+				Double odds = isProfit==true?Const.GUESS_PROFIT_WIN:Const.GUESS_PROFIT_LOSE;
+				for (MemberGuessProfitInfo memberGuessProfitInfo : memberGuessList) {
+					if(memberGuessProfitInfo.getIsProfit()==isProfit){
+						//派发积分 TODO 需要修改
+						memberGuessProfitInfo.setWinAmount(Double.valueOf(memberGuessProfitInfo.getInputAmount()*odds).intValue());
+						memberGuessProfitInfo.setProfitAmount(memberGuessProfitInfo.getWinAmount()-memberGuessProfitInfo.getInputAmount());
+						dao.update("MemberGuessProfitInfoMapper.updateByPrimaryKeySelective", memberGuessProfitInfo);
+						
+						String memberId = memberGuessProfitInfo.getMemberId();
+						PageData memberQuery = new PageData();
+						memberQuery.put("member_id", memberId);
+						PageData member = memberService.findByMemberId(memberQuery);
+						
+						
+						Map<String,Object> giveMemberPoint = new HashMap<String, Object>();
+						giveMemberPoint.put("giveAmount", memberGuessProfitInfo.getWinAmount());
+						giveMemberPoint.put("memberId", memberId);
+						dao.update("MemberMapper.giveMemberPoint", giveMemberPoint);
+						
+						PageData pointsObtainPd = new PageData();
+						pointsObtainPd.put("id",  UuidUtil.get32UUID());
+						pointsObtainPd.put("member_id",  memberId);
+						pointsObtainPd.put("points_number",  memberGuessProfitInfo.getWinAmount());
+						pointsObtainPd.put("obtain_time",  Tools.date2Str(new java.util.Date()));
+						pointsObtainPd.put("type",  "11");
+						pointsObtainPd.put("remarks",  "竞猜盈亏/"+service.getString("service_name")+"/"+this.getServiceTypeName(serviceCode));
+						pointsObtainPd.put("remain", memberGuessProfitInfo.getWinAmount()+(Integer)member.get("membe_point"));
+						dao.save("PointsMapper.savePointsObtain", pointsObtainPd);
+					}
+				}
+			}
+		}
+	}
+	
+	private String getServiceTypeName(String serviceCode){
+		if("DC".equals(serviceCode)){
+			return "单场";
+		}else if("YP".equals(serviceCode)){
+			return "亚盘";
+		}else if("JCECY".equals(serviceCode)){
+			return "二串一";
+		}else if("JCSPF".equals(serviceCode)){
+			return "竞彩胜平负";
+		}else if("JCRQSPF".equals(serviceCode)){
+			return "竞彩让球胜平负";
+		}else if("JCRQECY".equals(serviceCode)){
+			return "让球二串一";
+		}else{
+			return "";
+		}
+		
+	}
+
+}

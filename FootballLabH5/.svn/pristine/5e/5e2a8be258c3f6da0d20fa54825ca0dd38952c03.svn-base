@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>投注详情</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/iscroll.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+
+    </style>
+</head>
+
+
+<body style="padding: 0;">
+    <!--<p class="headerTou"></p>-->
+    <div id="wrapper" style="top:0px;">
+        <div id="scroller">
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade active in" id="home">
+                    <ul class="list_shigong" style="clear: both;">
+                        <li class="mTop10" onclick="window.open('#','_self')" style="height: 30px; background-color: #d6b947; border: 0;">
+                            <div class="content_shigong flexBox clearBoth">
+                                <div class="conLeft flexBox_zi1" style="color: #333; line-height: 30px; font-size: 1.2rem; padding: 0 8px 0 10px;">
+                                    <label id="time1" style="color: #333;font-size: 1.2rem;"></label>
+                                </div>
+                            </div>
+                            <div style="clear: both;"></div>
+                        </li>
+
+                    </ul>
+
+                    <div class="panel-group panel-group1" style="margin-top: 0px;" id="list">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script src="js/bind_data_ep.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+        $(function () {
+            var data = GetData(fl_url.memberGuessDetail, {memberGuessId:getQueryString("memberGuessId")});
+            BindData(data);        
+            
+            loaded();
+
+            sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+            shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+            shartlink = "http://www.01588.com/wechat/index.html?experts_code=" + getQueryString("experts_code");
+            Init();
+        });
+
+        function BindData(data){
+       		data = JSON.parse(data)
+            
+		    $("#time1").text(data.gameDateTime.substring(0,10));
+		    
+		    var html = "";
+		    html+="<div class='panel panel-default'>";
+		    html+="<div class='panel-heading'>";
+		    html+="<h4 class='panel-title'>";
+		    html+="<a data-toggle='collapse' onclick='rMs()' data-parent='#accordion' href='#collapse0'><span></span>";
+		    if(data.status){
+		    	var iClass="";
+		    	if(data.profitAmount>0){
+		    		iClass="colorh";
+		    	}
+		    	html+="<i class='pull-right rightMore "+iClass+"' id='rightMore0'>盈利:<em>&nbsp;&nbsp;&nbsp;&nbsp;<i class='"+iClass+"' style='font-size:1.2rem;margin-left:0px;'>"+data.profitAmount+"</i></em></i>";
+		    }
+       		html+=data.gameDateTime.substring(11,16)+"</a></h4></div>";
+       		html+="<div id='collapse0' class='panel-collapse collapse in'>";
+       		html+="<div class='panel-body panel-body1'>";
+       		html+="<table class='table row tableTib rowTable'>";
+       		html+="<tbody><tr style='border-bottom: 1px solid #a9aeb9;'>";
+       		html+="<th colspan='2' class='col-md-2 mcTit'>";
+       		html+="<div style='border-right: 1px solid #ccc; height: 60px;' id='gameInfo'>";
+       		html+="<span style='display: -webkit-box;'>&nbsp;"+data.leagueName+"</span>";
+       		
+       		var letTheCount = "<i class='colorh'>("+data.letTheCount+")</i>";
+       		if(data.letTheCount<0){
+       			letTheCount = "<i style='color:#22ad38'>("+data.letTheCount+")</i>";
+       		}
+       		
+       		var gameInfo = data.homeName+letTheCount+"<i>&nbsp;VS&nbsp;</i>"+data.awayName;
+       		if(data.status){
+       			gameInfo = data.homeName+letTheCount+"<i>&nbsp;"+data.homeScore+":"+data.awayScore+"&nbsp;</i>"+data.awayName;
+       		}
+       		html+="<p class='rightText'>"+gameInfo+"</p>";
+       		html+="</div></th><th class='col-md-9 mcCont' width='50%' valign='top'>";
+       		html+="<ul>";
+       		html+="<li style='border-bottom: 1px solid #ccc;'>";
+       		html+="<span class='pull-right'>";
+       		if(data.status){
+       			html+="<i style='font-size:1.2rem;'>中奖:&nbsp;&nbsp;&nbsp;"+data.winAmount+"</i>";
+       		}
+       		html+="</span><i>投入:"+data.inputAmount+"</i></li>";
+       		
+       		var strategy = JSON.parse(data.guessStrategy);
+       		if(strategy.winAmount!=null){
+       			html+="<li id='win'><span class='pull-right'>投入:&nbsp;&nbsp;&nbsp;"+strategy.winAmount+"</span>胜("+data.winOdds.toFixed(2)+")</li>";
+       		}
+       		if(strategy.drawAmount!=null){
+       			html+="<li id='draw'><span class='pull-right'>投入:&nbsp;&nbsp;&nbsp;"+strategy.drawAmount+"</span>平("+data.drawOdds.toFixed(2)+")</li>";
+       		}
+       		if(strategy.loseAmount!=null){
+       			html+="<li id='lose'><span class='pull-right'>投入:&nbsp;&nbsp;&nbsp;"+strategy.loseAmount+"</span>负("+data.loseOdds.toFixed(2)+")</li>";
+       		}
+       		if(strategy.rqWinAmount!=null){
+       			html+="<li id='rqWin'><span class='pull-right'>投入:&nbsp;&nbsp;&nbsp;"+strategy.rqWinAmount+"</span>让胜("+data.rqWinOdds.toFixed(2)+")</li>";
+       		}
+       		if(strategy.rqDrawAmount!=null){
+       			html+="<li id='rqDraw'><span class='pull-right'>投入:&nbsp;&nbsp;&nbsp;"+strategy.rqDrawAmount+"</span>让平("+data.rqDrawOdds.toFixed(2)+")</li>";
+       		}
+       		if(strategy.rqLoseAmount!=null){
+       			html+="<li id='rqLose'><span class='pull-right'>投入:&nbsp;&nbsp;&nbsp;"+strategy.rqLoseAmount+"</span>让负("+data.rqLoseOdds.toFixed(2)+")</li>";
+       		}
+       		
+       		//html+="<li><span class='pull-right'>&nbsp;</span></li>";
+       		html+="</ul></th></tr></tbody></table></div></div></div>";
+       		$("#list").append(html);
+       		
+       		var gameResult =  data.gameResult;
+       		if(gameResult!=null){
+       			$("#"+gameResult[0]).addClass("colorH");
+       			$("#"+gameResult[1]).addClass("colorH");
+       		}
+       		
+        }
+
+        function loaded() {
+            myScroll = new IScroll('#wrapper', { click: true });
+            document.addEventListener('touchmove', function (e) {
+                e.preventDefault();
+            }, false);
+        }
+        
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>积分抽奖</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+    <link href="js/LuckDraw/style.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+    
+    	.advertisement{
+			display: block;
+		    margin-top: -118px;
+		    position: relative;
+    	}
+    	
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+
+        body {
+            background-image: url(img/back1.png);
+            background-repeat: no-repeat;
+            background-size: 100% auto;
+            background-position: 0 -62px;
+        }
+
+        .round {
+            margin-top: 5px;
+            padding: 5px;
+            width: 100px;
+            height: 30px;
+            border: 1px solid #FF8000;
+            -moz-border-radius: 3px; /* Gecko browsers */
+            -webkit-border-radius: 3px; /* Webkit browsers */
+            border-radius: 3px; /* W3C syntax */
+            color: #FF8000;
+        }
+    </style>
+    <script type="text/javascript" charset="utf-8">
+    </script>
+</head>
+<body style="padding: 0; background-color: #520fab;">
+
+    <!--<p class="headerTou"><a href="javascript:GoToUrl();" class="pull-left"></a>积分抽奖<img src="img/home.png" onclick="GoToUrl_T('index.html')" style="float:right;margin-top:10px;width:24px;height:24px;" /></p>-->
+    <p class="headerTou" id="pGuanZhu" style="background: #fff; color: #000; display: none;">
+        <label style="position: relative; left: 12%; font-size: 1.4rem; color: #000;">积分抽奖</label><label class="pull-right round"><a id="aGuanZhu" href="http://mp.weixin.qq.com/s?__biz=MzIxODQ5MTY4Mw==&mid=2247483666&idx=1&sn=2c38aac6da365d49afc1f468d99bff1e&scene=0#wechat_redirect" style="display: initial; color: #FF8000;">+关注</a></label>
+    </p>
+    <p class="headerTou" id="pShart" style="background: #fff; color: #000; display: none;text-align:right;color:#0ef6f6;">
+        点击此处分享到朋友圈↑
+    </p>
+    <div class="headers" id="divJiFen">
+        <span style="display: block; text-align: center;">
+            <b style="font-size: 1.3rem; color: #fff;">当前积分:<i class="colorH">100</i>积分</b>
+        </span>
+
+    </div>
+
+    <!--转盘-开始-->
+    <img src="img/1.png" id="shan-img" style="display: none;" alt="" />
+    <img src="img/2.png" id="sorry-img" style="display: none;" alt="" />
+    <div class="banner">
+        <div class="turnplate" style="background-image: url(img/turnplate-bg.gif); background-size: 100% 100%;">
+            <canvas class="item" id="wheelcanvas" width="420px" height="420px"></canvas>
+            <img src="img/zhuanpan_bg.png" style="position: absolute; width: 100%; height: 46%; top: 55%; left: 0; z-index: 0;" />
+            <img class="pointer" src="img/turnplate-pointer.gif" style="left: 0;" />
+
+        </div>
+    </div>
+    <!--转盘-结束-->
+    <img class="advertisement" src="img/advertisement.png" width="100%" onclick="GoToUrl_T('guessGame.html')" />
+    <div class="textarea textarea1 textarea2 marginBop60" style="position: absolute; top: 65%; left: 2%; z-index: 4;">
+        <dl id="dl1">
+            <dt class="open" style="margin-bottom: 16px;">活动规则</dt>
+            <dd class="open2">1. 每次抽奖需扣100积分。</dd>
+            <!-- <dd>2. 每日第一次分享成功，可获得100积分。</dd> -->
+        </dl>
+        <dl id="dl2" style="display: none;">
+            <dt class="open" style="margin-bottom: 16px;">活动规则</dt>
+            <dd class="open2">1. 关注专家，可获得抽取得到的相应奖品。</dd>
+            <dd>2. 成功注册，可获得1000积分。</dd>
+        </dl>
+    </div>
+    <div id="register" style="display: none; position: absolute; top: 65%; width: 96%; left: 2%; z-index: 4;">
+        <div class="content_shigong flexBox clearBoth">
+            <input class="back0" id="txtMobile" type="number" placeholder="请输入手机号" />
+        </div>
+        <div class="content_shigong flexBox clearBoth" style="margin-top: 1px;">
+            <button class="pull-right yzmB">获取验证码</button><input class="back0" id="txtCode" type="number" placeholder="请输入验证码" />
+        </div>
+        <a class="dbtn dbtn123" id="btnRegister" style="margin-top: 4px; width: 100%;" href="#">注册</a>
+        <div class="textarea textarea1 textarea2">
+            <dl>
+                <dt class="open" style="margin-bottom: 16px;">活动规则</dt>
+                <dd class="open2">1. 关注专家，可获得抽取得到的相应奖品。</dd>
+                <dd>2. 成功注册，可获得1000积分。</dd>
+            </dl>
+        </div>
+    </div>
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script type="text/javascript" src="js/LuckDraw/awardRotate.js"></script>
+    <script type="text/javascript" src="js/LuckDraw/init.js"></script>
+    <script src="js/register.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        function GoToUrl() {
+            location.href = "my.html?experts_code=" + getQueryString("experts_code")
+        }
+        function GoToUrl_T(u) {
+            location.href = u + "?experts_code=" + getQueryString("experts_code");
+        }
+        var sharttitle = "幸运抽奖，帮你实现梦想！";
+        var shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案，幸运抽奖等你来！";
+        $(function () {
+
+            if (getQueryString("experts_code") == "jinghu") {
+                $("#aGuanZhu").attr("href", "http://mp.weixin.qq.com/s?__biz=MzAxMjk1NjYwMA==&mid=2247483654&idx=1&sn=66ed8863ea21271f03880c7338e8bad4&scene=0#wechat_redirect");
+            }
+
+            var UserInfo = sessionStorage.UserInfo;
+            UserInfo = JSON.parse(UserInfo);
+
+            if (fl_user.focus_status() != 1) {
+                $("#pGuanZhu").show();
+                $("#dl1").hide();
+                $("#dl2").show();
+            }
+
+            if (UserInfo.phone_number == undefined) {
+                if (fl_user.focus_status() == 1) {
+                    $(".headers").hide();
+                    $("#register").show();
+                    $(".colorH").text(0);
+                }
+                if (fl_user.focus_status() == 1) {
+                    $(".marginBop60").hide();
+                }
+                $("#divJiFen").hide();
+            }
+            else {
+                $(".colorH").text(fl_user.Integral());
+            }
+
+            Init();
+        });
+         function GoToNextUrl(nexurl, name) {
+            sessionStorage.setItem("selectPlanName", name);
+            sessionStorage.setItem("selectPlanUrl", nexurl);
+            window.open(nexurl, "_top");
+        }
+    </script>
+
+</body>
+</html>

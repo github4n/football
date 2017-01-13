@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FollowOrderMapper">
+	
+	<insert id="save" parameterType="pd">
+		insert into `tb_strategy_follow`(
+			member_id,
+			service_id,
+			strategy_time,
+			input_amount,
+			win_amount,
+			profit_amount,
+			follow_time
+		) values(
+			#{member_id},
+			#{service_id},
+			#{strategy_time},
+			#{input_amount},
+			#{win_amount},
+			#{profit_amount},
+			#{follow_time}
+		)
+	</insert>
+	
+	<select id="dataPageList" parameterType="page" resultType="pd">
+		SELECT 
+			a.id,a.follow_time,a.input_amount,a.win_amount,a.profit_amount,b.weixin,b.phone_number,c.service_name,c.service_code,c.play_type,d.experts_name
+		FROM 
+			tb_strategy_follow a
+		LEFT JOIN 
+			tb_member b 
+		ON 
+			a.member_id = b.member_id
+		LEFT JOIN 
+			tb_service c 
+		ON 
+			a.service_id = c.id
+		LEFT JOIN 
+			tb_experts d 
+		ON 
+			c.fk_experts_id = d.experts_id
+		
+		where 1=1 
+		<if test="pd.experts_id != null and pd.experts_id != ''"><!-- 专家检索 -->
+			and d.experts_id = #{pd.experts_id}
+		</if>
+		<if test="pd.wf != null and pd.wf !=''"><!-- 玩法~~ -->
+			and c.service_code = #{pd.wf}
+		</if>
+		<if test="pd.phone_number != null and pd.phone_number != ''"><!-- 手机号~~ -->
+			and b.phone_number = #{pd.phone_number}
+		</if>
+			<if test="pd.create_timeStart!=null and pd.create_timeStart!=''"><!-- 创建时间检索 -->
+			and a.follow_time &gt;= #{pd.create_timeStart} 
+		</if>
+		<if test="pd.create_timeEnd!=null and pd.create_timeEnd!=''"><!-- 创建时间检索 -->
+			and a.follow_time &lt;= #{pd.create_timeEnd} 
+		</if>
+		order by a.follow_time desc
+	</select>
+	<!-- 跟单数量 -->
+	<select id="totalCount" resultType="integer">
+		SELECT COUNT(1)
+		FROM 
+			`tb_strategy_follow`
+		ORDER BY id
+	</select>
+	<!-- 投入积分 -->
+	<select id="inputPointsCount" resultType="integer">
+		SELECT SUM(input_amount)
+		FROM 
+			`tb_strategy_follow`
+		ORDER BY id
+	</select>
+	<!-- 中奖积分 -->
+	<select id="winPointsCount" resultType="integer">
+		SELECT SUM(win_amount)
+		FROM 
+			`tb_strategy_follow`
+		ORDER BY id
+	</select>
+	<!-- 盈亏积分 -->
+	<select id="profitPointsCount" resultType="integer">
+		SELECT SUM(profit_amount)
+		FROM 
+			`tb_strategy_follow`
+		ORDER BY id
+	</select>
+	
+	<select id="getServiceFollowStatus" parameterType="pd" resultType="integer">
+		SELECT COUNT(1)
+		FROM 
+			`tb_strategy_follow`
+		WHERE service_id = #{pd.serviceId}
+	</select>
+	
+	<select id="getMemberList" parameterType="pd" resultType="pd">
+		SELECT DISTINCT b.member_id,b.`membe_point`
+		FROM 
+			`tb_strategy_follow` a,`tb_member` b
+		WHERE a.`member_id` = b.`member_id` AND service_id = #{pd.serviceId}
+	</select>
+	
+	<update id="updateWinAmount" parameterType="pd">
+		UPDATE `tb_strategy_follow` 
+		SET win_amount = #{pd.win_amount}
+		WHERE service_id = #{pd.serviceId}
+	</update>
+	
+	<update id="updateProfit" parameterType="pd">
+		UPDATE `tb_strategy_follow`
+		SET profit_amount = (win_amount - input_amount)
+		WHERE service_id = #{pd.serviceId}
+	</update>
+</mapper>

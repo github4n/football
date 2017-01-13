@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="EarningAmountMapper">
+	
+	<!-- 获取某个专家的所有服务盈利-->
+	<select id="findByExpert" parameterType="pd" resultType="pd">
+		select 
+		      a.*
+		from 
+			   tb_earning_amount as a  
+		left join 
+			   tb_service as b	 
+		on
+			 a.service_id = b.id	     
+		left join 
+			   tb_experts as c
+		on
+			   c.experts_id = b.fk_experts_id	   	          
+		where 
+			   c.experts_code = #{experts_code}	
+		and b.is_used = 1
+		
+		order by b.service_order 
+	</select>
+	
+</mapper>

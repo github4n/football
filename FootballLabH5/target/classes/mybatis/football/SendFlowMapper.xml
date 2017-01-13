@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SendFlowMapper">
+	
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into tb_send_flow(
+			member_id,
+			phone,	
+			send_time,
+			experts_id
+		) values (
+			#{member_id},
+			#{phone},	
+			#{send_time},
+			#{experts_id}
+		)
+	</insert>
+	
+	
+
+	
+    <!-- 通过手机号获取数据 -->
+	<select id="findByPhone" parameterType="pd" resultType="pd">
+		select 
+			member_id
+		from 
+			tb_send_flow
+		where 
+			phone = #{phone}
+		and experts_id=#{experts_id}
+	</select>
+	
+	
+</mapper>

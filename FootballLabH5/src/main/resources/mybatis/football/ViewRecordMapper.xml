@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ViewRecordMapper">
+
+		
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into tb_strategy_view_record(
+			id,fk_member_id,fk_service_id,strategy_day,add_time)
+		values(#{id},#{fk_member_id} ,#{fk_service_id},#{strategy_day},#{add_time})
+	</insert>
+		
+	<select id="hasViewRecord" parameterType="pd" resultType="pd">
+		select 
+			a.* 
+		from 
+			`tb_strategy_view_record` as a 
+		where 
+			a.fk_member_id = #{member_id}  
+		and 
+			a.add_time &gt; #{beginTime} 
+		and
+			a.add_time &lt;= #{endTime} 
+		and 
+			a.fk_service_id	= #{serviceId}
+	</select>
+</mapper>

@@ -1,0 +1,21 @@
+body{
+	background: #fff;
+	margin: 0px;
+	padding:10px;
+}
+.con_block img{
+	display: block;
+}
+.con_block{
+	border-bottom: 1px solid #999;
+	margin-bottom:10px ;
+}
+.sub_Txt{
+	margin: 10px 0;
+}
+.con_block p{
+	color: #666;
+}
+.highColor{
+	color: #d65213;
+}

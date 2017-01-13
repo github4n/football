@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>兑换奖品</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/jquery.marquee.min.js"></script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/cashPrize.css" rel="stylesheet" />
+    <style type="text/css">
+
+    </style>
+	</head>
+	<body>
+		<!--顶部轮播文字-->
+		<div class="advBox">
+			<div class="lefticon ico-horn"></div>
+	       	<div class="topscro" > 
+			    <ul id="marquee" class="marquee" >        
+				    <li>1</li>       
+				    <li>2</li>        
+				    <li>3</li>   
+				    <li>4</li>       
+				    <li>5</li>        
+				    <li>6</li>
+			    </ul> 
+	        </div>		
+		</div>
+		<div class="content">
+			<ul class="cardList">
+				<li>
+					<div class="cardBox pull-left">
+						<img width="90%" src="img/wxhb.png"/>
+						<div class="textbox">
+							<p>十元红包</p>
+							<p class="highColor">2000积分</p>
+						</div>
+						<a class="btn btn-highbg btn-disabled" href="javascript:void(0)">已抢光</a>
+					</div>
+				</li>
+				<li>
+					<div class="cardBox">
+						<img width="90%" src="img/500m.png"/>
+						<div class="textbox">
+							<p>500M流量</p>
+							<p class="highColor">3000积分</p>
+						</div>
+						<a class="btn btn-highbg" href="javascript:void(0)">立即兑换</a>
+					</div>
+				</li>
+				<li>
+					<div class="cardBox pull-right">
+						<img width="90%" src="img/jdcard.png"/>
+						<div class="textbox">
+							<p>
+		        				京东e卡50面值
+							</p>
+							<p class="highColor">2000积分</p>
+						</div>
+						<a class="btn btn-highbg" href="javascript:void(0)">立即兑换</a>
+					</div>
+				</li>
+			</ul>
+			
+			<div class="activeRule">
+				<p class="Ruletitle">兑奖流程：</p>
+				<p>     
+					1、成功兑换奖品后将扣除相应积分，积分不足不予兑换。<br /><br />
+					2、<em class="highColor" style="font-size: 12px;">成功兑换奖品用户，需添加斗球微信号douqiu310，<br />
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;并提供注册时所用的手机号，核实无误后进行奖品派发。</em><br /><br />
+					3、周六日及法定节假日不进行奖品派发<br /><br />
+					4、以任何方法进行作弊的用户，一经查实，将不予兑换，并扣除通过作弊形式所获得的积分<br /><br />
+					5、本活动最终解释权归北京周天体育科技有限责任公司所有<br /><br /><br />
+				</p>
+	
+			</div>			
+		</div>
+		<script type="text/javascript">
+			$(function(){      
+				$("#marquee").marquee({
+					yScroll: "bottom",
+					showSpeed:500
+				});
+			});  
+		</script>
+	</body>
+</html>

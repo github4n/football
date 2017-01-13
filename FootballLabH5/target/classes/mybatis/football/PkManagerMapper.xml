@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PkManagerMapper">
+	<sql id="pkDataListBaseSql">
+			select   
+			a.id as pk_id, a.add_time,
+			b.member_id,b.member_name,b.phone_number,
+			c.id as service_id, c.service_name, c.type,c.service_type,
+			d.experts_id,d.experts_name 
+		from 
+			(select * from `tb_pk` order by add_time asc )  as a 
+		left join 
+			tb_member as b on b.member_id = a.fk_member_id
+		left join 
+			tb_service as c on c.id = a.fk_service_id
+		left join
+			tb_experts as d on d.experts_id = c.fk_experts_id
+		
+		where b.member_id is not null
+		<if test="pd.expert_id != null and pd.expert_id != ''"><!-- 专家检索 -->
+			and d.experts_id=#{pd.expert_id} 
+		</if>
+		<if test="pd.wf != null and pd.wf != ''"><!-- 定制玩法 -->
+			and c.service_code=#{pd.wf} 
+		</if>				
+		<if test="pd.member_name!= null and pd.member_name!= ''"><!-- 用户名检索 -->
+			and b.member_name like CONCAT(CONCAT('%', #{pd.member_name}),'%') 
+		</if>	
+		
+		group by a.fk_member_id,a.fk_service_id 
+		order by a.add_time desc
+	</sql>
+	<!-- 用户和玩法group by列表-->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+			<include refid="pkDataListBaseSql" />
+	</select>
+	
+	<select id="excelList" parameterType="pd" resultType="pd">
+			<include refid="pkDataListBaseSql" />
+	</select>
+	
+	
+	<!-- 根据pk_id获取tb_pk -->
+	<select id="getPkById" parameterType="pd" resultType="pd">
+		select 
+			a.*,b.*,b.id as service_id
+		from 
+			`tb_pk`  as a
+		left join 
+			tb_service as b 
+		on 
+			a.fk_service_id = b.id
+		where a.id = #{pk_id}
+	</select>
+	
+	<!-- 根据tb_pk 的id，获取pk_detaile都pk了哪些比赛 -->
+	<select id="myStrategyGame" parameterType="pd" resultType="pd">
+		select 
+			distinct(a.fk_betting_game_id) as betting_game_id , a.fk_pk_id as pk_id,
+			b.*
+		from 
+			`tb_pk_detail` as a
+		left join 
+			tb_betting_game as b on b.id = a.fk_betting_game_id
+		where 
+			a.fk_pk_id = #{pk_id}
+	</select>
+	<!-- 根据tb_pk 的id 和 上一个方法获取的 betting_game_id  获取改比赛的策略pk_detaile -->
+	<select id="myStrategy" parameterType="pd" resultType="pd">
+		select 
+			* 
+		from `tb_pk_detail` 
+		where 
+			fk_betting_game_id = #{betting_game_id}
+		and 
+			fk_pk_id = #{pk_id}
+	</select>	
+	
+	<!-- 获取pk赔率数据 -->
+	<select id="companyOddsPk" parameterType="pd" resultType="pd">
+		select 
+			* 
+		from `tb_company_odds_pk` as a
+		where 
+			a.fk_betting_game_id = #{betting_game_id}
+		and 
+			a.fk_t_pk_detaile_id  in  (select id from tb_pk_detail where fk_pk_id = #{pk_id})
+		limit 1	
+	</select>	
+	
+	<!-- 根据pk_id获取pk_detaile 的list -->
+	<select id="getPkDetaileList" parameterType="pd" resultType="pd">
+		select 
+			* 
+		from `tb_pk_detail` as a
+		where 
+			a.fk_pk_id = #{pk_id}
+	</select>	
+</mapper>

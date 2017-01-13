@@ -1,0 +1,109 @@
+body{
+	margin: 0px;
+	padding: 0px;
+}
+.advBox{
+	position: relative;
+	background:#35528c;
+	height: 30px;
+}
+.content{
+	padding: 0 20px;
+	box-sizing: border-box;
+}
+.topscro{
+	position: absolute;
+	left: 50px;
+	right: 0px;
+	margin: auto;
+	height: 30px;
+}
+.topscro font{
+	font-size: 1.2rem;
+	color: #fff;
+	white-space: nowrap;
+}
+.lefticon{
+	position: absolute;
+	left: 15px;
+	width: 17px;
+	height: 30px;
+	overflow: hidden;
+	background: url(../img/icon-horn.png) no-repeat;
+	background-size: 100%;
+	background-position: center;
+}
+.cardList{
+	overflow: hidden;
+	margin: 30px 0 0 0;
+}
+.cardList li{
+	width: 33.333%;
+	float: left;
+}
+.cardBox{
+	width: 90%;
+	margin: 0 auto;
+}
+.textbox{
+	margin: 0 0 10px 0;
+}
+.textbox p{
+	font-size: 1.2rem;
+	text-align: center;
+	overflow: hidden;
+	white-space:nowrap;
+	text-overflow: ellipsis;
+}
+.textbox .highColor{
+	color: #d8b847;
+}
+.cardBox .btn-highbg{
+	background: #d8b847;
+	width: 100%;
+	font-size: 1.3rem;
+}
+.cardBox img{
+
+	display: block;
+	margin: 0 auto 5px;
+}
+.activeRule{
+	margin: 50px 0 0 0;
+}
+.activeRule p{
+	line-height: 20px;
+	color: #ccc;
+}
+.highColor{
+	color: #d8b847!important;
+}
+.Ruletitle{
+	margin: 0 0 5px 0;
+}
+.pull-left{
+	float: left;
+}
+.pull-right{
+	float: right;
+}
+ul.marquee {
+	display: block;
+	line-height: 1;
+	position: relative;
+	overflow: hidden;
+	width: 100%;
+	height: 30px; }  
+ul.marquee li {
+	position: absolute; 
+	height: 30px;
+	line-height: 30px;
+	top: -999em;
+	left: 0;
+	display: block;  
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.cardBox .btn-disabled{
+	background: #999;
+}

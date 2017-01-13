@@ -1,0 +1,417 @@
+package com.visolink.controller.football.webchat;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONObject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.visolink.controller.base.BaseController;
+import com.visolink.entity.GuessGame;
+import com.visolink.entity.MemberGuessInfo;
+import com.visolink.entity.PointExchange;
+import com.visolink.entity.WxPage;
+import com.visolink.entity.dto.GuessStrategyDTO;
+import com.visolink.entity.dto.MemberGuessDetailDTO;
+import com.visolink.service.football.guess.GuessService;
+import com.visolink.service.football.guessprofit.GuessProfitService;
+import com.visolink.service.football.member.MemberService;
+import com.visolink.service.football.points.PointsService;
+import com.visolink.service.football.service.ServiceService;
+import com.visolink.service.football.transaction.TransactionService;
+import com.visolink.util.DateUtil;
+import com.visolink.util.JsonUtil;
+import com.visolink.util.PageData;
+
+/**
+ * 微信相关活动控制器
+ * @author lottery
+ *
+ */
+@Controller
+@RequestMapping(value = "/webChat")
+public class WebChatActivityController extends BaseController{
+	
+	@Resource(name = "transactionService")
+	private TransactionService transactionService;
+	
+	@Resource(name = "guessService")
+	private GuessService guessService;
+	
+	@Resource(name = "memberService")
+	private MemberService memberService;
+	
+	@Resource(name = "pointsService")
+	private PointsService pointsService;
+	
+	@Resource(name = "serviceService")
+	private ServiceService serviceService;
+	
+	@Resource(name = "guessProfitService")
+	private GuessProfitService guessProfitService;
+	
+	/**
+	 * 判断用户当日是否可以参加对赌
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+	@RequestMapping("/validateMemberCanDuiDu")
+	@ResponseBody
+	public void validateMemberCanDuiDu(HttpServletRequest request,HttpServletResponse response) throws Exception{
+		PageData pd = this.getPageData();
+		Boolean canDuiDu = transactionService.validateMemberCanDuiDu(pd);
+		JSONObject result = new JSONObject();
+		result.put("flag", canDuiDu);
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String now = format.format(new Date());
+		
+		Calendar calendar = Calendar.getInstance();
+		int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		int minute = calendar.get(Calendar.MINUTE);
+		
+		if(("2016-12-06".equals(now) || 
+				"2016-12-07".equals(now) || 
+				"2016-12-08".equals(now) || 
+				"2016-12-09".equals(now) || 
+				"2016-12-10".equals(now) || 
+				"2016-12-11".equals(now))
+			&& (hour>11 || (hour==11 && minute>30) )){
+			
+			result.put("dateFlag", true);
+		}else{
+			result.put("dateFlag", false);
+		}
+		
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setCharacterEncoding("utf-8");
+		response.setHeader("Content-type", "text/html;charset=UTF-8");
+		response.getWriter().print(result.toString());
+	}
+	
+	/**
+	 * 获取当前线上竞猜比赛
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/getOnlineGuessGame")
+	@ResponseBody
+	public JSONObject getOnlineGuessGame(HttpServletResponse response) throws Exception{
+		
+		JSONObject result = new JSONObject();
+		
+		PageData pd = this.getPageData();
+		String expertCode = pd.getString("experts_code");
+		GuessGame guessGame = guessService.getOnLineGuessGame(expertCode);
+		result.put("guessGame", guessGame);
+		
+		Integer guessNum = guessService.getGuessMemberNum(guessGame.getId());
+		result.put("guessNum", guessNum);
+		
+		List<String> marqueeList = guessService.getGuessListByWXMarquee(guessGame.getId());
+		result.put("marqueeList", marqueeList);
+		
+		return result;
+	}
+	
+	/**
+	 * 根据id获取比赛信息
+	 * @param response
+	 * @param guessGameId 竞猜比赛id
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/getGuessGame")
+	@ResponseBody
+	public JSONObject getGuessGame(HttpServletResponse response) throws Exception{
+		
+		JSONObject result = new JSONObject();
+		
+		PageData pd = this.getPageData();
+		GuessGame guessGame = guessService.getGuessGameByIdAndPage(pd);
+		if(guessGame==null){
+			return result;
+		}
+		result.put("guessGame", guessGame);
+		if(guessGame.getStatus()){
+			Map<Integer, Integer>  rankingRewardMap = guessService.getRankingRewardMap(guessGame.getId());
+			result.put("rankingRewardMap", JsonUtil.beanToJson(rankingRewardMap));
+		}
+		
+		
+		return result;
+	}
+	
+	
+	/**
+	 * 获取投注排行榜
+	 * @param response
+	 * @throws Exception
+	 */
+	@RequestMapping("/getGuessRanking")
+	public void getGuessRanking(HttpServletResponse response,Integer guessGameId) throws Exception{
+		
+		GuessGame guessGame = guessService.getGuessGameById(guessGameId);
+		
+		PageData pd = this.getPageData();
+		pd.put("guessGameId", guessGame.getId());
+		pd.put("isEnd", guessGame.getStatus());
+		Integer showCount = Integer.valueOf(pd.getString("showCount"));
+		Integer currentPage = Integer.valueOf(pd.getString("currentPage"));
+		WxPage page = new WxPage(showCount, currentPage);
+		page.pd = pd;
+		
+		List<MemberGuessInfo> rankingList = guessService.selectGuessListByWX(page);
+		
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setCharacterEncoding("utf-8");
+		response.setHeader("Content-type", "text/html;charset=UTF-8");
+		response.getWriter().print(JsonUtil.beanToJson(rankingList));
+	}
+	
+	
+	/**
+	 * 验证是否可以参加投注
+	 * @param guessGameId
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/validateCanGuess")
+	@ResponseBody
+	public JSONObject validateCanGuess(Integer guessGameId) throws Exception{
+		
+		JSONObject result = new JSONObject();
+		
+		GuessGame guessGame = guessService.getGuessGameById(guessGameId);
+		if(guessGame.getGameDateTime().getTime()<new Date().getTime() || guessGame.getStatus()){
+			result.put("code", 201);
+			result.put("msg","本场投注已过期");
+			return result;
+		}else{
+			result.put("code", 200);
+			return result;
+		}
+	}
+	
+	/**
+	 * 用户参加投注
+	 * @param memberGuessInfo
+	 * @param strategy
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/guessGame")
+	@ResponseBody
+	public JSONObject guessGame(MemberGuessInfo memberGuessInfo,GuessStrategyDTO strategy) throws Exception{
+		
+   		JSONObject result = new JSONObject();
+   		
+   		if(memberGuessInfo.getInputAmount()>2000){
+   			result.put("code", 205);
+			result.put("msg","投注失败");
+			return result;
+   		}
+		
+		PageData pd = this.getPageData();
+		PageData memberPd = memberService.findByPhoneNum(pd);
+		memberGuessInfo.setMemberId(memberPd.getString("member_id"));
+		
+		GuessGame guessGame = guessService.getGuessGameById(memberGuessInfo.getGuessGameId());
+		if(guessGame.getGameDateTime().getTime()<new Date().getTime() || guessGame.getStatus()){
+			result.put("code", 201);
+			result.put("msg","本场投注已过期");
+			return result;
+		}
+		
+		if(((Integer)memberPd.get("membe_point"))<memberGuessInfo.getInputAmount()){
+			result.put("code", 204);
+			result.put("msg","积分不足");
+			return result;
+		}
+		
+		//查询比赛是否投注过
+		/*Boolean isCanGuess = guessService.validateMemberGuess(memberGuessInfo);
+		
+		if(!isCanGuess){
+			result.put("code", 202);
+			result.put("msg","每场只能投注一次，本场已投过~");
+			return result;
+		}*/
+		
+		memberGuessInfo.setGuessStrategy(strategy);
+		memberGuessInfo.setWinAmount(null);
+		
+		try {
+			boolean flag = guessService.guessGame(memberGuessInfo);
+			if(flag){
+				result.put("code", 200);
+				result.put("msg","投注成功！");
+				result.put("id",memberGuessInfo.getId());
+			}else{
+				result.put("code", 203);
+				result.put("msg","投注失败！");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("用户提交一场夺金失败",e);
+			result.put("code", 203);
+			result.put("msg","投注失败！");
+		}
+		
+		
+		return result;
+	}
+	
+	/**
+	 * 获取用户竞猜列表
+	 * @param memberId
+	 * @param experts_id
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping("/getGuessList")
+	@ResponseBody
+	public void getGuessList(HttpServletResponse response,String memberId) throws Exception{
+		
+		PageData pd = this.getPageData();
+		Integer showCount = Integer.valueOf(pd.getString("showCount"));
+		Integer currentPage = Integer.valueOf(pd.getString("currentPage"));
+		WxPage page = new WxPage(showCount, currentPage);
+		page.pd = pd;
+		
+		List<MemberGuessInfo> guessList = guessService.getGuessListByMemberId(page);
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setCharacterEncoding("utf-8");
+		response.setHeader("Content-type", "text/html;charset=UTF-8");
+		response.getWriter().print(JsonUtil.beanToJson(guessList));
+	}
+	
+	/**
+	 * 用户竞猜详情
+	 * @param response
+	 * @param memberGuessId
+	 * @throws Exception
+	 */
+	@RequestMapping("/memberGuessDetail")
+	@ResponseBody
+	public void memberGuessDetail(HttpServletResponse response,String memberGuessId) throws Exception{
+		
+		MemberGuessDetailDTO detail = guessService.getMemberGuessInfo(memberGuessId);
+		
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setCharacterEncoding("utf-8");
+		response.setHeader("Content-type", "text/html;charset=UTF-8");
+		response.getWriter().print(JsonUtil.beanToJson(detail));
+	}
+	
+	
+	
+	/**
+	 * 积分兑换
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping("/pointExchange")
+	@ResponseBody
+	public JSONObject pointExchange(String memberId,Integer productId) throws Exception{
+		
+		JSONObject result = new JSONObject();
+		
+		PageData query = new PageData();
+		query.put("member_id", memberId);
+		PageData member = (PageData)memberService.findByMemberId(query) ;
+		Integer memberPoint = (Integer) member.get("membe_point");
+		PointExchange productInfo = pointsService.getProductInfo(productId);
+		if(productInfo.getPoint()>memberPoint){
+			result.put("code", 202);
+			result.put("msg", "积分余额不足");
+			return result;
+		}
+		//判断是否还可以兑换
+		if(productInfo.getExchangeNum().intValue()>=productInfo.getTotalNum()){
+			result.put("code", 203);
+			result.put("msg", "来晚啦，已被抢光啦！");
+			return result;
+		}
+		
+		boolean flag = pointsService.exchange(memberId,productId,memberPoint);
+		if(flag){
+			result.put("code", 200);
+			result.put("msg", "兑换成功");
+		}else{
+			result.put("code", 201);
+			result.put("msg", "兑换失败");
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 获取积分兑换页面所需数据
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/exchange")
+	@ResponseBody
+	public JSONObject exchange() throws Exception{
+		JSONObject result = new JSONObject();
+		List<String> exchangeList = pointsService.getExchangeList();
+		result.put("exchangeList", exchangeList);
+		List<PointExchange> pointExchangeList = pointsService.getPointExchange();
+		result.put("pointExchangeList", pointExchangeList);
+		return result;
+	}
+	
+	/**
+	 * 获取竞猜盈亏列表
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/getGuessProfitList")
+	@ResponseBody
+	public JSONObject getGuessProfitList() throws Exception{
+		PageData pd = this.getPageData();
+		JSONObject result = new JSONObject();
+		List<PageData>  list = guessProfitService.getGuessProfitList(pd);
+		result.put("guessProfitList", list);
+		result.put("gameDate", DateUtil.getGameDate());
+		
+		return result;
+	}
+	
+	/**
+	 * 获取竞猜盈亏单个详情信息
+	 * @param serviceId
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping("/getGuessProfitInfoById")
+	@ResponseBody
+	public JSONObject getGuessProfitInfoById() throws Exception{
+		JSONObject result = new JSONObject();
+		PageData pd = this.getPageData();
+		PageData service = serviceService.findById(pd);
+		Map<String, Object> serviceInfo = guessProfitService.getServiceProfitInfo(service.getString("service_code"), service.getString("id"));
+		service.putAll(serviceInfo);
+		
+		result.put("service", service);
+		result.put("gameDate", DateUtil.getGameDate());
+		
+		return result;
+	}
+	
+
+}

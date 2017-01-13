@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>专家排行</title> 
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/swiper.min.js"></script>
+    <script src="js/jquery.SuperSlide.2.1.1.js"></script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/swiper.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/expertRank.css"/>
+	</head>
+	<body>
+       <div id="leftTabBox" class="slideTxtBox">
+            <div class="hd">
+                <ul>
+                    <li><span>单场</span></li>
+                    <li><span>亚盘</span></li>
+                    <li><span class="noborder">2串1</span></li>
+                </ul>
+            </div>
+            <div class="bd">
+                <ul class="list_layout">
+                    <li class="item_block">
+						<div>1</div>
+						<div>京城虎哥</div>
+						<div>
+							30天盈利率
+							<i class="hignColorSize">120%</i>
+						</div>
+                    </li>    
+                    <li class="item_block">
+						<div>2</div>
+						<div>京城虎哥</div>
+						<div>
+							30天盈利率
+							<i class="hignColorSize">120%</i>
+						</div>
+                    </li>  
+                    <li class="item_block">
+						<div>3</div>
+						<div>京城虎哥</div>
+						<div>
+							30天盈利率
+							<i class="hignColorSize">120%</i>
+						</div>
+                    </li>  
+                    <li class="item_block">
+						<div>4</div>
+						<div>京城虎哥</div>
+						<div>
+							30天盈利率
+							<i class="hignColorSize">120%</i>
+						</div>
+                    </li>  
+                </ul>  
+
+               <ul class="list_layout">
+                    <li class="item_block">
+						<div>1</div>
+						<div>京城虎哥</div>
+						<div>
+							30天盈利率
+							<i class="hignColorSize">120%</i>
+						</div>
+                    </li>    
+                    <li class="item_block">
+						<div>2</div>
+						<div>京城虎哥</div>
+						<div>
+							30天盈利率
+							<i class="hignColorSize">120%</i>
+						</div>
+                    </li>  
+                    <li class="item_block">
+						<div>3</div>
+						<div>京城虎哥</div>
+						<div>
+							30天盈利率
+							<i class="hignColorSize">120%</i>
+						</div>
+                    </li>  
+                    <li class="item_block">
+						<div>4</div>
+						<div>京城虎哥</div>
+						<div>
+							30天盈利率
+							<i class="hignColorSize">120%</i>
+						</div>
+                    </li>  
+                </ul>  
+
+               <ul class="list_layout">
+                    <li class="item_block">
+						<div>1</div>
+						<div>京城虎哥</div>
+						<div>
+							30天盈利率
+							<i class="hignColorSize">120%</i>
+						</div>
+                    </li>    
+                    <li class="item_block">
+						<div>2</div>
+						<div>京城虎哥</div>
+						<div>
+							30天盈利率
+							<i class="hignColorSize">120%</i>
+						</div>
+                    </li>  
+                    <li class="item_block">
+						<div>3</div>
+						<div>京城虎哥</div>
+						<div>
+							30天盈利率
+							<i class="hignColorSize">120%</i>
+						</div>
+                    </li>  
+                    <li class="item_block">
+						<div>4</div>
+						<div>京城虎哥</div>
+						<div>
+							30天盈利率
+							<i class="hignColorSize">120%</i>
+						</div>
+                    </li>  
+                </ul>  
+                                      
+            </div>
+        </div> 	
+        <script>
+        	jQuery(".slideTxtBox").slide({trigger:"click"});
+        </script>
+	</body>
+</html>

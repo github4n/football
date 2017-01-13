@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MemberAppointmentMapper">
+	<resultMap id="BaseResultMap" type="com.visolink.h5.entity.MemberAppointment" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="Member_Name" property="memberName" jdbcType="VARCHAR" />
+    <result column="Member_Phone" property="memberPhone" jdbcType="VARCHAR" />
+    <result column="Member_ID" property="memberId" jdbcType="INTEGER" />
+    <result column="Member_Village_Name" property="memberVillageName" jdbcType="VARCHAR" />
+    <result column="Member_Hou_Area" property="memberHouArea" jdbcType="VARCHAR" />
+    <result column="Member_Hou_Budget" property="memberHouBudget" jdbcType="VARCHAR" />
+    
+    <result column="Member_Appointment_Date" property="memberAppointmentDate" jdbcType="TIMESTAMP" />
+     <result column="Member_Appointment_Remark" property="memberAppointmentRemark" jdbcType="VARCHAR" />
+      <result column="Member_Appointment_Time" property="memberAppointmentTime" jdbcType="TIMESTAMP" />
+       <result column="Member_Appointment_Status" property="memberAppointmentStatus" jdbcType="INTEGER" />
+        <result column="Designer_ID" property="designerId" jdbcType="INTEGER" />
+         <result column="Designer_Name" property="designerName" jdbcType="VARCHAR" />
+          <result column="Shop_ID" property="shopId" jdbcType="INTEGER" />
+          <result column="Shop_Name" property="shopName" jdbcType="VARCHAR" />
+           <result column="City_ID" property="cityId" jdbcType="INTEGER" />
+          <result column="City_Name" property="cityName" jdbcType="VARCHAR" />
+  </resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into h5_member_appointment(
+			MEMBER_NAME,	
+			MEMBER_PHONE,	
+			MEMBER_ID,	
+			MEMBER_VILLAGE_NAME,	
+			MEMBER_HOU_AREA,	
+			MEMBER_HOU_BUDGET,	
+			MEMBER_APPOINTMENT_DATE,	
+			MEMBER_APPOINTMENT_REMARK,	
+			MEMBER_APPOINTMENT_TIME,	
+			MEMBER_APPOINTMENT_STATUS,
+			City_ID,
+			City_Name
+		) values (
+			#{MEMBER_NAME},	
+			#{MEMBER_PHONE},	
+			#{MEMBER_ID},	
+			#{MEMBER_VILLAGE_NAME},	
+			#{MEMBER_HOU_AREA},	
+			#{MEMBER_HOU_BUDGET},	
+			#{MEMBER_APPOINTMENT_DATE},	
+			#{MEMBER_APPOINTMENT_REMARK},	
+			#{MEMBER_APPOINTMENT_TIME},	
+			#{MEMBER_APPOINTMENT_STATUS},
+			#{City_ID},
+			#{City_NAME}
+		)
+	</insert>
+	
+	<!-- 新增-->
+	<insert id="saveApply" parameterType="com.visolink.h5.entity.MemberAppointment">
+		insert into h5_member_appointment(
+			MEMBER_NAME,	
+			MEMBER_PHONE,	
+			MEMBER_ID,	
+			MEMBER_VILLAGE_NAME,	
+			MEMBER_HOU_AREA,	
+			MEMBER_HOU_BUDGET,	
+			MEMBER_APPOINTMENT_DATE,	
+			MEMBER_APPOINTMENT_REMARK,	
+			MEMBER_APPOINTMENT_TIME,	
+			MEMBER_APPOINTMENT_STATUS,
+			Designer_ID,
+			Designer_Name,
+			Shop_ID,
+			Shop_Name,
+			City_id,
+			City_name
+		) values (
+			#{memberName},	
+			#{memberPhone},	
+			#{memberId},	
+			#{memberVillageName},	
+			#{memberHouArea},	
+			#{memberHouBudget},	
+			#{memberAppointmentDate},	
+			#{memberAppointmentRemark},	
+			#{memberAppointmentTime},	
+			#{memberAppointmentStatus},
+			#{designerId},
+			#{designerName},
+			#{shopId},
+			#{shopName},
+			#{cityId},
+			#{cityName}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from h5_member_appointment
+		where 
+			ID = #{ID}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  h5_member_appointment
+			set 
+				MEMBER_NAME = #{MEMBER_NAME},
+				MEMBER_PHONE = #{MEMBER_PHONE},
+				MEMBER_VILLAGE_NAME = #{MEMBER_VILLAGE_NAME},
+				MEMBER_HOU_AREA = #{MEMBER_HOU_AREA},
+				MEMBER_HOU_BUDGET = #{MEMBER_HOU_BUDGET},
+				MEMBER_APPOINTMENT_DATE = #{MEMBER_APPOINTMENT_DATE},
+				MEMBER_APPOINTMENT_REMARK = #{MEMBER_APPOINTMENT_REMARK},
+				MEMBER_APPOINTMENT_STATUS = #{MEMBER_APPOINTMENT_STATUS},
+				City_ID = #{City_ID},
+				City_Name = #{City_NAME}
+			where 
+				ID = #{ID}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+			ID, 
+			MEMBER_NAME,	
+			MEMBER_PHONE,	
+			MEMBER_ID,	
+			MEMBER_VILLAGE_NAME,	
+			MEMBER_HOU_AREA,	
+			MEMBER_HOU_BUDGET,	
+			MEMBER_APPOINTMENT_DATE,	
+			MEMBER_APPOINTMENT_REMARK,	
+			MEMBER_APPOINTMENT_TIME,	
+			MEMBER_APPOINTMENT_STATUS,
+			Designer_ID,
+			Designer_Name,
+			Shop_ID,
+			Shop_Name,
+			City_id,
+			City_name
+		from 
+			h5_member_appointment
+		where 
+			ID = #{ID}
+	</select>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findByMemberId" parameterType="pd"  resultMap="BaseResultMap">
+		select 
+			MEMBER_NAME,	
+			MEMBER_PHONE,	
+			MEMBER_ID,	
+			MEMBER_VILLAGE_NAME,	
+			MEMBER_HOU_AREA,	
+			MEMBER_HOU_BUDGET,	
+			MEMBER_APPOINTMENT_DATE,	
+			MEMBER_APPOINTMENT_REMARK,	
+			MEMBER_APPOINTMENT_TIME,	
+			MEMBER_APPOINTMENT_STATUS,	
+			ID,
+			Designer_ID,
+			Designer_Name,
+			Shop_ID,
+			Shop_Name
+		from 
+			h5_member_appointment
+		where 
+			MEMBER_ID = #{memberId}
+			order by MEMBER_APPOINTMENT_DATE desc
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.MEMBER_NAME,	
+				a.MEMBER_PHONE,	
+				a.MEMBER_ID,	
+				a.MEMBER_VILLAGE_NAME,	
+				a.MEMBER_HOU_AREA,	
+				a.MEMBER_HOU_BUDGET,	
+				a.MEMBER_APPOINTMENT_DATE,	
+				a.MEMBER_APPOINTMENT_REMARK,	
+				a.MEMBER_APPOINTMENT_TIME,	
+				a.MEMBER_APPOINTMENT_STATUS,
+				a.Designer_ID,
+				a.Designer_Name,
+				a.Shop_ID,
+				a.Shop_Name,
+				a.City_id,
+				a.City_name,	
+				a.ID
+		from 
+				h5_member_appointment a
+				
+							where
+			1 = 1
+		<if test="pd.MEMBER_NAME!= null and pd.MEMBER_NAME!= ''"><!-- 名称检索 -->
+			and a.MEMBER_NAME like CONCAT(CONCAT('%', #{pd.MEMBER_NAME}),'%') 
+		</if>
+		<if test="pd.MEMBER_APPOINTMENT_STATUS != null and pd.MEMBER_APPOINTMENT_STATUS != ''"><!-- 类型检索 -->
+			and a.MEMBER_APPOINTMENT_STATUS=#{pd.MEMBER_APPOINTMENT_STATUS} 
+		</if>
+		<if test="pd.City_NAME != null and pd.City_NAME != ''"><!-- 类型检索 -->
+			and a.City_name=#{pd.City_NAME} 
+		</if>
+		
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.MEMBER_NAME,	
+				a.MEMBER_PHONE,	
+				a.MEMBER_ID,	
+				a.MEMBER_VILLAGE_NAME,	
+				a.MEMBER_HOU_AREA,	
+				a.MEMBER_HOU_BUDGET,	
+				a.MEMBER_APPOINTMENT_DATE,	
+				a.MEMBER_APPOINTMENT_REMARK,	
+				a.MEMBER_APPOINTMENT_TIME,	
+				a.MEMBER_APPOINTMENT_STATUS,	
+				a.ID
+		from 
+				h5_member_appointment a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from h5_member_appointment
+		where 
+			ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 取消预约 -->
+	<update id="cancel" parameterType="pd">
+		update  h5_member_appointment
+			set 
+				MEMBER_APPOINTMENT_STATUS = #{MEMBER_APPOINTMENT_STATUS}
+			where 
+				ID = #{ID}
+	</update>
+	
+	<!-- 列表(全部) -->
+	<select id="getAppointmentById" parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+		select
+				 `ID`,
+    `Member_Name`,
+    `Member_Phone`,
+    `Member_ID`,
+    `Member_Village_Name`,
+    `Member_Hou_Area`,
+    `Member_Hou_Budget`,
+    `Member_Appointment_Date`,
+    `Member_Appointment_Remark`,
+    `Member_Appointment_Time`,
+    `Member_Appointment_Status`,
+    `Designer_ID`,
+    `Designer_Name`,
+    `Shop_ID`,
+    `Shop_Name`
+		from 
+				h5_member_appointment a
+				where id=#{appointId}
+	</select>
+	
+</mapper>

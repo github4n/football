@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>竞猜大厅</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link href="css/timeline.css" rel="stylesheet" type="text/css" />
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+    <link href="css/guessing.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+		<div class="header">今日竞猜盈亏方案</div>
+		<div class="blockCon">
+			<ul class="listLayout">
+				<li class="item_block yapan">
+					<div class="item_block_top clearfix">
+						<p class="pull-left align_left exper_name">京城虎哥-单场方案</p>
+						<p class="pull-left align_right time">倒计时：8小时6分钟</p>
+					</div>
+					<div class="item_block_bt clearfix">
+						<div class="pull-left exper_rate">
+							<span>近十期盈亏情况</span>
+							<div class="customChart">
+								<span class="customChartCircle">
+									<i>
+										<span class="gain">
+											盈	
+										</span>
+									</i>
+									<i>
+										<span class="loss">
+											亏	
+										</span>
+									</i>
+									<i>
+										<span class="gain">
+											盈	
+										</span>
+									</i>
+									<i>
+										<span class="loss">
+											亏	
+										</span>
+									</i>
+									<i>
+										<span class="gain">
+											盈	
+										</span>
+									</i>
+									<i>
+										<span class="loss">
+											亏	
+										</span>
+									</i>
+									<i>
+										<span class="gain">
+											盈	
+										</span>
+									</i>
+									<i>
+										<span class="loss">
+											亏	
+										</span>
+									</i>
+									<i>
+										<span class="gain">
+											盈	
+										</span>
+									</i>
+									<i>
+										<span class="loss">
+											亏	
+										</span>
+									</i>
+								</span>	
+								<div class="customChartLine"></div>
+							</div>
+						</div>
+						<p class="pull-left">
+							<a class="goOrder" href="#">
+								竞猜今日盈亏
+							</a>
+						</p>
+					</div>				
+				</li>
+				<li class="item_block danc">
+					<div class="item_block_top clearfix">
+						<p class="pull-left align_left exper_name">京城虎哥-亚盘方案</p>
+						<p class="pull-left align_right time">倒计时：8小时6分钟</p>
+					</div>
+					<div class="item_block_bt clearfix">
+						<div class="pull-left exper_rate">
+							<span>近十期盈亏情况</span>
+							<div class="customChart">
+								<span class="customChartCircle">
+									<i>
+										<span class="gain">
+											盈	
+										</span>
+									</i>
+									<i>
+										<span class="loss">
+											亏	
+										</span>
+									</i>
+									<i>
+										<span class="gain">
+											盈	
+										</span>
+									</i>
+									<i>
+										<span class="loss">
+											亏	
+										</span>
+									</i>
+									<i>
+										<span class="gain">
+											盈	
+										</span>
+									</i>
+	
+								</span>	
+								<div class="customChartLine"></div>
+							</div>
+						</div>
+						<p class="pull-left">
+							<a class="goOrder" href="#">
+								竞猜今日盈亏
+							</a>
+						</p>
+					</div>				
+				</li>
+				<li class="item_block ecy">
+					<div class="item_block_top clearfix">
+						<p class="pull-left align_left exper_name">京城虎哥-二串一方案</p>
+						<p class="pull-left align_right time">倒计时：8小时6分钟</p>
+					</div>
+					<div class="item_block_bt clearfix">
+						<div class="pull-left exper_rate">
+							<span>近十期盈亏情况</span>
+							<div class="customChart">
+								<span class="customChartCircle">
+									<i>
+										<span class="gain">
+											盈	
+										</span>
+									</i>
+									<i>
+										<span class="loss">
+											亏	
+										</span>
+									</i>
+									<i>
+										<span class="gain">
+											盈	
+										</span>
+									</i>
+									<i>
+										<span class="loss">
+											亏	
+										</span>
+									</i>
+									<i>
+										<span class="gain">
+											盈	
+										</span>
+									</i>
+									<i>
+										<span class="loss">
+											亏	
+										</span>
+									</i>
+									<i>
+										<span class="gain">
+											盈	
+										</span>
+									</i>
+									<i>
+										<span class="loss">
+											亏	
+										</span>
+									</i>
+		
+								</span>	
+								<div class="customChartLine"></div>
+							</div>
+						</div>
+						<p class="pull-left">
+							<a class="goOrder" href="#">
+								竞猜今日盈亏
+							</a>
+						</p>
+					</div>				
+				</li>			
+			</ul>			
+		</div>
+		<!--
+	    	作者：1632276537@qq.com
+	    	时间：2017-01-04
+	    	描述：无方案显示页
+	    -->
+		<div class="blockCon" style="display: none;">
+			<p class="popTxt">方案待发布，去玩玩一场夺分吧</p>
+			<a class="mybtn">一场夺分</a>
+		</div>
+	    <footer class="footer">
+	        <ul class="clearfix">
+	            <li  onclick="GoToUrl_T('index.html');">
+	            	<a class="icon_home" href="#"></a>
+	                <span>首页</span>
+	            </li>
+	            <li onclick="GoToUrl_T('my.html');">
+	            	<a class="icon_order" href="#"></a>
+	                <span>跟投</span>
+	            </li>
+	            <li class="active" onclick="GoToUrl_T('guessProfit.html');">
+	            	<a class="icon_guess" href="#"></a>
+	                <span>竞猜</span>
+	            </li>
+	            <li onclick="GoToUrl_T('my.html');">
+	            	<a class="icon_my" href="#"></a>
+	                <span>我的</span>
+	            </li>            
+	        </ul>
+    	</footer>
+	</body>
+	<script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		
+	</script>
+</html>

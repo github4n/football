@@ -1,0 +1,449 @@
+package com.visolink.service.football.service;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.visolink.dao.DaoSupport;
+import com.visolink.entity.AsianVO;
+import com.visolink.entity.ServiceResultForDays;
+import com.visolink.entity.SingleVO;
+import com.visolink.entity.TwoOnOneVO;
+import com.visolink.h5.datasource.MultipleDataSource;
+import com.visolink.service.football.asian.AsianService;
+import com.visolink.service.football.single.SingleService;
+import com.visolink.service.football.twoonone.TwoOnOneService;
+import com.visolink.util.Const;
+import com.visolink.util.DateUtil;
+import com.visolink.util.PageData;
+import com.visolink.util.RedisUtils;
+import com.visolink.util.UuidUtil;
+
+
+@Service("serviceService")
+public class ServiceService {
+
+	@Resource(name = "daoSupport")
+	private DaoSupport dao;
+	
+	@Resource(name = "singleService")
+	private SingleService singleService;
+
+	@Resource(name = "twoOnOneService")
+	private TwoOnOneService twoOnOneService;
+
+	@Resource(name = "asianService")
+	private AsianService asianService;
+	
+	private static Integer REDIS_DB = 1;
+	
+	private static String EARNING_RATE_KEY = "earningRate:";
+	
+	public static long LIVE_TIME = 60 * 60 * 24 * 7;
+	
+	
+	/*
+	* 新增
+	*/
+	public void save(PageData pd)throws Exception{
+		dao.save("ServiceMapper.save", pd);
+	}
+	
+	/*
+	* 根据experts_id 获取 service 列表(全部)
+	*/
+	public List<PageData> listAll(String expertsId)throws Exception{
+		MultipleDataSource.setDataSourceKey(MultipleDataSource.DATA_SOURCE_LOCAL);
+		return (List<PageData>)dao.findForList("ServiceMapper.datalist", expertsId);
+	}
+	
+	public PageData findById(PageData pd)throws Exception{
+		MultipleDataSource.setDataSourceKey(MultipleDataSource.DATA_SOURCE_LOCAL);
+		return (PageData)dao.findForObject("ServiceMapper.findById", pd);
+	}
+	
+	public void setUse(PageData pd)throws Exception{
+		dao.update("ServiceMapper.setUse", pd);
+	}
+	
+	public List<PageData> getEarningAmountList(PageData pd)throws Exception{
+		List<PageData> earningAmountList = (List<PageData>)dao.findForList("EarningAmountMapper.findByExpert", pd);
+		return earningAmountList;
+	}
+	
+	public Map<String,Double> getEarningAmountMap(PageData pd)throws Exception{
+		Map<String,Double> result = new HashMap<String,Double>();
+		List<PageData> earningAmountList = (List<PageData>)dao.findForList("EarningAmountMapper.findByExpert", pd);
+		for (PageData pageData : earningAmountList) {
+			result.put(pageData.getString("service_id"), (Double)pageData.get("earning_amount"));
+		}
+		return result;
+	}
+	
+	/*
+	* 根据experts_code 获取 service 列表(is_use)
+	*/
+	public List<PageData> findByExpert(PageData pd)throws Exception{
+		MultipleDataSource.setDataSourceKey(MultipleDataSource.DATA_SOURCE_LOCAL);
+		List<PageData> result = (List<PageData>)dao.findForList("ServiceMapper.findByExpert", pd);
+		return result;
+	}
+	
+	/*
+	 * 按ServcieCode分类获取service组成的map
+	 */
+	public Map<String,List<PageData>> findMapByExpert(PageData pd)throws Exception{
+		
+		Map<String,List<PageData>> result = new HashMap<String,List<PageData>>();
+		
+		MultipleDataSource.setDataSourceKey(MultipleDataSource.DATA_SOURCE_LOCAL);
+		List<PageData> data = (List<PageData>)dao.findForList("ServiceMapper.findByExpert", pd);
+		for (PageData pageData : data) {
+			
+			String serviceCode = pageData.getString("service_code");
+			List<PageData> list = result.get(serviceCode);
+			if(list==null){
+				list = new ArrayList<PageData>();
+				result.put(serviceCode, list);
+			}
+			list.add(pageData);
+		}
+		return result;
+	}
+	
+	/*
+	* 根据experts_code 获取 service 列表(全部)
+	*/
+	public List<PageData> findAllByExpert(PageData pd)throws Exception{
+		MultipleDataSource.setDataSourceKey(MultipleDataSource.DATA_SOURCE_LOCAL);
+		List<PageData> result = (List<PageData>)dao.findForList("ServiceMapper.findAllByExpert", pd);
+		return result;
+	}
+	/**
+	 * 单联赛列表
+	 * @param expertsId
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> singleLeagueList(PageData pd)throws Exception{
+		MultipleDataSource.setDataSourceKey(MultipleDataSource.DATA_SOURCE_LOCAL);
+		return (List<PageData>)dao.findForList("ServiceMapper.singleLeagueList", pd);
+	}
+	
+	/**
+	 * 其他联赛列表
+	 * @param expertsId
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> otherLeagueList(String expertsId,String serviceCode)throws Exception{
+		MultipleDataSource.setDataSourceKey(MultipleDataSource.DATA_SOURCE_LOCAL);
+		Map<String,String> query = new HashMap<String,String>();
+		query.put("expertsId", expertsId);
+		query.put("serviceCode", serviceCode);
+		return (List<PageData>)dao.findForList("ServiceMapper.otherLeagueList", query);
+	}
+	
+	/**
+	 * 新增玩法
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void insertServiceBySingleAndOther(PageData pd,Integer playType) throws Exception{
+		pd.put("id", UuidUtil.get32UUID());
+		if(pd.get("is_used")==null){
+			pd.put("is_used", 0);
+		}
+		
+		pd.put("is_pk", 0);
+		if("JCRQSPF".equals(pd.get("service_code"))){
+			pd.put("type", 1);
+		}else{
+			pd.put("type", 0);
+		}
+		
+		if("DC".equals(pd.get("service_code")) || "YP".equals(pd.get("service_code"))){
+			pd.put("fk_company_id", 1);
+			pd.put("rule", "每日11:30发布");
+		}else{
+			pd.put("fk_company_id", 4);
+			pd.put("rule", "每日17:00发布");
+		}
+		
+		if("JCSPF".equals(pd.get("service_code")) || "JCECY".equals(pd.get("service_code"))){
+			pd.put("service_type", 1);
+		}else if("JCRQSPF".equals(pd.get("service_code")) || "JCRQECY".equals(pd.get("service_code"))){
+			pd.put("service_type", 2);
+		}else if("DC".equals(pd.get("service_code")) || "YP".equals(pd.get("service_code"))){
+			pd.put("service_type", 3);
+		}
+		
+		pd.put("play_type",playType);
+		pd.put("fk_experts_id", pd.get("experts_id"));
+		dao.save("ServiceMapper.save", pd);
+	}
+	
+	public void updateServiceBySingleAndOther(PageData pd) throws Exception{
+		
+		if("JCRQSPF".equals(pd.get("service_code"))){
+			pd.put("type", 1);
+		}else{
+			pd.put("type", 0);
+		}
+		
+		if("DC".equals(pd.get("service_code")) || "YP".equals(pd.get("service_code"))){
+			pd.put("fk_company_id", 1);
+			pd.put("rule", "每日11:30发布");
+		}else{
+			pd.put("fk_company_id", 4);
+			pd.put("rule", "每日17:00发布");
+		}
+		
+		if("JCSPF".equals(pd.get("service_code")) || "JCECY".equals(pd.get("service_code"))){
+			pd.put("service_type", 1);
+		}else if("JCRQSPF".equals(pd.get("service_code")) || "JCRQECY".equals(pd.get("service_code"))){
+			pd.put("service_type", 2);
+		}else if("DC".equals(pd.get("service_code")) || "YP".equals(pd.get("service_code"))){
+			pd.put("service_type", 3);
+		}
+		dao.update("ServiceMapper.edit", pd);
+	}
+	
+	public void deleteServiceById(String serviceId) throws Exception{
+		dao.delete("ServiceMapper.deleteServiceById", serviceId);
+		dao.delete("ServiceMapper.deleteServiceModelByServiceId", serviceId);
+	}
+	
+	/**
+	 * 获取推荐方案数量
+	 * @param expertCode
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String,Integer> getTodayStrategyNum(String expertCode) throws Exception{
+		
+		Map<String,Integer> result = new HashMap<String,Integer>();
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String endDate = DateUtil.getSchemeDate();
+		
+		Date date = format.parse(endDate);
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.add(Calendar.DAY_OF_YEAR,-1);
+		
+		String startDate = format.format(c.getTime());
+		
+		HashMap<String,String> query = new HashMap<String,String>();
+		query.put("startDate", startDate + Const.GAME_TIME);
+		query.put("endDate", endDate + Const.GAME_TIME);
+		query.put("expertCode", expertCode);
+		
+		List<PageData> list = (List<PageData>) dao.findForList("ServiceMapper.selectTodayStrategyNum", query);
+		for (PageData pageData : list) {
+			result.put(pageData.getString("id"), ((Long)pageData.get("num")).intValue());
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 获取未开赛推荐方案数量
+	 * @param expertCode
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String,Integer> getNotStartStrategyNum(String expertCode) throws Exception{
+		
+		Map<String,Integer> result = new HashMap<String,Integer>();
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		HashMap<String,String> query = new HashMap<String,String>();
+		query.put("startDate", format.format(new Date()));
+		query.put("endDate", DateUtil.getSchemeDate() + Const.GAME_TIME);
+		query.put("expertCode", expertCode);
+		
+		List<PageData> list = (List<PageData>) dao.findForList("ServiceMapper.selectTodayStrategyNum", query);
+		for (PageData pageData : list) {
+			result.put(pageData.getString("id"), ((Long)pageData.get("num")).intValue());
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 获取当日最大盈利率
+	 * @param serviceId 服务id
+	 * @param serviceCode 玩法code
+	 * @return
+	 * @throws Exception
+	 */
+	public Double getTodayEarningRate(String serviceId,String serviceCode) throws Exception{
+		
+		String redisEarningRate = RedisUtils.getString(EARNING_RATE_KEY+serviceId+":"+DateUtil.getGameDate(), REDIS_DB);
+		if(redisEarningRate!=null && redisEarningRate!=""){
+			return Double.valueOf(redisEarningRate);
+		}
+		
+		Integer serviceType = -1;
+		if("DC".equals(serviceCode) || "YP".equals(serviceCode)){
+			serviceType = 3;
+		}else{
+			if("JCRQSPF".equals(serviceCode)){
+				serviceType = 2;
+			}else{
+				serviceType = 1;
+			}
+		}
+		
+		PageData pdQuery = new PageData();
+		pdQuery.put("beginTime", DateUtil.getSpecifiedDayAfter(DateUtil.getSchemeDate(), -1) + Const.GAME_TIME);
+		pdQuery.put("endTime", DateUtil.getSchemeDate() + Const.GAME_TIME);
+		pdQuery.put("serviceId", serviceId);
+		pdQuery.put("serviceType", serviceType);
+		
+		
+		Double maxEarningRate = 0d;
+		if ("DC".equals(serviceCode) || "JCSPF".equals(serviceCode) || "JCRQSPF".equals(serviceCode)) {
+			maxEarningRate = this.getSingleEarningRate(pdQuery);
+		} else if ("JCECY".equals(serviceCode) || "JCRQECY".equals(serviceCode)) {
+			maxEarningRate = this.getTwoOnOneEarningRate(pdQuery);
+		} else if ("YP".equals(serviceCode)) {
+			maxEarningRate = this.getAsianEarningRate(pdQuery);
+		}
+		
+		RedisUtils.add(EARNING_RATE_KEY+serviceId+":"+DateUtil.getGameDate(), maxEarningRate, LIVE_TIME, REDIS_DB);
+		
+		return maxEarningRate;
+	}
+	
+	/**
+	 * 计算单场最大盈利率
+	 * @param pdQuery
+	 * @return
+	 * @throws Exception 
+	 */
+	private Double getSingleEarningRate(PageData pdQuery) throws Exception{
+		List<SingleVO> singleVOList = (List<SingleVO>) dao.findForList("SingleMapper.singleDayList", pdQuery);
+		Double totalWinAmount = 0d;
+		Double totalInputAmount = 0d;
+		Map<Integer,Double> gameWinAmountMap = new HashMap<Integer, Double>();
+		for (SingleVO singleVO : singleVOList) {
+			totalInputAmount+=singleVO.getBetting_amount();
+			Double winAmount = 0d;
+			Integer startegy = singleVO.getStrategy();
+			if(startegy==3){
+				winAmount = singleVO.getBetting_amount()*singleVO.getWin_odds();
+			}else if(startegy==1){
+				winAmount = singleVO.getBetting_amount()*singleVO.getDraw_odds();
+			}else{
+				winAmount = singleVO.getBetting_amount()*singleVO.getLose_odds();
+			}
+			Double beforeWinAmount = gameWinAmountMap.get(singleVO.getFk_betting_game_id());
+			if(beforeWinAmount==null || beforeWinAmount<winAmount){
+				gameWinAmountMap.put(singleVO.getFk_betting_game_id(), winAmount);
+			}
+		}
+		
+		for (Integer gameId : gameWinAmountMap.keySet()) {
+			totalWinAmount+=gameWinAmountMap.get(gameId);
+		}
+		
+		return (totalWinAmount-totalInputAmount)/totalInputAmount;
+	}
+	
+	/**
+	 * 计算二串一最大盈利率
+	 * @param pdQuery
+	 * @return
+	 * @throws Exception 
+	 */
+	private Double getTwoOnOneEarningRate(PageData pdQuery) throws Exception{
+		List<TwoOnOneVO> twoOnOneVOList = (List<TwoOnOneVO>) dao.findForList("TwoOnOneMapper.twoOnOneDayList", pdQuery);
+		Double totalWinAmount = 0d;
+		Double totalInputAmount = 0d;
+		Map<String,Double> gameWinAmountMap = new HashMap<String, Double>();
+		for (TwoOnOneVO twoOnOneVO : twoOnOneVOList) {
+			totalInputAmount+=twoOnOneVO.getBetting_amount();
+			Double winAmount = 0d;
+			Integer startegyOne = twoOnOneVO.getStrategy_one();
+			Integer startegyTwo = twoOnOneVO.getStrategy_two();
+			if(startegyOne==3 && startegyTwo==3){
+				winAmount = twoOnOneVO.getBetting_amount()*twoOnOneVO.getWin_odds1()*twoOnOneVO.getWin_odds2();
+			}else if(startegyOne==3 && startegyTwo==1){
+				winAmount = twoOnOneVO.getBetting_amount()*twoOnOneVO.getWin_odds1()*twoOnOneVO.getDraw_odds2();
+			}else if(startegyOne==3 && startegyTwo==0){
+				winAmount = twoOnOneVO.getBetting_amount()*twoOnOneVO.getWin_odds1()*twoOnOneVO.getLose_odds2();
+			}else if(startegyOne==1 && startegyTwo==3){
+				winAmount = twoOnOneVO.getBetting_amount()*twoOnOneVO.getDraw_odds1()*twoOnOneVO.getWin_odds2();
+			}else if(startegyOne==1 && startegyTwo==1){
+				winAmount = twoOnOneVO.getBetting_amount()*twoOnOneVO.getDraw_odds1()*twoOnOneVO.getDraw_odds2();
+			}else if(startegyOne==1 && startegyTwo==0){
+				winAmount = twoOnOneVO.getBetting_amount()*twoOnOneVO.getDraw_odds1()*twoOnOneVO.getLose_odds2();
+			}else if(startegyOne==0 && startegyTwo==3){
+				winAmount = twoOnOneVO.getBetting_amount()*twoOnOneVO.getLose_odds1()*twoOnOneVO.getWin_odds2();
+			}else if(startegyOne==0 && startegyTwo==1){
+				winAmount = twoOnOneVO.getBetting_amount()*twoOnOneVO.getLose_odds1()*twoOnOneVO.getDraw_odds2();
+			}else if(startegyOne==0 && startegyTwo==0){
+				winAmount = twoOnOneVO.getBetting_amount()*twoOnOneVO.getLose_odds1()*twoOnOneVO.getLose_odds2();
+			}
+			
+			String twoOnOneId = twoOnOneVO.getTb_two_on_one_matches_id();
+			Double beforeWinAmount = gameWinAmountMap.get(twoOnOneId);
+			if(beforeWinAmount==null || beforeWinAmount<winAmount){
+				gameWinAmountMap.put(twoOnOneId, winAmount);
+			}
+		}
+		
+		for (String twoOnOneId : gameWinAmountMap.keySet()) {
+			totalWinAmount+=gameWinAmountMap.get(twoOnOneId);
+		}
+		
+		return (totalWinAmount-totalInputAmount)/totalInputAmount;
+	}
+	
+	/**
+	 * 计算亚盘盈利率
+	 * @param pdQuery
+	 * @return
+	 * @throws Exception 
+	 */
+	private Double getAsianEarningRate(PageData pdQuery) throws Exception{
+		List<AsianVO> singleVOList = (List<AsianVO>) dao.findForList("AsianMapper.asianDayList", pdQuery);
+		Double totalWinAmount = 0d;
+		Double totalInputAmount = 0d;
+		Map<Integer,Double> gameWinAmountMap = new HashMap<Integer, Double>();
+		for (AsianVO asianVO : singleVOList) {
+			totalInputAmount+=asianVO.getBetting_amount();
+			Double winAmount = 0d;
+			Integer startegy = asianVO.getStrategy();
+			if(startegy==3){
+				winAmount = asianVO.getBetting_amount()*asianVO.getWin_odds();
+			}else{
+				winAmount = asianVO.getBetting_amount()*asianVO.getLose_odds();
+			}
+			Double beforeWinAmount = gameWinAmountMap.get(asianVO.getFk_betting_game_id());
+			if(beforeWinAmount==null || beforeWinAmount<winAmount){
+				gameWinAmountMap.put(asianVO.getFk_betting_game_id(), winAmount);
+			}
+		}
+		
+		for (Integer gameId : gameWinAmountMap.keySet()) {
+			totalWinAmount+=gameWinAmountMap.get(gameId);
+		}
+		
+		return (totalWinAmount-totalInputAmount)/totalInputAmount;
+	}
+	
+	
+}
+

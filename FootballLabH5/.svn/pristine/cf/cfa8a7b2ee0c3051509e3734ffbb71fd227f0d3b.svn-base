@@ -1,0 +1,3 @@
+.list_shigong .item_block{
+  overflow:hidden;
+}

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>交易记录详细信息</title>
+
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+    </style>
+</head>
+<body style="padding: 0;">
+    <!--<p class="headerTou"><a href="javascript:history.go(-1);" class="pull-left"></a>交易记录详细信息<img src="img/home.png" onclick="GoToUrl_T('index.html')" style="float:right;margin-top:10px;width:24px;height:24px;" /></p>-->
+    <p class="titLie" id="t1"></p>
+    <ul class="list_shigong list_shigongLie">
+        <li class="" onclick="window.open('#','_self')">
+            <span class="pull-right"><label id="t2"></label>元</span> <span class="pull-left">付款金额</span>
+        </li>
+        <li class="" onclick="window.open('#','_self')">
+            <span class="pull-right" id="t3"></span> <span class="pull-left">活动类型</span>
+        </li>
+        <li class="" onclick="window.open('#','_self')" style="height:100px">
+            <span class="pull-right" id="t4"></span> <span class="pull-left">方案时间范围</span>
+        </li>
+ 		<li class="" onclick="window.open('#','_self')">
+            <span class="pull-right" id="t5"></span> <span class="pull-left">订单号</span>
+        </li>
+        <li class="" onclick="window.open('#','_self')">
+            <span class="pull-right" id="t6">微信支付</span> <span class="pull-left">交易方式</span>
+        </li>
+        <li class="" onclick="window.open('#','_self')">
+            <span class="pull-right" id="t7"></span> <span class="pull-left">交易时间</span>
+        </li>
+    </ul>
+
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+        function GoToUrl_T(u) {
+            location.href = u + "?experts_code=" + getQueryString("experts_code");
+        }
+
+        var tid;
+        $(function () {
+            var result = GetData(fl_url.myTradeDetaile, {
+                tdid:getQueryString("tdid")
+            });
+            result = JSON.parse(result);
+            var temp1 = "";
+            switch (result.statement) {
+                case "1":
+                    temp1 = "支付失败";
+                    break;
+                case "2":
+                    temp1 = "支付成功";
+                    break;
+                case "0":
+                    temp1 = "等待支付";
+                    break;
+            }
+            var temp2 = result.actualMoney;
+            var temp3 = result.service_name;
+            if(result.type=="2"){
+            	temp3 = temp3+"-不盈双倍返";
+            }
+            var temp4 = result.service_start_time.substring(0,10)
+            			+" 11:30:00<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;至<br/>"
+            			+result.service_end_time.substring(0,10)+" 11:30:00";
+            var temp5 = result.transaction_number;
+            var temp7 = result.create_time;
+            $("#t1").text(temp1);
+            $("#t2").text(temp2);
+            $("#t3").text(temp3);
+            $("#t4").html(temp4);
+            $("#t5").text(temp5);
+            $("#t7").text(temp7);
+            tid = result.tid;
+            console.log(result);
+
+            sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+            shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+            shartlink = "http://www.01588.com/wechat/index.html?experts_code=" + getQueryString("experts_code");
+            Init();
+        });
+
+        function playCustomized() {
+            var data = GetData(fl_url.payConfig, {
+                tid: tid
+            });
+            console.log(data);
+            // 验证支付
+            if (data == "{msg:'payFail'}") {
+                tishi_error("支付暂不可用，稍后再试。");
+                return;
+            }
+
+            data = JSON.parse(data);
+
+            if (data.appId == undefined) {
+                 location.href = "myCustomized_detail.html?tid=" + data.tid + "&experts_code=" + getQueryString("experts_code");
+            }
+            else {
+                PayWeiXin(data.appId, data.timeStamp, data.nonceStr, data.package, data.signType, data.paySign, data.tid);
+            }
+        }
+    </script>
+</body>
+</html>

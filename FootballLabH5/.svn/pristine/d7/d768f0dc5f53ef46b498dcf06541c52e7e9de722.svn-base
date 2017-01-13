@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TwoOnOneMapper">
+	
+	<sql id="twoOnOneBaseSql">
+		select 
+			 a.id as tb_two_on_one_betting_strategy_id,a.strategy_one,a.strategy_two,a.betting_amount,a.fk_t_two_on_one_matches,
+			 m.id as tb_two_on_one_matches_id,m.match_one_id,m.match_two_id,m.company_id,m.create_time,m.service_id,
+			 b1.id as tb_betting_game_id1,b1.league_id  league_id1,b1.league_name league_name1,b1.away_name away_name1,b1.home_name home_name1,b1.game_date_time game_date_time1,b1.home_score home_score1,b1.away_score away_score1,b1.league_time_id league_time_id1,b1.league_time_name league_time_name1,b1.round round1,b1.home_score_half home_score_half1,b1.away_score_half away_score_half1,b1.let_the_count let_the_count1,
+			 b2.id as tb_betting_game_id2,b2.league_id  league_id2,b2.league_name league_name2,b2.away_name away_name2,b2.home_name home_name2,b2.game_date_time game_date_time2,b2.home_score home_score2,b2.away_score away_score2,b2.league_time_id league_time_id2,b2.league_time_name league_time_name2,b2.round round2,b2.home_score_half home_score_half2,b2.away_score_half away_score_half2,b2.let_the_count let_the_count2,
+			 c1.id as tb_company_odds_id1,c1.fk_company_id  as company_id1,c1.lose_odds lose_odds1,c1.draw_odds draw_odds1,c1.win_odds win_odds1 ,
+ 			 c2.id as tb_company_odds_id2,c2.fk_company_id  as company_id2,c2.lose_odds lose_odds2,c2.draw_odds draw_odds2,c2.win_odds win_odds2 
+		from 
+			tb_two_on_one_betting_strategy as a 
+		left join 
+			tb_two_on_one_matches as m on a.fk_t_two_on_one_matches=m.id
+		left join 
+			tb_betting_game as b1 on m.match_one_id=b1.id 
+		left join 
+			tb_betting_game as b2 on m.match_two_id=b2.id 
+		left join 
+			tb_company_odds as c1 on m.company_id=c1.fk_company_id and m.match_one_id=c1.fk_betting_game_id and c1.type = #{serviceType}
+		left join 
+			tb_company_odds as c2 on m.company_id=c2.fk_company_id and m.match_two_id=c2.fk_betting_game_id and c2.type = #{serviceType}
+	</sql>
+	
+	<select id="twoOnOneDayList" parameterType="pd" resultType="com.visolink.entity.TwoOnOneVO">
+		<include refid="twoOnOneBaseSql" />
+		where 
+			b1.game_date_time &gt; #{beginTime}
+		and 
+			b1.game_date_time &lt;= #{endTime}
+		and
+			m.service_id = #{serviceId}
+		order by m.id	
+	</select>
+
+	<select id="twoOnOneTimeList" parameterType="pd" resultType="com.visolink.entity.GameMapper">
+		select 
+			game_date_time1 game_date_time,sum(1) as num 
+		from 
+			(
+				<include refid="twoOnOneBaseSql" />
+				where 
+					b1.game_date_time &gt; #{beginTime}
+				and 
+					b1.game_date_time &lt;= #{endTime}
+				and
+					m.service_id = #{serviceId}
+			) as aa
+		group by game_date_time 
+		order by game_date_time
+	</select>
+	<!-- 比赛数据 -->
+	<select id="bettingGameListTwoOnOne" parameterType="pd" resultType="com.visolink.entity.BettingGameTwoOnOne">
+		select
+			 m.id  tb_two_on_one_matches_id,
+			 b1.id as tb_betting_game_id1,b1.league_id  league_id1,b1.league_name league_name1,b1.away_name away_name1,b1.home_name home_name1,b1.game_date_time game_date_time1,b1.home_score home_score1,b1.away_score away_score1,b1.league_time_id league_time_id1,b1.league_time_name league_time_name1,b1.round round1,b1.home_score_half home_score_half1,b1.away_score_half away_score_half1,b1.let_the_count let_the_count1,b1.game_serial_number game_serial_number1,
+			 b2.id as tb_betting_game_id2,b2.league_id  league_id2,b2.league_name league_name2,b2.away_name away_name2,b2.home_name home_name2,b2.game_date_time game_date_time2,b2.home_score home_score2,b2.away_score away_score2,b2.league_time_id league_time_id2,b2.league_time_name league_time_name2,b2.round round2,b2.home_score_half home_score_half2,b2.away_score_half away_score_half2,b2.let_the_count let_the_count2,b2.game_serial_number game_serial_number2
+		from 
+			tb_two_on_one_matches m
+		left join 
+			tb_betting_game as b1 on m.match_one_id=b1.id 
+		left join 
+			tb_betting_game as b2 on m.match_two_id=b2.id 
+		where  
+			m.id 
+		in 
+			(
+				select tb_two_on_one_matches_id from 
+					(
+				   		<include refid="twoOnOneBaseSql" />	
+				   		where 
+				   			b1.game_date_time = #{gameDate}
+						and
+							m.service_id = #{serviceId}
+					 ) as aa
+			  )
+	
+	</select>
+	
+	<!-- 赔率数据 -->
+	<select id="getCompanyOddsTwoOnOne" resultType="com.visolink.entity.CompanyOddsTwoOnOne">
+		select 
+			 m.id  tb_two_on_one_matches_id,
+			 c1.id as tb_company_odds_id1,c1.fk_company_id  as company_id1,c1.lose_odds lose_odds1,c1.draw_odds draw_odds1,c1.win_odds win_odds1 ,
+ 			 c2.id as tb_company_odds_id2,c2.fk_company_id  as company_id2,c2.lose_odds lose_odds2,c2.draw_odds draw_odds2,c2.win_odds win_odds2 
+		from 
+			tb_two_on_one_matches m
+		left join 
+			tb_company_odds as c1 on m.company_id=c1.fk_company_id and m.match_one_id=c1.fk_betting_game_id
+		left join 
+			tb_company_odds as c2 on m.company_id=c2.fk_company_id and m.match_two_id=c2.fk_betting_game_id
+		where 
+			m.id= #{tb_two_on_one_matches_id}
+		and 
+			c1.type= #{serviceType} 
+		and 
+			c2.type = #{serviceType}	
+		and 
+			m.company_id= #{companyId}
+	</select>
+	
+	<!-- 比赛推荐情况-->
+	<select id="getGameStrategyTwoOneOneList" resultType="com.visolink.entity.BettingStrategyForTwoOnOne">
+		select 
+			 a.id ,a.strategy_one,a.strategy_two,a.betting_amount,a.fk_t_two_on_one_matches
+		from 
+			tb_two_on_one_betting_strategy a 
+		where 
+			a.fk_t_two_on_one_matches= #{tb_two_on_one_matches_id}
+	</select>
+	
+</mapper>

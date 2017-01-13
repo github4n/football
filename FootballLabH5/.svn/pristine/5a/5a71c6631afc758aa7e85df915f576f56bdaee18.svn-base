@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>专家方案</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/swiper.min.js"></script>
+    <script src="js/jquery.SuperSlide.2.1.1.js"></script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <!-- <link href="css/index_header.css" rel="stylesheet" type="text/css" /> -->
+    <link href="css/swiper.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/index.css" rel="stylesheet" />
+    <style type="text/css">
+       body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+    </style>
+</head>
+<body style="padding: 0">
+    <!--<p class="headerTou"><a href="javascript:history.go(-1);" class="pull-left"></a>专家方案<img src="img/home.png" onclick="GoToUrl_T('index.html')" style="float: right; margin-top: 10px; width: 24px; height: 24px;" /></p>-->
+    <p class="headerTou" id="pGuanZhu" style="background: #fff; color: #000; display: none;">
+        <label style="position: relative; left: 12%; font-size: 1.4rem; color: #000;">专家方案</label><label class="pull-right round"><a id="aGuanZhu" href="http://mp.weixin.qq.com/s?__biz=MzIxODQ5MTY4Mw==&mid=2247483666&idx=1&sn=2c38aac6da365d49afc1f468d99bff1e&scene=0#wechat_redirect" style="display: initial; color: #FF8000;">+关注</a></label>
+    </p>
+    <div style="padding: 0 0 60px 0">
+        <header class="banner" style="padding: 0 0 0 0;">
+            <div id="ifocus">
+                <div id="ifocus_pic">
+                   	<div class='swiper-container'>
+						<div id="piclist" class="swiper-wrapper">
+                        	<!-- 轮播图 -->
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="navItem" >
+            <ul class="navList">
+                <li onclick="javascript:GoToUrl_T('guessGame.html');">
+                    <div class="circle red">
+                        	夺
+                    </div>
+                    <p class="icontext">一场夺分</p>
+                </li>
+                <li onclick="javascript:GoToUrl_T('duidu_index.html');" id="fan">
+                    <div class="circle green">
+                        	返
+                    </div>
+                    <p class="icontext">返还活动</p>
+                </li>
+                <li onclick="javascript:GoToUrl_T('LuckDraw.html');">
+                    <div class="circle orange">
+                        <img src="./img/wheel.png" alt="抽奖">
+                    </div>
+                    <p class="icontext">转盘抽奖</p>
+                </li>
+                <li onclick="javascript:GoToUrl_T('pointExchange.html');">
+                    <div class="circle purple">
+                        <img src="./img/gift.png" alt="积分">
+                    </div>
+                    <p class="icontext">积分兑奖</p>
+                </li>
+            </ul>
+        </div>
+        <div class="advBox">
+			<div class="lefticon ico-horn"></div>
+	       	<div class="topscro" > 
+			    <ul id="marquee" class="marquee" >        
+				    <li>
+				    	方案推荐<i class="highTxt">2元/天</i>，火热促销中！<i class="rtHighTxt">每日11:30发布方案</i>
+				    </li>       
+			    </ul> 
+	        </div>		
+		</div>
+		<!-- <div class="planTitle ">
+            <i class="icon"><img src="./img/king.png" width="90%" style="display:block; margin:2px auto 0;" alt=""></i>
+            <p class="bigSize">方案推荐</p>
+        </div> -->
+        <div id="leftTabBox" class="slideTxtBox">
+            <div class="hd">
+                <ul>
+                    <li class="active"><span>单场</span></li>
+                    <li><span>亚盘</span></li>
+                    <li><span class="noborder">2串1</span></li>
+                </ul>
+            </div>
+            <div class="bd">
+                <ul id="dcul">
+                </ul>  
+
+                <ul id="ypul">
+                </ul> 
+
+                <ul id="jcecyul">
+                </ul>    
+                                      
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <ul class="clearfix">
+            <li class="footer_show" onclick="GoToUrl_T('index.html');">
+                <a href="#">专家方案</a>
+            </li>
+            <li onclick="GoToUrl_T('my.html');">
+                <a href="#">我的</a>
+            </li>
+        </ul>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script src="js/marquee.js"></script>
+    <script>
+
+        var url = "";
+        var sharttitle, shartcontent;
+        $(function () {
+
+            if (getQueryString("experts_code") == "jinghu") {
+                $("#aGuanZhu").attr("href", "http://mp.weixin.qq.com/s?__biz=MzAxMjk1NjYwMA==&mid=2247483654&idx=1&sn=66ed8863ea21271f03880c7338e8bad4&scene=0#wechat_redirect");
+            }
+
+            if (fl_user.focus_status() != 1) {
+                $("#pGuanZhu").show();
+            }
+
+            // 绑定轮播图
+            var datapic = GetData(fl_url.indexLink, {});
+            datapic = JSON.parse(datapic);
+            var p_c = "";
+            var pichtml = "";
+            for (var i = 0; i < datapic.length; i++) {
+                pichtml = "";
+                if(i == 0){
+                    p_c = "current";
+                }else{
+                    p_c = "normal";
+                }
+                /* if(datapic[i].stiename=="不盈双倍返!"){
+                	 pichtml = "<div class='swiper-slide'><a href=\"javascript:GoToNextUrl('expertPlan.html?serviceType=3&type=0&serviceId=1103c7f205714ca5bef7b5cba23af3a7&service_code=DC&companyId=1&experts_code=caishen&service_name=%u6CD5%u7532','法甲')\">";
+                }else{
+                	pichtml = "<div class='swiper-slide'><a href=\"" + decodeURI(datapic[i].tourl) + "\">";
+                } */
+                pichtml = "<div class='swiper-slide'><a href=\"" + decodeURI(datapic[i].tourl) + "\">";
+               
+                pichtml += "<img height='180' src=\"" + datapic[i].stieurl + "\" alt=\"" + datapic[i].stiename + "\" /></a></div>";
+                $("#piclist").append(pichtml);
+            }
+
+            // 绑定方案
+            var data = GetData(fl_url.indexNew, {});
+            data = JSON.parse(data);
+            var html = "";
+            var ndays, number3;
+            var serviceCodeArr = {"DC":"dcul","YP":"ypul","JCECY":"jcecyul"};
+            
+            for(serviceInfo in serviceCodeArr){
+            	var dataList = data[serviceInfo];
+            	for (var i = 0; i < dataList.length; i++) {
+            		if(serviceInfo!="JCECY" && dataList[i].play_type==1 && getQueryString("experts_code")=="caishen"){
+            			continue;
+            		}
+            		ndays = dataList[i].ndays==undefined?0:dataList[i].ndays;
+               		number3 = dataList[i].number3==undefined?0:dataList[i].number3;
+               		html += "<li onclick=\"GoToNextUrl('expertPlan.html?serviceType=" + dataList[i].service_type + "&type=" + dataList[i].type + "&serviceId=" + dataList[i].id + "&service_code=" + dataList[i].service_code + "&companyId=" + dataList[i].fk_company_id + "&experts_code=" + getQueryString("experts_code")+ "&service_name=" + escape(dataList[i].service_name) + "','" + dataList[i].service_name + "')\">";
+                    html += "<dl>";   
+                    var num = dataList[i].strategyNum;
+                    var notStartNum = dataList[i].notStartNum==undefined?0:dataList[i].notStartNum;
+                    if(num!=undefined){
+                   		html+="<dt class='titBox'>"+getWeek()+"方案"+num+"个<i class='rtpop'>未赛"+notStartNum+"个</i></dt>";
+                    }else{
+                    	html+="<dt class='titBox'>"+getWeek()+"方案<i class='popno'>暂无</i></dt>";
+                    }
+                   
+                    if(dataList[i].play_type==1){
+                    	 html += "<dd class='highColor'>焦点赛事</dd>";    
+                    }else{
+                   		 html += "<dd class='highColor'>"+dataList[i].service_name+"</dd>";    
+                    }
+                    html += "<dd>"+ ndays +"天盈利<em>"+ parseInt(number3) +"</em></dd>";   
+                    if((serviceInfo=="DC" || serviceInfo=="YP" ) && getQueryString("experts_code") == "caishen"  && num!=undefined && num>0){
+                    	html += "<div class='popicon'><img width='100%' src='img/hongbao.png'/></div></dl></li>";    
+                    } else{
+                    	html += "</dl></li>";    
+                    }
+                    
+            	}
+            	$("#"+serviceCodeArr[serviceInfo]).html(html);
+            	html="";
+            }
+            
+            //$("#fan").attr("onclick","GoToNextUrl('expertPlan.html?serviceType=3&type=0&serviceId=1103c7f205714ca5bef7b5cba23af3a7&service_code=DC&companyId=1&experts_code=caishen&service_name="+escape("法甲")+"','法甲')")
+            
+            sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+            shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+            Init();
+            //ScrollText($('#scrollText'),23,350,'<font size="2" color="#edc33e" >提示：由于11月10日开始为国际比赛日，下次推荐方案预计为11月15日的巴甲比赛，敬请关注。</font>','left',1,30);//滚动字幕
+        	addVisitInfo();
+        });
+
+        function GoToNextUrl(nexurl, name) {
+            sessionStorage.setItem("selectPlanName", name);
+            sessionStorage.setItem("selectPlanUrl", nexurl);
+            window.open(nexurl, "_top");
+        }
+
+        function GoToUrl() {
+            if (url.length > 0) {
+                location.href = url;
+            }
+        }
+        function GoToUrl_T(u) {
+            location.href = u + "?experts_code=" + getQueryString("experts_code");
+        }
+
+        $(document).ready(function () {
+            var swiper = new Swiper('.swiper-container', {
+		        pagination: '.swiper-pagination',
+		        paginationClickable: true,
+		        autoplay:5000,
+		        autoplayDisableOnInteraction : false
+		    });
+        });
+        
+        jQuery(".slideTxtBox").slide({trigger:"click"});
+    
+		$(window).scroll(function(){
+		    var mytop = $(window).scrollTop();
+		    if(mytop>$("#leftTabBox").offset().top){
+		        $("#leftTabBox").addClass("current");
+		    }else{
+		         $("#leftTabBox").removeClass("current");
+		    }
+		
+		}) ;
+    </script>
+</body>
+</html>

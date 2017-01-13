@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CampaignApplyMapper">
+	
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into h5_marketing_campaign_apply(
+		    CAMPAIGN_ID,
+		    CAMPAIGN_TITLE,		
+			MEMBER_ID,	
+			MEMBER_NAME,	
+			MEMBER_PHONE,	
+			MEMBER_VILLAGE_NAME,	
+			MEMBER_HOU_AREA,	
+			MEMBER_HOU_TYPE,	
+			MEMBER_HOU_STYLE,	
+			MEMBER_REMARK,	
+			ADDTIME,	
+			UPTIME,	
+			STATUS,
+			City_ID,	
+			City_NAME
+			
+		) values (
+			#{CAMPAIGN_ID},
+			#{CAMPAIGN_TITLE},		
+			#{MEMBER_ID},
+			#{MEMBER_NAME},	
+			#{MEMBER_PHONE},	
+			#{MEMBER_VILLAGE_NAME},	
+			#{MEMBER_HOU_AREA},	
+			#{MEMBER_HOU_TYPE},	
+			#{MEMBER_HOU_STYLE},	
+			#{MEMBER_REMARK},	
+			#{ADDTIME},	
+			#{UPTIME},	
+			#{STATUS},
+			#{City_ID},	
+			#{City_NAME}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from h5_marketing_campaign_apply
+		where 
+			ID = #{ID}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  h5_marketing_campaign_apply
+			set 
+				CAMPAIGN_ID = #{CAMPAIGN_ID},
+				CAMPAIGN_TITLE = #{CAMPAIGN_TITLE},
+				MEMBER_ID = #{MEMBER_ID},
+				MEMBER_NAME = #{MEMBER_NAME},
+				MEMBER_PHONE = #{MEMBER_PHONE},
+				MEMBER_VILLAGE_NAME = #{MEMBER_VILLAGE_NAME},
+				MEMBER_HOU_AREA = #{MEMBER_HOU_AREA},
+				MEMBER_HOU_TYPE = #{MEMBER_HOU_TYPE},
+				MEMBER_HOU_STYLE = #{MEMBER_HOU_STYLE},
+				MEMBER_REMARK = #{MEMBER_REMARK},
+				STATUS = #{STATUS},
+				City_ID = #{City_ID},
+				City_NAME = #{City_NAME}
+			where 
+				ID = #{ID}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			CAMPAIGN_ID,
+			CAMPAIGN_TITLE,	
+			MEMBER_ID,	
+			MEMBER_NAME,	
+			MEMBER_PHONE,	
+			MEMBER_VILLAGE_NAME,	
+			MEMBER_HOU_AREA,	
+			MEMBER_HOU_TYPE,	
+			MEMBER_HOU_STYLE,	
+			MEMBER_REMARK,	
+			ADDTIME,	
+			UPTIME,	
+			STATUS,	
+			ID
+		from 
+			h5_marketing_campaign_apply
+		where 
+			ID = #{ID}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.CAMPAIGN_ID,
+				a.CAMPAIGN_TITLE,		
+				a.MEMBER_ID,	
+				a.MEMBER_NAME,	
+				a.MEMBER_PHONE,	
+				a.MEMBER_VILLAGE_NAME,	
+				a.MEMBER_HOU_AREA,	
+				a.MEMBER_HOU_TYPE,	
+				a.MEMBER_HOU_STYLE,	
+				a.MEMBER_REMARK,	
+				a.ADDTIME,	
+				a.UPTIME,	
+				a.STATUS,	
+				a.ID,
+				a.City_ID,
+				a.City_NAME
+		from 
+				h5_marketing_campaign_apply a
+				where
+			1 = 1
+		<if test="pd.CAMPAIGN_TITLE != null and pd.CAMPAIGN_TITLE != ''"><!-- 标题检索 -->
+			and a.CAMPAIGN_TITLE like CONCAT(CONCAT('%', #{pd.CAMPAIGN_TITLE}),'%') 
+		</if>
+		<if test="pd.MEMBER_NAME!= null and pd.MEMBER_NAME!= ''"><!-- 发布人检索 -->
+			and a.MEMBER_NAME like CONCAT(CONCAT('%', #{pd.MEMBER_NAME}),'%') 
+		</if>
+		<if test="pd.STATUS != null and pd.STATUS != ''"><!-- 状态检索 -->
+			and a.STATUS=#{pd.STATUS} 
+		</if>
+		<if test="pd.City_NAME != null and pd.City_NAME != ''"><!-- 状态检索 -->
+			and a.City_NAME=#{pd.City_NAME} 
+		</if>
+		order
+		by uptime desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.CAMPAIGN_ID,
+				a.CAMPAIGN_TITLE,		
+				a.MEMBER_ID,	
+				a.MEMBER_NAME,	
+				a.MEMBER_PHONE,	
+				a.MEMBER_VILLAGE_NAME,	
+				a.MEMBER_HOU_AREA,	
+				a.MEMBER_HOU_TYPE,	
+				a.MEMBER_HOU_STYLE,	
+				a.MEMBER_REMARK,	
+				a.ADDTIME,	
+				a.UPTIME,	
+				a.STATUS,	
+				a.ID
+		from 
+				h5_marketing_campaign_apply a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from h5_marketing_campaign_apply
+		where 
+			ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>使用优惠券</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+    </style>
+</head>
+<body style="padding: 0;">
+    <!--<p class="headerTou"><a href="javascript:history.go(-1);" class="pull-left"></a>使用优惠券<img src="img/home.png" onclick="GoToUrl_T('index.html')" style="float:right;margin-top:10px;width:24px;height:24px;" /></p>-->
+    <p class="titLie">使用优惠券</p>
+    <ul class="list_shigong list_shigongLie">
+        <li class="">
+            <span class="pull-left width100">玩法</span><span class="pull-left" id="lblPlan">竞彩胜平负</span>
+            <select id="selPlan" style="display: none; color: #000; height: 30px;">
+            </select>
+        </li>
+        <li class="">
+            <span class="pull-left width100">方案推荐天数</span><span class="pull-left"><i id="days">1</i>天</span>
+        </li>
+        <li class="">
+            <span class="pull-left width100">方案定价</span><span class="pull-left"><i id="price">25.00</i>元</span>
+        </li>
+        <!--        <li class="" onclick="window.open('#','_self')">
+            <span class="pull-right" style="margin-right: 15px;"><i class="colorH">-99.00</i>元</span><span class="jiao" style="right: 2%; top: 8px;"></span><span class="pull-left width100">优惠券</span><span class="pull-left">2张</span>
+        </li>-->
+    </ul>
+    <a id="btnDingZhi" class="dbtn dbtn123" href="javascript:playCustomized()">定制</a>
+
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        var data;
+        var days;
+        $(function () {
+            var type = getQueryString("type");
+
+            // 获取全部方案
+            data = GetData(fl_url.index, {});
+            data = JSON.parse(data);
+            var isSelect = true;
+            var html = "";
+            for (var i = 0; i < data.length; i++) {
+                if (type == "01" || type == "02" || type == "03" || type == "04" || type == "05" || type == "06") {
+                    isSelect = false;
+                }
+                if (type == "01" && data[i].service_code == "JCSPF" || type == "02" && data[i].service_code == "JCRQSPF" || type == "03" && data[i].service_code == "JCECY" || type == "04" && data[i].service_code == "JCRQECY" || type == "05" && data[i].service_code == "YP" || type == "06" && data[i].service_code == "DC") {
+                    $("#selPlan").append("<option value=\"" + data[i].id + "\" selected=\"selected\"\>" + data[i].service_name + "</option>");
+                    html = "<option value=\"" + data[i].id + "\" selected=\"selected\"\>" + data[i].service_name + "</option>";
+                } else{
+                	if(type=="4"){
+                		if(data[i].play_type!=1){
+                			$("#selPlan").append("<option value=\"" + data[i].id + "\">" + data[i].service_name + "</option>");
+                		}
+                	}else{
+                		$("#selPlan").append("<option value=\"" + data[i].id + "\">" + data[i].service_name + "</option>");
+                	}
+                }
+            }
+            if (!isSelect && html.length > 0) {
+                $("#selPlan").html(html);
+            }
+
+            $("#selPlan").show();
+            $("#lblPlan").hide();
+            if (type == "01" || type == "02" || type == "03" || type == "04" || type == "05" || type == "06") {
+                $("#selPlan").attr("disabled", "disabled");
+            }
+            
+            var mData = GetData(fl_url.myCouponDetaile, { mcid: getQueryString("mcid") });
+            days = parseInt(JSON.parse(mData).validity_days);
+            var serviceInfo =  JSON.parse(GetData(fl_url.serviceInfo, {service_id: $("#selPlan").val()}));
+            if(days==1){
+            	$("#days").html("1");
+            	$("#price").html(serviceInfo.prices[0]);
+            }else if(days==30){
+            	$("#days").html("30");
+            	$("#price").html(serviceInfo.prices[1]);
+            }
+        });
+        function GoToUrl_T(u) {
+            location.href = u + "?experts_code=" + getQueryString("experts_code");
+        }
+        function playCustomized() {
+            var mcid = getQueryString("mcid");
+            if (mcid == undefined || $.trim(mcid).length == 0) {
+                mcid = "";
+            }
+
+            var serviceId = $("#selPlan").val();
+            if (serviceId == undefined || serviceId.length == 0) {
+                tishi_error("请选择方案");
+                return;
+            }
+
+            var memberInfo;
+            if (fl_user.IsLogin()) {
+                memberInfo = GetData(fl_url.memberInfo, { phoneNum: fl_user.Mobile(), serviceId: serviceId });
+                memberInfo = JSON.parse(memberInfo);
+            }
+            // 验证是否定制
+            if (memberInfo.hasTransaction != "0") {
+                alert_error("<lable style=\"color:#000000;font-size:16px;\">提示</lable><br><div style=\"text-align:center;color:#000;line-height:24px;\">该玩法已定制，无需使用此券。</div>", "查看方案", function () {
+                    var u = "";
+                    var data = GetData(fl_url.index, {});
+                    data = JSON.parse(data);
+                    for (var i = 0; i < data.length; i++) {
+                        if (serviceId == data[i].id) {
+                            u = "expertPlan.html?serviceType=" + data[i].service_type + "&type=" + data[i].type + "&serviceId=" + data[i].id + "&service_code=" + data[i].service_code + "&companyId=" + data[i].fk_company_id + "&experts_code=" + getQueryString("experts_code");
+                            break;
+                        }
+                    }
+                    location.href = u;
+                });
+                return;
+            }
+
+            var data = GetData(fl_url.payConfig, {
+                serviceId: serviceId,
+                phoneNum: fl_user.Mobile(),
+                mcid: mcid,
+                pointsNum: "",
+                days:days,
+                type:1
+            });
+            console.log(data);
+            // 验证支付
+            if (data == "{msg:'payFail'}") {
+                tishi_error("支付暂不可用，稍后再试。");
+                return;
+            }
+
+            data = JSON.parse(data);
+            location.href = "myCustomized_detail.html?tid=" + data.tid + "&experts_code=" + getQueryString("experts_code");
+        }
+    </script>
+</body>
+</html>

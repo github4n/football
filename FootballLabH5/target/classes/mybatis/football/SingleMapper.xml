@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SingleMapper">
+	
+	<sql id="singleBaseSql">
+		select 
+			 a.id as tb_betting_strategy_for_single_id,a.strategy,a.betting_amount,a.create_time,a.fk_betting_game_id,a.fk_company_id,a.service_id,
+			 b.id as tb_betting_game_id, b.league_id,b.league_name,b.away_name,b.home_name,b.game_date_time,b.home_score,b.away_score,b.league_time_id,b.league_time_name,b.round,b.home_score_half,b.away_score_half,b.let_the_count,
+			 c.id as tb_company_odds_id,c.fk_company_id as company_id,c.lose_odds,c.draw_odds,c.win_odds
+		from 
+			tb_betting_strategy_for_single as a 
+		left join 
+			tb_betting_game as b on a.fk_betting_game_id=b.id 
+		left join 
+			tb_company_odds as c on a.`fk_company_id`=c.fk_company_id and c.fk_betting_game_id = b.id
+	</sql>
+	
+	<select id="singleDayList" parameterType="pd" resultType="com.visolink.entity.SingleVO">
+		<include refid="singleBaseSql" />
+		where 
+			b.game_date_time &gt; #{beginTime}
+		and 
+			b.game_date_time &lt;= #{endTime}
+		and
+			a.service_id = #{serviceId}
+		and 
+			c.type = #{serviceType}
+		order by b.game_date_time	
+	</select>
+	
+	<select id="singleDayListDesc" parameterType="pd" resultType="com.visolink.entity.SingleVO">
+		<include refid="singleBaseSql" />
+		where 
+			b.game_date_time &gt; #{beginTime}
+		and 
+			b.game_date_time &lt;= #{endTime}
+		and
+			a.service_id = #{serviceId}
+		and 
+			c.type = #{serviceType}
+		order by b.game_date_time desc
+	</select>
+
+	<select id="singleTimeList" parameterType="pd" resultType="com.visolink.entity.GameMapper">
+		select 
+			game_date_time,sum(1) as num 
+		from 
+			(
+				<include refid="singleBaseSql" />
+				where 
+					b.game_date_time &gt; #{beginTime}
+				and 
+					b.game_date_time &lt;= #{endTime}
+				and
+					a.service_id = #{serviceId}
+				and 
+					c.type = #{serviceType}
+			) as aa
+		group 
+			by game_date_time 
+		order 
+			by game_date_time
+	</select>
+	
+	<!-- 某一个时间的比赛数据（有方案的） -->
+	<select id="bettingGameList" parameterType="pd" resultType="com.visolink.entity.BettingGame">
+		select 
+			 b.id , b.league_id,b.league_name,b.away_name,b.home_name,b.game_date_time,b.home_score,b.away_score,b.league_time_id,b.league_time_name,b.round,b.home_score_half,b.away_score_half,b.let_the_count,b.game_serial_number
+		from 
+			tb_betting_game as b
+		where  
+			b.id 
+		in 
+			(
+				select tb_betting_game_id from 
+					(
+				   		<include refid="singleBaseSql" />	
+				   		where 
+				   			b.game_date_time = #{gameDate}
+						and
+							a.service_id = #{serviceId}
+						and 
+							c.type = #{serviceType}
+					 ) as aa
+			  )
+	
+	</select>
+	
+	<!-- pk比赛数据(当天未开始的所有的比赛) -->
+	<select id="pkBettingGameList" parameterType="pd" resultType="com.visolink.entity.BettingGame">
+		select 
+			 b.id , b.league_id,b.league_name,b.away_name,b.home_name,b.game_date_time,b.home_score,b.away_score,b.league_time_id,b.league_time_name,b.round,b.home_score_half,b.away_score_half,b.let_the_count
+		from 
+			tb_betting_game as b
+		where  
+			b.id 
+		in 
+			(
+				select tb_betting_game_id from 
+					(
+				   		<include refid="singleBaseSql" />	
+				   		where 
+				   			b.game_date_time &gt;= #{beginTime}
+						and
+							b.game_date_time &lt;= #{endTime}
+						and
+							a.service_id = #{serviceId}
+						and 
+							c.type = #{serviceType}
+						and 
+							b.game_date_time &gt;= #{nowTime}	
+					 ) as aa
+			  )
+		<if test="service_code == 'JCSPF' || service_code == 'JCRQSPF'">
+			and b.game_serial_number is not null 
+		</if>
+		order by b.game_date_time	
+	</select>
+	
+	<!-- 赔率数据 -->
+	<select id="getCompanyOdds" resultType="com.visolink.entity.CompanyOdds">
+		select 
+			id, fk_company_id as company_id,lose_odds,draw_odds,win_odds,fk_betting_game_id
+		from 
+			tb_company_odds 
+		where 
+			fk_betting_game_id= #{betting_game_id}
+		and 
+			type= #{serviceType} 
+		and 
+			fk_company_id= #{companyId}
+	</select>
+	
+	<!-- 比赛推荐情况-->
+	<select id="getGameStrategyList" resultType="com.visolink.entity.BettingStrategyForSingle">
+		select 
+			id,strategy,betting_amount,create_time,fk_betting_game_id,fk_company_id,service_id
+		from 
+			tb_betting_strategy_for_single s 
+		where 
+			s.fk_betting_game_id= #{betting_game_id}
+		and 
+			s.service_id= #{serviceId}
+	</select>
+	
+</mapper>

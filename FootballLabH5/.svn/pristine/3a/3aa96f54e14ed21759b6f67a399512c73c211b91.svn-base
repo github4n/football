@@ -1,0 +1,28 @@
+.bt_bar li{
+	width: 50%;
+	background: RGB(75,104,163);
+	padding: 10px;
+	box-sizing: border-box;
+	position: relative;
+	line-height: 1;
+	font-size: 1.25rem;
+	color: RGB(237,195,62);
+}
+.bt_bar li i{
+	font-size: 10px;
+}
+.bt_bar li:nth-child(1):after{
+	content: "";
+	width: 1px;
+	height: 34px;
+	background: RGB(48,63,96);
+	right: 0px;
+	position: absolute;
+	top: 50%;
+	margin-top: -17px;
+}
+.use_info{
+	background: RGB(53,82,140);
+	overflow: hidden;
+	padding-top: 20px;
+}

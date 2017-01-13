@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>猜比分拿红包</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+</head>
+<body style="padding: 0;">
+
+	<dl class="tishi_des">
+		<dt>活动规则</dt>
+		<dd>1、关注并注册“斗球老料”，在“斗球老料”微信公众号</dd>
+		<dd><span class="tishi_des_b">留言进行竞猜</span></dd>
+		<dd>2、奖品领取：竞猜正确的用户，均可获得<span class="tishi_des_b">5元红包</span></dd>
+		<dd>
+			3、参与格式：例如：<span class="tishi_des_b">利物浦2:0曼联</span>
+		</dd>
+		<dd>
+			4、截至时间：每场比赛开始<span class="tishi_des_b">前10分钟</span>
+		</dd>
+		<dd>
+			5、每个用户仅能竞猜一次，多次竞猜以<span class="tishi_des_b">第一次为准</span>
+		</dd>
+		<dd>
+			没有按照参与格式竞猜的用户以及未关注注册参与竞猜的用户视为无效竞猜
+		</dd>
+		
+	</dl>
+
+	<dl class="tishi_des">
+		<dt>兑奖形式</dt>
+		<dd>
+			6.用户需添加微信<span class="tishi_des_b">douqiu310</span>，并发竞猜截图，核对无误后通过微信红包形式返还
+		</dd>
+	</dl>
+	<hr class="td_hr" />
+	<dl class="tishi_des">
+		<dd>
+			<img src="img/ad_icon.png">活动解释权归北京周天体育科技有限责任公司所有
+		</dd>
+	</dl>
+	<a class="dbtn dbtn123" style="width: 94%" href="javascript:WeixinJSBridge.call('closeWindow');" id="fanan">立即去玩</a>
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script>
+    	var sharttitle = "猜比分拿红包";
+   		var shartcontent = "每日免费竞猜一场，猜中即送5元红包！";
+    	$(function(){
+    		addVisitInfo();
+		    Init();
+    	})
+    </script>
+</body>
+</html>

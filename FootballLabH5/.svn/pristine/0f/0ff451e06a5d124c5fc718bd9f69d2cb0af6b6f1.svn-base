@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>显示方案（单场--已完赛）</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+   
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"/>  
+    
+    <link href="css/mui.css" rel="stylesheet"/>
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+    
+    <style type="text/css">
+    	body,html{margin: 0;,padding: 0;}
+    	
+    	@media screen and (max-width: 980px) { 
+	   
+} 
+
+@media screen and (max-width: 650px) { 
+   
+} 
+
+@media screen and (max-width: 480px) { 
+ 
+    html { 
+        -webkit-text-size-adjust: none; 
+    } 
+ 
+   
+ 
+} 
+
+@media screen and (max-width: 560px) { 
+ 
+   
+ 
+} 
+
+    	
+    </style>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+    </script>
+</head>
+<body style="padding: 0;">
+	<p class="headerTou"><a href="javascript:history.go(-1);" class="pull-left"></a>显示方案（单场-已完赛） <span class="pull-right">●●●</span></p>
+	<p class="yingl">盈利走势图</p>
+	<ul class="list_shigong">
+		<li class="mTop10" onclick="window.open('#','_self')" style="height: 40px;background-color:#d6b947;border: 0;">
+			<div class="content_shigong flexBox clearBoth">
+				<div class="conLeft flexBox_zi1" style="color:#333 ;line-height: 40px;font-size:1.2rem;">
+					<span class="pull-right" style="color:#333 ;line-height: 40px;display: inline-block;font-size:1.2rem;">总投：1000斗&nbsp;&nbsp;预奖：30000斗 </span>2016-10-10
+					<!--<p><span class="pull-right">订单号：159725058387</span><time class="pull-left">2016-10-10  22:00:00</time></p>-->
+				</div>
+			</div>
+			<!--<span class="posi posi1"><i>剩三天</i></span>-->
+			<div style="clear: both;"></div>
+		</li>
+		
+	</ul>
+<div class="panel-group panel-group1" style="margin-top: 0px;" >
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" 
+          href="#collapseOne"><span></span><i class="pull-right rightMore">盈亏<em>1200斗</em></i>8:00(2个)</a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in">
+      <div class="panel-body panel-body1">
+          <table class="table row tableTib rowTable">
+             <tr>
+             	<th colspan="2" class="col-md-2 mcTit">
+             		<div style="border-right:1px solid #ccc;height: 77px;padding-top: 20px;">
+             		<span>英超</span>
+             		<p>阿森纳<i>2:1</i>利物浦</p>
+             		</div>
+             		
+             	</th>
+             	
+             	<th class="col-md-9 mcCont" width="60%" valign="top">
+             		<ul>
+             			<li  style="border-bottom: 1px solid #ccc;"><span class="pull-right">预奖<i>1200</i></span><i>方案/</i>投注：600</li>
+             			<li class="colorH"><span class="pull-right">投注：600</span><span class="xulie12">1</span>胜(2.00)</li>
+             			<li><span class="pull-right">投注：600</span><span class="xulie12">2</span>胜(2.00)</li>
+             			
+             			
+             		</ul>
+             	</th>
+             </tr>
+             
+             
+            
+          </table>
+        
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" 
+          href="#collapseTwo"><span></span><i class="pull-right rightMore">盈亏<em style="color: #c5c3c4;">-1200斗</em></i>19:00(2个)</a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse">
+      <div class="panel-body panel-body1">
+        <table class="table row tableTib rowTable">
+             <tr>
+             	<th colspan="2" class="col-md-2 mcTit">
+             		
+             		<div style="border-right:1px solid #ccc;height: 77px;padding-top: 20px;">
+             		<span>英超</span>
+             		<p>阿森纳<i>2:1</i>利物浦</p>
+             		</div>
+             		
+             	</th>
+             	
+             	<th class="col-md-9 mcCont" width="60%" valign="top">
+             		<ul>
+             			<li  style="border-bottom: 1px solid #ccc;"><span class="pull-right">预奖<i>1200</i></span><i>方案/</i>投注：600</li>
+             			<li><span class="pull-right">投注：600</span><span class="xulie12">1</span>胜(2.00)</li>
+             			<li><span class="pull-right">投注：600</span><span class="xulie12">2</span>胜(2.00)</li>
+             			
+             			
+             		</ul>
+             	</th>
+             </tr>
+             
+             
+            
+          </table>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" 
+          href="#collapseThree"><span></span><i class="pull-right rightMore">盈亏<em style="color: #c5c3c4;">-1200斗</em></i>20:00(2个)</a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse">
+      <div class="panel-body panel-body1">
+        <table class="table row tableTib rowTable">
+             <tr>
+             	<th colspan="2" class="col-md-2 mcTit">
+             		
+             		<div style="border-right:1px solid #ccc;height: 77px;padding-top: 20px;">
+             		<span>英超</span>
+             		<p>阿森纳<i>2:1</i>利物浦</p>
+             		</div>
+             		
+             	</th>
+             	
+             	<th class="col-md-9 mcCont" width="60%" valign="top">
+             		<ul>
+             			<li  style="border-bottom: 1px solid #ccc;"><span class="pull-right">预奖<i>1200</i></span><i>方案/</i>投注：600</li>
+             			<li><span class="pull-right">投注：600</span><span class="xulie12">1</span>胜(2.00)</li>
+             			<li><span class="pull-right">投注：600</span><span class="xulie12">2</span>胜(2.00)</li>
+             			
+             			
+             		</ul>
+             	</th>
+             </tr>
+             
+             
+            
+          </table>
+      </div>
+    </div>
+  </div>
+</div>
+	
+	<a class="dbtn dbtn123" href="#">分享的积分</a>
+
+		
+</body>
+</html>

@@ -1,0 +1,308 @@
+    header.banner img {
+        width: 100w;
+    }
+    
+    header.banner {
+        height: 180px;
+    }
+    
+    .round {
+        margin-top: 5px;
+        padding: 5px;
+        width: 100px;
+        height: 30px;
+        border: 1px solid #FF8000;
+        -moz-border-radius: 3px;
+        /* Gecko browsers */
+        -webkit-border-radius: 3px;
+        /* Webkit browsers */
+        border-radius: 3px;
+        /* W3C syntax */
+    }
+    
+    .jiaobiao {
+        position: absolute;
+        top: -5px;
+        right: -3px;
+        width: 30px;
+        height: 30px;
+    }
+    
+    .swiper-container-horizontal > .swiper-pagination-bullets,
+    .swiper-pagination-custom,
+    .swiper-pagination-fraction {
+        background: rgba(255, 255, 255, 0);
+        bottom: 5px;
+    }
+    
+    .swiper-container {
+        height: 100%;
+    }
+    /*-------------------------------------------------------*/
+    
+    img {
+        border: 0;
+    }
+    
+    li {
+        list-style-type: none;
+    }
+    /*-------------------------------------------------------*/
+    /*****Ê×Ò³FLASHÍ¼Æ¬ÇÐ»»*****/
+    
+    #ifocus {
+        width: 100%;
+    }
+    
+    #ifocus_pic {
+        display: block;
+        position: relative;
+        width: 100%;
+        height: 180px;
+        overflow: hidden;
+        margin: 0px 0 0 0px;
+    }
+    
+    #ifocus_piclist {
+        position: absolute;
+        width: 100%;
+    }
+    
+    #ifocus_piclist li {
+        width: 100%;
+        height: 180px;
+        overflow: hidden;
+        display: none;
+    }
+    
+    #ifocus_piclist img {
+        width: 100%;
+        height: 180px;
+    }
+    
+    #ifocus_btn {
+        display: inline;
+        float: right;
+        width: 91px;
+        margin: 0px 0px 0 0;
+    }
+    
+    #ifocus_btn li {
+        width: 91px;
+        height: 57px;
+        cursor: pointer;
+        opacity: 0.5;
+        -moz-opacity: 0.5;
+        filter: alpha(opacity=50);
+    }
+    
+    #ifocus_btn img {
+        width: 75px;
+        height: 45px;
+        margin: 0px 0 0 0px;
+    }
+    
+    #ifocus_opdiv {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 35px;
+        background: #000;
+        opacity: 0.5;
+        -moz-opacity: 0.5;
+        filter: alpha(opacity=50);
+    }
+    
+    #ifocus_tx {
+        position: absolute;
+        left: 8px;
+        bottom: 8px;
+        color: #FFF;
+    }
+    
+    #ifocus_tx .normal {
+        display: none;
+    }
+    /****二级横向导航****/
+    
+    .navItem {
+        margin-top: 3px;
+        padding: 15px 0;
+        background: #35528c;
+        margin-bottom: 10px
+    }
+    
+    .navList {
+        overflow: hidden;
+    }
+    
+    .navList li {
+        width: 25%;
+        float: left;
+    }
+    
+    .navList li .circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin: 0 auto;
+        line-height: 50px;
+        text-align: center;
+        font-size: 1.65rem;
+    }
+    
+    .icontext {
+        padding: 5px 0 0 0;
+        text-align: center;
+    }
+    
+    .circle img {
+        display: block;
+        width: 61%;
+        margin: 10px auto 0;
+    }
+    
+    .purple img {
+        display: block;
+        width: 55%;
+        margin: 10px auto 0;
+    }
+    /* tabcss */
+    
+    .slideTxtBox {
+        width: 100%;
+        text-align: left;
+    }
+    
+    .slideTxtBox .hd {
+        height: 30px;
+        line-height: 30px;
+        background: #35528c;
+        position: relative;
+        width: 100%;
+        margin-bottom: 2px;
+    }
+    
+    .slideTxtBox .hd ul {
+        width: 100%;
+        position: absolute;
+        top: 0px;
+        height: 30px;
+        padding: 0 15px;
+    }
+    
+    .slideTxtBox .hd ul li {
+        width: 33.33333%;
+        height: 30px;
+        line-height: 30px;
+        float: left;
+        cursor: pointer;
+        text-align: center;
+        font-size: 1.25rem;
+    }
+    
+    .slideTxtBox .hd ul li span {
+        font-size: 1.25rem;
+        display: inline-block;
+        height: 17px;
+        line-height: 17px;
+        width: 100%;
+        border-right: 1px solid #999999;
+    }
+    
+    .noborder {
+        border-right-width: 0px!important;
+    }
+    
+    .slideTxtBox .hd ul li.on {
+        height: 30px;
+        border-bottom: 1px solid #edc33e;
+    }
+    
+    .slideTxtBox .hd ul li.on span {
+        color: #edc33e;
+        font-size: 1.25rem;
+    }
+    
+    .slideTxtBox .bd ul {
+        /*padding: 15px;*/
+        zoom: 1;
+    }
+    
+    .slideTxtBox .bd li {
+        width: 50%;
+        padding: 15px;
+        background: #35528c;
+        float: left;
+        margin-bottom: 1px;
+    }
+    
+    .slideTxtBox .bd li:nth-child(odd) {
+        margin-right: 1px;
+        margin-left: -1px;
+    }
+    
+    .slideTxtBox .bd li .date {
+        float: right;
+        color: #999;
+    }
+    /* 下面是前/后按钮代码，如果不需要删除即可 */
+    
+    .slideTxtBox .arrow {
+        position: absolute;
+        right: 10px;
+        top: 0;
+    }
+    
+    .slideTxtBox .arrow a {
+        display: block;
+        width: 5px;
+        height: 9px;
+        float: right;
+        margin-right: 5px;
+        margin-top: 10px;
+        overflow: hidden;
+        cursor: pointer;
+        background: url("../images/arrow.png") 0 0 no-repeat;
+    }
+    
+    .slideTxtBox .arrow .next {
+        background-position: 0 -50px;
+    }
+    
+    .slideTxtBox .arrow .prevStop {
+        background-position: -60px 0;
+    }
+    
+    .slideTxtBox .arrow .nextStop {
+        background-position: -60px -50px;
+    }
+    
+    .planTitle{
+        height: 30px;
+        line-height: 30px;
+        background: #35528c;
+        margin-bottom: 3px;
+    }
+    .planTitle p{
+        height: 30px;
+        line-height: 30px;
+        padding: 0 0 0 40px;
+    }
+    .highColor{
+        color: #edc33e;
+        font-size: 1.25rem;
+    }
+    .bd em{
+        color: #edc33e;
+    }
+    .bigSize{
+        font-size: 1.25rem;
+    }
+    .red{background-color:#dc4747;}
+    .green{background-color:#15a022;}
+    .orange{background-color:#d65213;}
+    .purple{background-color:#b319ca;}
+    .icon{ display: block; float: left; width: 20px; height: 20px; padding: 2px; border-radius: 50%; background: #cc0f21; margin-top: 5px; margin-left: 15px;}

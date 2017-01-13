@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>跟投</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link href="css/timeline.css" rel="stylesheet" type="text/css" />
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="css/listPage.css"/>
+    <link href="css/withBetting.css" rel="stylesheet" type="text/css" />
+    
+	</head>
+	<body>
+		<div class="betting_pay">
+			<div class="top_block">
+				<p class="align_left">京城虎哥</p>
+				<p>单场方案</p>
+				<p class="align_right">近30天盈利率20%</p>
+			</div>
+			<div class="con_block">
+				<div class="con_block_top clearfix">
+					<a class="checkPlan" href="#">查看方案 >></a>
+				</div>
+				<div class="con_block_middle">
+					<span id="interestRate">105</span>%
+					<i>预计盈利率</i>
+				</div>
+				<div class="con_block_bt">
+					跟单截止时间:2016-10-10 23:00:00
+				</div>
+			</div>		
+			<div class="footer_tap">
+	     		<div class="toggleBox clearfix">
+	                <div id="mySelect" class="mySelect pull-left upIcon">
+	                	<p class="selectVal">投<i></i>积分</p>
+	                	<ul class="selectList">
+	                		<li class="defaultVal">投<i>2000</i>积分</li>
+	                		<li>投<i>1000</i>积分</li>
+	                		<li>投<i>500</i>积分</li>
+	                		<li>投<i>200</i>积分</li>
+	                		<li>投<i>100</i>积分</li>
+	                	</ul>
+	                </div>
+	                <p class="pull-right rtTxt">预计收益:<span id="intergalNum" class="intergalNum"></span>积分</p>
+	            </div>	
+	            <input type="button" id="js-submit" class="betBtn" value="立即支付">				
+			</div>
+
+		</div>
+		<script src="js/common.js"></script>
+		<script src="js/bettingPay.js"></script>
+
+	</body>
+</html>

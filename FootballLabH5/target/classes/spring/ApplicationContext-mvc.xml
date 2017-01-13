@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:task="http://www.springframework.org/schema/task"  
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd	
+		http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/task
+		http://www.springframework.org/schema/task/spring-task.xsd  
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<mvc:annotation-driven/>	
+	<mvc:default-servlet-handler/>
+	<task:annotation-driven/>  
+	
+	<context:component-scan base-package="com.visolink.controller" />
+	<context:component-scan base-package="com.visolink.h5.controller" />
+	<context:component-scan base-package="com.json" />
+
+	<!-- 对静态资源文件的访问  restful-->     
+	<mvc:resources mapping="/admin/**" location="/,/admin/" />
+	<mvc:resources mapping="/static/**" location="/,/static/" />
+	<mvc:resources mapping="/plugins/**" location="/,/plugins/" />
+	<mvc:resources mapping="/uploadFiles/**" location="/,/uploadFiles/" /> 
+	
+	<mvc:resources mapping="/h5/css/**" location="/,/h5/css/" />
+	<mvc:resources mapping="/h5/images/**" location="/,/h5/images/" />
+	<mvc:resources mapping="/h5/js/**" location="/,/h5/js/" />
+	<mvc:resources mapping="/h5/pic/**" location="/,/h5/pic/" />
+	<mvc:resources mapping="/h5/fashion/**" location="/,/h5/fashion/" />
+
+	<!-- 访问拦截  -->  
+  	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**/**"/>
+			<bean class="com.visolink.interceptor.LoginHandlerInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/webChat/**"/>
+			<bean class="com.visolink.interceptor.WechatParamsInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	<!-- aop log -->
+	<aop:aspectj-autoproxy />  
+        <bean id="logAspect" class="com.visolink.h5.aop.LogAspect" /> 
+        
+	<aop:aspectj-autoproxy proxy-target-class="true">
+		        <aop:include name="logAspect"/>  
+	</aop:aspectj-autoproxy>
+	
+    <context:annotation-config/>  
+   	 <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>  
+    <context:component-scan base-package="com.visolink"/> 
+	 
+	<!-- 配置SpringMVC的视图解析器 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/"/>
+		<property name="suffix" value=".jsp"/>
+		<property name="contentType" value="text/html;charset=UTF-8" />
+	</bean>
+	
+	<bean id="exceptionResolver" class="com.visolink.resolver.MyExceptionResolver"></bean>
+	<!-- 上传拦截，如最大上传值及最小上传值 -->
+	  <bean id="multipartResolver"   class="org.springframework.web.multipart.commons.CommonsMultipartResolver" >   
+		  <property name="maxUploadSize">    
+	          <value>104857600</value>    
+	       </property>   
+	        <property name="maxInMemorySize">    
+	            <value>4096</value>    
+	        </property>   
+	         <property name="defaultEncoding">    
+	            <value>utf-8</value>    
+	        </property> 
+    </bean>  
+	
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="jsonHttpMessageConverter" />
+				<ref bean="byteArrayHttpMessageConverter" />
+				<ref bean="stringHttpMessageConverter" />
+				<ref bean="sourceHttpMessageConverter" />
+				<ref bean="xmlAwareFormHttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>application/json;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="byteArrayHttpMessageConverter" class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+	<bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter" >
+		<property name="writeAcceptCharset" value="false"/>
+	</bean>
+	<bean id="sourceHttpMessageConverter" class="org.springframework.http.converter.xml.SourceHttpMessageConverter" />
+	<bean id="xmlAwareFormHttpMessageConverter" class="org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter" />    
+</beans>

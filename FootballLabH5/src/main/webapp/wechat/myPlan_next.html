@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>我的方案</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/iscroll.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+    </style>
+</head>
+<body style="padding: 0;">
+
+    <!--<p class="headerTou"><a href="javascript:GoToUrl_T('myPlan.html');" class="pull-left"></a>我的方案<img src="img/home.png" onclick="GoToUrl_T('index.html')" style="float:right;margin-top:10px;width:24px;height:24px;" /></p>-->
+    
+
+        <div class="waiTab">
+            <ul id="myTab" class="nav nav-tabs nav-tabs-jin">
+                <li id="li1" class="active"><a href="#home" data-toggle="tab" onclick="rMs()">我的方案</a></li>
+                <li id="li2" class="pull-right"><a href="#ios" data-toggle="tab" onclick="rMs()">专家方案</a></li>
+            </ul>
+        </div>
+    <div id="wrapper" style="top:40px;">
+        <div id="scroller">
+            <div id="myTabContent" class="tab-content">
+
+                <div class="tab-pane fade in active" id="home">
+                    <ul class="list_shigong" id="list">
+                    </ul>
+                </div>
+
+                <div class="tab-pane fade" id="ios">
+                    <ul class="list_shigong" id="list1">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+        $(function () {
+
+            var zj_ymd = GetDateStr(0);
+
+            // 绑定我的方案
+            dataUrl = fl_url.mySingleDayList;
+            dataParam = {
+                phoneNum: fl_user.Mobile(),
+                beginDate: getQueryString("beginDate"),
+                endDate: zj_ymd,
+                type: getQueryString("type"),
+                serviceId: getQueryString("serviceId")
+            };
+            var data1 = GetData(dataUrl, dataParam);
+            $("#list").append(BindData(data1,1));
+            // 绑定专家方案
+            dataUrl1 = fl_url.singleDayList;
+
+
+            dataParam1 = {
+                beginDate: zj_ymd,
+                days: GetDateDiffDay(getQueryString("beginDate"), zj_ymd).day,
+                type: getQueryString("type"),
+                serviceId: getQueryString("serviceId"),
+                serviceType: getQueryString("service_type"),
+                service_code: getQueryString("service_code")
+            };
+            var data2 = GetData(dataUrl1, dataParam1);
+
+            $("#list1").append(BindData(data2, 2));
+
+            if (getQueryString("n_d_type") == "2") {
+                $("#ios").addClass("in");
+                $("#ios").addClass("active");
+                $("#home").removeClass("in");
+                $("#home").removeClass("active");
+                $("#li2").addClass("active");
+                $("#li1").removeClass("active");
+            }
+
+            loaded();
+
+            sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+            shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+            shartlink = "http://www.01588.com/wechat/index.html?experts_code=" + getQueryString("experts_code");
+            Init();
+        });
+        function GoToUrl_T(u) {
+            location.href = u + "?experts_code=" + getQueryString("experts_code");
+        }
+        function rMs() {
+            setTimeout(function () {
+                myScroll.refresh();
+            }, 500);
+        }
+
+        function loaded() {
+            myScroll = new IScroll('#wrapper', { click: true });
+            document.addEventListener('touchmove', function (e) {
+                e.preventDefault();
+            }, false);
+        }
+        
+        function openNext(url,date) {
+            var memberInfo;
+            if (fl_user.IsLogin()) {
+                memberInfo = GetData(fl_url.memberInfo, { phoneNum: fl_user.Mobile(), serviceId: getQueryString("serviceId") });
+                memberInfo = JSON.parse(memberInfo);
+            }
+
+            if (getQueryString("service_code") == "JCSPF" || getQueryString("service_code") == "JCRQSPF") {
+                var t_date = GetDateDiffDay(date, GetDateYMDHMS());
+                if (new Date().getHours() >= 17 && memberInfo != undefined && memberInfo.hasLook == 0 || t_date.day == 1 && t_date.hours < 11 && memberInfo != undefined && memberInfo.hasLook == 0 || t_date.day == 1 && t_date.hours == 11 && t_date.minutes < 30 && memberInfo != undefined && memberInfo.hasLook == 0) {
+
+                    if (memberInfo.hasPK != "0") {
+                        sessionStorage.setItem("myPlan_next", location.href);
+                        location.href = url;
+                        return;
+                    }
+
+
+                    var ispkdata = GetData(fl_url.hasPkBettingGame, { serviceId: getQueryString("serviceId"), serviceType: getQueryString("service_type"), companyId: getQueryString("companyId") });
+                    ispkdata = JSON.parse(ispkdata);
+                    if (ispkdata.hasPkBettingGame == false) {
+                        sessionStorage.setItem("myPlan_next", location.href);
+                        location.href = url;
+                        return;
+                    }
+
+                    confirm_error1("<lable style=\"color:#000000;font-size:16px;\">PK赛提示</lable><br><div style=\"text-align:left;color:#000;line-height:24px;\">专家方案已出，您可选择与专家进行PK；若不PK，请直接选择查看方案。</div>"
+                                , function () {
+                                    if (memberInfo.hasPK != "0") {
+                                        tishi_error("您今日已经PK过了，不可以再次进行PK。");
+                                        return;
+                                    }
+                                    dataParam_pk = {
+                                        gameDate: date,
+                                        companyId: getQueryString("companyId"),
+                                        type: getQueryString("type"),
+                                        serviceId: getQueryString("serviceId"),
+                                        serviceType: getQueryString("service_type"),
+                                        service_code: getQueryString("service_code")
+                                    };
+                                    // 本地存储
+                                    sessionStorage.setItem("dataParamPKsel", JSON.stringify(dataParam_pk));
+                                    location.href = "pk_index.html?experts_code=" + getQueryString("experts_code");
+                                }, function () {
+                                    GetData(fl_url.saveViewRecord, {
+                                        phoneNum: fl_user.Mobile(),
+                                        serviceId: getQueryString("serviceId")
+                                    });
+                                    sessionStorage.setItem("myPlan_next", location.href);
+                                    location.href = url;
+                                }, "查看方案", "与专家PK");
+                    return;
+                }
+            }
+            sessionStorage.setItem("myPlan_next", location.href);
+            location.href = url;
+            
+        }
+
+        // 绑定数据html
+        function BindData(data,clickType) {
+            var html = "";
+            data = JSON.parse(data);
+            console.log(data);
+
+            var is_day = false;
+            var d_temp_n = new Date();
+            if (d_temp_n.getHours() == 11 && d_temp_n.getMinutes() < 30 || d_temp_n.getHours() < 11) {
+                is_day = true;
+            }
+
+            if (typeof (data) != undefined && data != null && data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+
+                    if (GetDateDiffDay(data[i].date, GetDateStr(0)).day == 0 && is_day) {
+                        continue;
+                    }
+
+                    html += "<li class=\"mTop10\" onclick=\"openNext('myPlan_next_detail.html?clickType=" + clickType + "&gameDate=" + data[i].date + "&type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&serviceType=" + getQueryString("service_type") + "&companyId=" + getQueryString("companyId") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "','" + data[i].date + "')\">";
+                    html += "<div class=\"content_shigong flexBox clearBoth\">";
+                    html += "<div class=\"conLeft flexBox_zi1\">";
+                    html += "<p class=\"font14\"><span class=\"pull-right rightTextR\" style=\"font-size: 1.2rem;width:30%;\"><i>" + data[i].number2 + "场</i>场数：</span><time class=\"pull-left\">" + data[i].date + "</time></p>";
+                    html += "<h3 style=\"font-size: 1.2rem;\"><span style=\"font-size: 1.2rem;width:30%;\" class=\"pull-right rightTextR\"><i class=\"colorh ";
+                    if (parseInt(data[i].number3) < 0) {
+                        html += "colorlv";
+                    }
+
+                    if (data[i].end == "0") {
+                        html += "\" style=\"font-size: 1.2rem;\"></i>等待开奖</span>投注：" + parseInt(data[i].number4) + "</h3>";
+                    } else {
+                        html += "\" style=\"font-size: 1.2rem;\">" + parseInt(data[i].number3) + "</i>盈利： </span>投注：" + parseInt(data[i].number4) + "</h3>";
+                    }
+                    html += "</div>";
+                    html += "</div>";
+                    html += "<div style=\"clear: both;\"></div>";
+                    html += "</li>";
+                }
+            } else {
+                html += "<div style='text-align:center;margin-top:40%;'><img src=\"img/myPlan_not.jpg\"/></div>";
+            }
+            return html;
+        }
+    </script>
+</body>
+</html>

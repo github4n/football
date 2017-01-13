@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CompanyOddsMapper">
+		
+	<!-- 赔率数据根据id -->
+	<select id="getCompanyOddsById" resultType="com.visolink.entity.CompanyOdds">
+		select 
+			id, fk_company_id as company_id,lose_odds,draw_odds,win_odds,fk_betting_game_id
+		from 
+			tb_company_odds 
+		where 
+			id = #{company_odds_id}
+	</select>
+		
+	<!-- 新增pk赔率-->
+	<insert id="saveCompanyOddsPk" parameterType="pd">
+		insert into tb_company_odds_pk(
+			id,	
+			lose_odds,	
+			draw_odds,	
+			win_odds,
+			fk_betting_game_id,
+			fk_company_id,
+			fk_member_id,
+			fk_t_pk_detaile_id
+		) values (
+			#{id},	
+			#{lose_odds},	
+			#{draw_odds},	
+			#{win_odds},
+			#{fk_betting_game_id},
+			#{fk_company_id},
+			#{fk_member_id},
+			#{fk_t_pk_detaile_id}
+		)
+	</insert>
+</mapper>

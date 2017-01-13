@@ -1,0 +1,451 @@
+body{
+	margin: 0px;
+	padding: 0px;
+	
+}
+i{
+	color: #333;
+}
+.banner{
+	width: 100%;
+	position: relative;
+	background-size: 100%;
+}
+.banner img{
+	display: block;
+}
+.banner .topIcon{
+	position: absolute;
+	top: 0px;
+	width: 50px;
+	left: 50%;
+	margin-left: -25px;
+}
+.banner .bannerCon{
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	width: 100%;
+}
+.bannerBox li{
+	float: left;
+}
+.bannerBox{
+	margin-top: 50px;
+}
+.bannerBox .leftCell,.bannerBox .rightCell{
+	text-align: center;
+	font-size: 20px;
+	color: RGB(251,241,56);
+	width: 40%;
+}
+.bannerBox .leftCell i{
+	color: RGB(251,241,56);
+}
+.bannerBox .centerCell{
+	width: 10%;
+}
+.bannerBox .matchName{
+	text-align: center;
+	color: RGB(251,241,56);
+}
+.bannerBox td{
+	vertical-align: middle;
+}
+
+.btTxt{
+	position: absolute;
+	bottom: 10px;
+	width: 100%;
+	text-align: center;
+}
+.content{
+	padding:10px;
+	margin-bottom: 100px;
+}
+/*积分奖励*/
+
+.grid_list li{
+	float: left;
+	width: 25%;
+	text-align: center;
+	position: relative;
+	overflow: hidden;
+}
+.grid_list{
+	padding: 5px 0 0 10px;
+	border-bottom: 1px solid RGB(48,63,96);
+}
+.grid_box{
+	background: RGB(53,82,140);
+
+}
+.interBox{
+	margin: 0 10px 5px 0;
+	background: RGB(68,105,179);
+	padding: 12px 20px 12px 10px;	
+	box-sizing: border-box;
+	border-radius: 5px;
+	position: relative;
+	overflow: hidden;
+}
+
+.ranking{
+	display: block;
+	color: #fff;
+	background: RGB(68,105,179);
+	padding: 5px;
+	width: 100%;
+	text-align: center;
+	border-radius: 20px;
+}
+.ranking:hover{
+	color: #fff;
+	text-decoration: none;
+}
+.lastBox{
+	position: absolute;
+	height: 45px;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 10px;
+	margin: auto;
+}
+.joinNum{
+	color: #ccc;
+
+}
+.icon_Medal{
+	display: block;
+	width: 15px;
+	height: 20px;
+	position: absolute;
+	top: 0px;
+	right: 2px;
+	background: #fff;
+}
+.icon_Medal.icon_First{
+	background: url(../img/icon-firstJp.png) no-repeat;
+	background-size: 100%;
+}
+.icon_Medal.icon_Second{
+	background: url(../img/icon-secondJp.png) no-repeat;
+	background-size: 100%;
+}
+.icon_Medal.icon_Third{
+	background: url(../img/icon-thirdJp.png) no-repeat;
+	background-size: 100%;
+}
+.leftTopIcon{
+	position: absolute;
+	z-index: 1;
+}
+.lefticon{
+	left: 1px;
+}
+.topscro{
+	left: 25px;
+
+}
+.topscro li{
+	color: RGB(216,184,71);
+}
+.interBox img{
+	width: 100%;
+	display: block;
+	margin: 0 auto;
+}
+.interBox .btTap{
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	text-align: center;
+	background: rgba(0,0,0,0.4);
+	padding: 2px 0;
+}
+.integral{
+	margin: 0 0 10px 0;
+}
+.integral ul{
+	overflow: hidden;
+}
+.integral ul li{
+	float: left;
+}
+.integralNum{
+	font-size: 16px;
+	color: #ce9a3e;
+}
+.integral ul li a{
+	font-size: 14px;
+	color: #eb6100;
+	text-decoration: none;
+	border-bottom: 1px solid #eb6100; 
+}
+.pull-right{
+	float: right!important;
+}
+.ps-right{
+	right: 0!important;
+}
+
+.betBtn{
+	font-size: 16px;
+	display: block;
+	width: 100%;
+	text-align: center;
+	background: #ccc;
+	padding:7px;
+	border-radius: 5px;
+	margin-top: 10px;
+	color: #333;
+	border: 0px;
+}
+.bet-active{
+	background: #d8b847;
+}
+.activeRule{
+	margin: 20px 0 0 0;
+}
+.activeRule p{
+	line-height: 20px;
+	color: #ccc;
+}
+.highColor{
+	color: #eb6100;
+}
+.Ruletitle{
+	margin: 0 0 5px 0;
+}
+.table>tbody>tr>td>input[type='checkbox']
+{
+	position: absolute;
+    top: 0px;
+    left: 0px;
+	margin: 0px;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+
+    border: 0;
+    outline: 0 !important;
+    background-color: transparent;
+	opacity: 0;
+    -webkit-appearance: none;
+}
+.tableList{
+	overflow: hidden;
+}
+.titleTxt{
+	padding: 5px 0;
+	font-size: 14px;
+}
+.listCell:nth-child(2){
+	margin-top: 5px;
+}
+.listCell>ul{
+	overflow: hidden;
+	border-radius: 5px;
+}
+.listCell:nth-child(1){
+	border-bottom: 1px solid RGB(32,42,64);
+	padding-bottom: 15px;
+}
+.listCell>ul>li{
+	float: left;
+	width: 33.33333%;
+	text-align: center;
+	padding: 5px;
+	box-sizing: border-box;
+	background: RGB(53,82,140);
+
+}
+.listCell>ul>li:nth-child(2){
+	border-left: 1px solid RGB(48,63,96);
+	border-right: 1px solid RGB(48,63,96);
+}
+.listCell>ul>li p:nth-child(1){
+	margin-bottom: 5px;
+}
+.listCell>ul>li p{
+	font-size: 14px;
+}
+.popTxt{
+	color: RGB(13,195,30);
+	font-size: 14px;
+}
+.mySelect{
+	width: 120px;
+	padding: 0 35px 0 5px;
+
+	position: relative;	
+	height: 35px;
+	line-height: 35px;
+	border-radius: 5px;
+
+}
+.upIcon{
+	background:RGB(255,255,255) url(../img/downIcon.png) no-repeat;
+	background-size: 15px;
+	background-position: 94px center;	
+}
+.downIcon{
+	background:RGB(255,255,255) url(../img/upIcon.png) no-repeat;
+	background-size: 15px;
+	background-position: 94px center;	
+}
+
+.mySelect .selectVal{
+	color: #333;
+	height: 35px;
+	line-height: 35px;
+	border-right: 1px solid #ccc;
+}
+.mySelect .selectList li{
+	color: #333;
+	padding: 10px 5px;
+	border-bottom: 1px solid RGB(48,63,96);
+}
+.mySelect .selectList{
+	position: absolute;
+	right: 0px;
+	left: 0px;
+	bottom:31px ;
+	background: RGB(255,255,255);
+	border-radius: 5px 5px 0 0;
+	padding-bottom: 3px;
+	display: none;
+	
+}
+.intergalNum{
+	color: RGB(216,184,71);
+	font-size: 14px;
+}
+.toggleBox{
+	display: none;
+}
+.clearfix:after{  
+    content:"."; 
+    height:0;  
+    visibility:hidden;  
+    display:block;  
+    clear:both;  
+} 
+.rtTxt{
+	height: 35px;
+	line-height: 35px;
+	font-size: 14px;
+}
+.active{
+	background: RGB(216,184,71)!important;
+	color: #333;
+}
+.active p{
+	color: #333!important;
+}
+.selectList .active{
+	background: RGB(204,204,204)!important;
+}
+.active i{
+	color: #333!important;
+}
+
+
+/******积分购买*******/
+
+.buy_List .pos-left{
+	width: 100px;
+	box-sizing: border-box;
+}
+.buy_List .pos-right{
+	position: absolute;
+	left: 100px;
+	top: 10px;
+	right: 20px;
+	text-align: right;
+}
+.buy_List li{
+	position: relative;
+	border-bottom: 1px solid RGB(48,63,96);
+	padding: 10px;
+
+}
+.buy_List li div,.buy_List li i{
+	font-size: 14px;
+}	
+.buy_List{
+	padding: 0 10px;
+	margin-top: 20px;
+}
+.buy_List ul{
+	background: RGB(53,82,140);
+}
+.left_title{
+	color: RGB(216,184,71);
+}
+
+
+/*****支付页面******/
+.ul_grid li{
+	 float: left;
+	 width: 33.3333%;
+	 margin-bottom: 10px;
+	 position: relative;
+	 
+}
+.ul_grid i{
+	color: #fff;
+}
+.payCon {
+	padding: 10px;
+}
+.payCon .ul_grid{
+	min-height: 150px;
+}
+.payCon .ul_grid li .checkBox{
+	width: 95%;
+	margin: 0 auto;
+	text-align: center;
+	background: RGB(53,82,140);
+	border-radius: 5px;
+	padding: 10px;
+}
+.payCon .inptBox:nth-child(6){
+	background: RGB(48,63,96)!important;
+	width: 80%;
+}
+.payCon .inptBox .otherAmount{
+	display: block;
+	width: 100%;
+	border: none;
+	background: none;
+	border-radius: 5px;
+	border: 1px solid RGB(53,82,140);
+	outline: none;
+	font-size: 14px;
+	height: 38px;
+	padding: 0 25px 0 15px;
+}	
+.payCon .pix{
+	position: absolute;	
+	right: 10px;
+	top: 50%;
+	margin-top: -7px;
+}
+
+.buy_List i{
+	color: RGB(216,184,71);
+}
+.footerBox{
+	position: fixed;
+	bottom: 0px;
+	width: 100%;
+	margin: 0px;
+	left: 0px;
+	padding: 10px;
+	box-sizing: border-box;
+	background: #303f60;
+	border-top: 1px solid #a6c4fe;
+}

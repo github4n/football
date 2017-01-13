@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>我的方案详情</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/iscroll.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+
+    </style>
+</head>
+
+
+<body style="padding: 0;">
+    <!--<p class="headerTou"></p>-->
+    <div id="wrapper" style="top:0px;">
+        <div id="scroller">
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade active in" id="home">
+                    <ul class="list_shigong" style="clear: both;">
+                        <li class="mTop10" onclick="window.open('#','_self')" style="height: 30px; background-color: #d6b947; border: 0;">
+                            <div class="content_shigong flexBox clearBoth">
+                                <div class="conLeft flexBox_zi1" style="color: #333; line-height: 30px; font-size: 1.2rem; padding: 0 8px 0 10px;">
+                                    <span class="pull-right" id="lblZTandZJ" style="color: #333; line-height: 30px; display: inline-block; font-size: 1.2rem;">总投:&nbsp;&nbsp;<label id="zt1" style="color: #333;font-size: 1.2rem;"></label>&nbsp;&nbsp;<i style="color:#000;font-size: 1.2rem;" id="iZj">中奖:</i>&nbsp;&nbsp;<label id="yj1" style="color: #333;font-size: 1.2rem;"></label> </span><label id="time1" style="color: #333;font-size: 1.2rem;"></label>
+                                </div>
+                            </div>
+                            <div style="clear: both;"></div>
+                        </li>
+
+                    </ul>
+
+                    <div class="panel-group panel-group1" style="margin-top: 0px;" id="list">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script src="js/bind_data_ep.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+        $(function () {
+            var dataUrl, dataParam;
+            if (getQueryString("clickType") == "2") {
+                // 绑定专家方案
+                dataUrl = fl_url.singleTimeList;
+                dataParam = {
+                    gameDate: getQueryString("gameDate"),
+                    companyId: getQueryString("companyId"),
+                    type: getQueryString("type"),
+                    serviceId: getQueryString("serviceId"),
+                    serviceType: getQueryString("serviceType"),
+                    service_code: getQueryString("service_code")
+                };
+                $(".headerTou").html("<a href=\"javascript:backUrl();\" class=\"pull-left\"></a>专家方案详情" + '<img src="img/home.png" onclick="location.href=\'index.html?experts_code=' + getQueryString("experts_code") + '\';" style="float:right;margin-top:10px;width:24px;height:24px;" />');
+                document.title = "专家方案详情";
+            } else {
+                // 绑定我的方案
+                dataUrl = fl_url.mySingleTimeList;
+                dataParam = {
+                    gameDate: getQueryString("gameDate"),
+                    type: getQueryString("type"),
+                    serviceId: getQueryString("serviceId"),
+                    phoneNum: fl_user.Mobile(),
+                };
+                $(".headerTou").html("<a href=\"javascript:backUrl();\" class=\"pull-left\"></a>我的方案详情" + '<img src="img/home.png" onclick="location.href=\'index.html?experts_code=' + getQueryString("experts_code") + '\';" style="float:right;margin-top:10px;width:24px;height:24px;" />');
+                document.title = "我的方案详情";
+            }
+            var data = GetData(dataUrl, dataParam);
+            $("#list").append(BindData(data, 1));
+            $("#time1").text(getQueryString("gameDate"));
+            //$("#time2").text(getQueryString("gameDate"));
+            loaded();
+
+            sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+            shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+            shartlink = "http://www.01588.com/wechat/index.html?experts_code=" + getQueryString("experts_code");
+            Init();
+        });
+
+        function backUrl() {
+            if (sessionStorage.myPlan_next == undefined) {
+                history.go(-1);
+            } else {
+                if (sessionStorage.myPlan_next.indexOf("&n_d_type=") > 0) {
+                    location.href = sessionStorage.myPlan_next;
+                } else {
+                    location.href = sessionStorage.myPlan_next + "&n_d_type=" + getQueryString("clickType");
+                }
+            }
+        }
+
+        function loaded() {
+            myScroll = new IScroll('#wrapper', { click: true });
+            document.addEventListener('touchmove', function (e) {
+                e.preventDefault();
+            }, false);
+        }
+        // 绑定数据html
+        function BindData(data,type) {
+            var html = "";
+            data = JSON.parse(data);;
+            var zt = 0, zj = 0;
+            if (typeof (data) != undefined && data != null && data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    zt += data[i].num4;
+                    zj += data[i].num3 + data[i].num4;
+                    html += SetHtmlEPByServerCode(getQueryString("service_code"), data[i], i);
+                }
+            } else {
+                html += "<div style='text-align:center;margin-top:40%;'><img src=\"img/myPlan_not.jpg\"/></div>";
+            }
+            $("#yj" + type).text(parseInt(zj));
+            $("#zt" + type).text(parseInt(zt));
+            return html;
+        }
+
+    </script>
+</body>
+
+</html>

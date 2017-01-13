@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TradeMapper">
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+	 	select 
+		        a.*,b.`phone_number`, b.weixin, c.`service_name`,d.experts_name,e.*
+		 from  
+		        tb_transaction_detail as a  
+		 left join
+		 		tb_transaction as e on e.transaction_id = a.fk_transaction_id       
+		 left join  
+		       `tb_member` as b on b.`member_id` = e.`fk_memeber_id`
+		 left join  
+		       `tb_service` as c on c.id = e.`fk_service_id`
+		 left join
+		 		tb_experts as d on d.experts_id=b.fk_experts_id  
+		 
+		where 
+			 a.id = #{transaction_detail_id}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+	 	select 
+		        a.*,b.`phone_number`,b.member_name,c.`service_name`,c.`service_code`,c.play_type,d.experts_name,e.*
+		 from  
+		        tb_transaction_detail as a  
+		 left join
+		 		tb_transaction as e on e.transaction_id = a.fk_transaction_id       
+		 left join  
+		       `tb_member` as b on b.`member_id` = e.`fk_memeber_id`
+		 left join  
+		       `tb_service` as c on c.id = e.`fk_service_id`
+		 left join
+		 		tb_experts as d on d.experts_id=b.fk_experts_id   
+		 
+
+		where 1=1  and a.money_amount >0  and b.member_id is not null 
+				     
+		<if test="pd.expert_id != null and pd.expert_id != ''"><!-- 专家检索 -->
+			and d.experts_id = #{pd.expert_id}
+		</if>
+		<if test="pd.statement != null and pd.statement != ''"><!-- 交易状态 -->
+			and a.statement=#{pd.statement} 
+		</if>
+		<if test="pd.wf != null and pd.wf != ''"><!-- 定制玩法 -->
+			and c.service_code=#{pd.wf} 
+		</if>
+		<if test="pd.member_name!= null and pd.member_name!= ''"><!-- 用户名检索 -->
+			and b.member_name like CONCAT(CONCAT('%', #{pd.member_name}),'%') 
+		</if>
+		<if test="pd.phone_name!= null and pd.phone_name!= ''"><!-- 手机号检索 -->
+			and b.phone_name like CONCAT(CONCAT('%', #{pd.phone_name}),'%') 
+		</if>
+		<if test="pd.create_timeStart!=null and pd.create_timeStart!=''"><!-- 创建时间检索 -->
+			and a.create_time &gt;= #{pd.create_timeStart} 
+		</if>
+		<if test="pd.create_timeEnd!=null and pd.create_timeEnd!=''"><!-- 创建时间检索 -->
+			and a.create_time &lt;= #{pd.create_timeEnd} 
+		</if>
+		<if test="pd.transaction_number!= null and pd.transaction_number!= ''"><!-- 订单号检索 -->
+			and e.transaction_number like CONCAT(CONCAT('%', #{pd.transaction_number}),'%') 
+		</if> 
+		<if test="pd.type!= null and pd.type!= ''"><!-- 订单类型  1方案定制 2对赌 -->
+			and e.type =#{pd.type}
+		</if>   
+		
+		order by a.create_time desc 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+	 	select 
+		        a.*,b.`phone_number`,c.`service_name`,d.experts_name,e.*
+		 from  
+		        tb_transaction_detail as a  
+		 left join
+		 		tb_transaction as e on e.transaction_id = a.fk_transaction_id       
+		 left join  
+		       `tb_member` as b on b.`member_id` = e.`fk_memeber_id`
+		 left join  
+		       `tb_service` as c on c.id = e.`fk_service_id`
+		 left join
+		 		tb_experts as d on d.experts_id=b.fk_experts_id   
+		 
+	</select>
+	
+	<!-- 我的交易记录 -->
+	<select id="listByMember" parameterType="pd" resultType="pd">
+	 	select 
+		    a.id as tdid,
+            a.statement,
+            a.create_time,
+            a.money_amount as actualMoney,
+            d.service_name,
+            b.transaction_id as tid,
+            b.transaction_number,
+            b.type,
+            a.fk_points_consumption_id as points_consumption_id,
+            a.fk_member_coupon_id as member_coupon_id,
+            b.transaction_amount as orderMoney,
+            d.play_type,
+            d.service_code
+		 from  
+		     tb_transaction_detail as a  
+		 left join
+		 	 tb_transaction as b on b.transaction_id = a.fk_transaction_id       
+		 left join  
+          	`tb_member` as c on c.`member_id` = b.`fk_memeber_id`
+		 left join  
+         	`tb_service` as d on d.id = b.`fk_service_id`
+         left join
+		 	 tb_experts as e on e.experts_id = c.fk_experts_id      	
+         where c.`phone_number` = #{pd.phoneNum} 
+         	   and e.experts_id = c.fk_experts_id   
+         	   and e.experts_code = #{pd.experts_code}     
+         	   and a.statement != 0
+         
+         order by a.create_time desc
+         limit #{currentResult} ,#{showCount}
+	</select>
+	
+	<!-- 我的交易记录详情-->
+	<select id="detaileByMember" parameterType="pd" resultType="pd">
+	 	select 
+		    a.id as tdid,
+            a.statement,
+            a.create_time,
+            a.money_amount as actualMoney,
+            a.fk_points_consumption_id as consumId,
+            d.service_name,
+            b.transaction_id as tid,
+            b.transaction_number,
+            b.transaction_amount as orderMoney,
+            b.type,
+            b.service_start_time,
+            b.service_end_time,
+            e.points_number,
+            d.service_code,
+            d.play_type
+		 from  
+		     tb_transaction_detail as a  
+		 left join
+		 	 tb_transaction as b on b.transaction_id = a.fk_transaction_id       
+		 left join  
+          	`tb_member` as c on c.`member_id` = b.`fk_memeber_id`
+		 left join  
+         	`tb_service` as d on d.id = b.`fk_service_id`
+         left join 
+         	tb_points_obtain as e on e.id = a.fk_points_obtain_id	
+         where a.`id` = #{tdid}
+	</select>
+	<!-- 交易总记录数 -->
+	<select id="TotalCount" resultType="integer">
+		select count(*)
+		from 
+			(select 
+		        a.*,b.`phone_number`,c.`service_name`,d.experts_name,e.*
+		 from  
+		        tb_transaction_detail as a  
+		 left join
+		 		tb_transaction as e on e.transaction_id = a.fk_transaction_id       
+		 left join  
+		       `tb_member` as b on b.`member_id` = e.`fk_memeber_id`
+		 left join  
+		       `tb_service` as c on c.id = e.`fk_service_id`
+		 left join
+		 		tb_experts as d on d.experts_id=b.fk_experts_id   
+		 where 1=1  and a.money_amount >0  and b.member_id is not null ) tmep_count
+		
+	</select>
+	<!-- 交易成功条数 -->
+	<select id="SuccessCount" resultType="integer">
+			select count(*)
+		from 
+			(select 
+		        a.*,b.`phone_number`,c.`service_name`,d.experts_name,e.*
+		 from  
+		        tb_transaction_detail as a  
+		 left join
+		 		tb_transaction as e on e.transaction_id = a.fk_transaction_id       
+		 left join  
+		       `tb_member` as b on b.`member_id` = e.`fk_memeber_id`
+		 left join  
+		       `tb_service` as c on c.id = e.`fk_service_id`
+		 left join
+		 		tb_experts as d on d.experts_id=b.fk_experts_id   
+		 where 1=1  and a.money_amount >0  and b.member_id is not null and a.statement = 2 ) tmep_count
+		
+	</select>
+	<!-- 交易成功金额 -->
+	<select id="TotalAmountBySuccess" resultType="double">
+		SELECT sum(money_amount)
+		FROM 
+			`tb_transaction_detail` a
+		WHERE a.statement = 2
+	</select>
+</mapper>

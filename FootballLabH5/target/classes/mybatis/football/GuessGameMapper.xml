@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="GuessGameMapper" >
+  <resultMap id="BaseResultMap" type="com.visolink.entity.GuessGame" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="experts_id" property="expertsId" jdbcType="VARCHAR" />
+    <result column="online_time" property="onlineTime" jdbcType="TIMESTAMP" />
+    <result column="game_date_time" property="gameDateTime" jdbcType="TIMESTAMP" />
+    <result column="league_name" property="leagueName" jdbcType="VARCHAR" />
+    <result column="home_name" property="homeName" jdbcType="VARCHAR" />
+    <result column="away_name" property="awayName" jdbcType="VARCHAR" />
+    <result column="let_the_count" property="letTheCount" jdbcType="INTEGER" />
+    <result column="home_score" property="homeScore" jdbcType="INTEGER" />
+    <result column="away_score" property="awayScore" jdbcType="INTEGER" />
+    <result column="win_odds" property="winOdds" jdbcType="DOUBLE" />
+    <result column="draw_odds" property="drawOdds" jdbcType="DOUBLE" />
+    <result column="lose_odds" property="loseOdds" jdbcType="DOUBLE" />
+    <result column="rq_win_odds" property="rqWinOdds" jdbcType="DOUBLE" />
+    <result column="rq_draw_odds" property="rqDrawOdds" jdbcType="DOUBLE" />
+    <result column="rq_lose_odds" property="rqLoseOdds" jdbcType="DOUBLE" />
+    <result column="member_count" property="memberCount" jdbcType="INTEGER" />
+    <result column="profit_amount" property="profitAmount" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="BIT" />
+    <result column="is_return" property="isReturn" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, experts_id, online_time, game_date_time, league_name, home_name, away_name, let_the_count, 
+    home_score, away_score, win_odds, draw_odds, lose_odds, rq_win_odds, rq_draw_odds, 
+    rq_lose_odds, profit_amount, status,is_return
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_guess_game
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_guess_game
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.visolink.entity.GuessGame" >
+    insert into tb_guess_game (id, experts_id, online_time, 
+      game_date_time, league_name, home_name, 
+      away_name, let_the_count, home_score, 
+      away_score, win_odds, draw_odds, 
+      lose_odds, rq_win_odds, rq_draw_odds, 
+      rq_lose_odds, profit_amount, 
+      status,is_return)
+    values (#{id,jdbcType=INTEGER}, #{expertsId,jdbcType=VARCHAR}, #{onlineTime,jdbcType=TIMESTAMP}, 
+      #{gameDateTime,jdbcType=TIMESTAMP}, #{leagueName,jdbcType=VARCHAR}, #{homeName,jdbcType=VARCHAR}, 
+      #{awayName,jdbcType=VARCHAR}, #{letTheCount,jdbcType=INTEGER}, #{homeScore,jdbcType=INTEGER}, 
+      #{awayScore,jdbcType=INTEGER}, #{winOdds,jdbcType=DOUBLE}, #{drawOdds,jdbcType=DOUBLE}, 
+      #{loseOdds,jdbcType=DOUBLE}, #{rqWinOdds,jdbcType=DOUBLE}, #{rqDrawOdds,jdbcType=DOUBLE}, 
+      #{rqLoseOdds,jdbcType=DOUBLE}, #{profitAmount,jdbcType=INTEGER}, 
+      #{status,jdbcType=BIT},#{isReturn,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.visolink.entity.GuessGame" >
+    insert into tb_guess_game
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="expertsId != null" >
+        experts_id,
+      </if>
+      <if test="onlineTime != null" >
+        online_time,
+      </if>
+      <if test="gameDateTime != null" >
+        game_date_time,
+      </if>
+      <if test="leagueName != null" >
+        league_name,
+      </if>
+      <if test="homeName != null" >
+        home_name,
+      </if>
+      <if test="awayName != null" >
+        away_name,
+      </if>
+      <if test="letTheCount != null" >
+        let_the_count,
+      </if>
+      <if test="homeScore != null" >
+        home_score,
+      </if>
+      <if test="awayScore != null" >
+        away_score,
+      </if>
+      <if test="winOdds != null" >
+        win_odds,
+      </if>
+      <if test="drawOdds != null" >
+        draw_odds,
+      </if>
+      <if test="loseOdds != null" >
+        lose_odds,
+      </if>
+      <if test="rqWinOdds != null" >
+        rq_win_odds,
+      </if>
+      <if test="rqDrawOdds != null" >
+        rq_draw_odds,
+      </if>
+      <if test="rqLoseOdds != null" >
+        rq_lose_odds,
+      </if>
+      <if test="profitAmount != null" >
+        profit_amount,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="isReturn != null" >
+        is_return,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="expertsId != null" >
+        #{expertsId,jdbcType=VARCHAR},
+      </if>
+      <if test="onlineTime != null" >
+        #{onlineTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gameDateTime != null" >
+        #{gameDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="leagueName != null" >
+        #{leagueName,jdbcType=VARCHAR},
+      </if>
+      <if test="homeName != null" >
+        #{homeName,jdbcType=VARCHAR},
+      </if>
+      <if test="awayName != null" >
+        #{awayName,jdbcType=VARCHAR},
+      </if>
+      <if test="letTheCount != null" >
+        #{letTheCount,jdbcType=INTEGER},
+      </if>
+      <if test="homeScore != null" >
+        #{homeScore,jdbcType=INTEGER},
+      </if>
+      <if test="awayScore != null" >
+        #{awayScore,jdbcType=INTEGER},
+      </if>
+      <if test="winOdds != null" >
+        #{winOdds,jdbcType=DOUBLE},
+      </if>
+      <if test="drawOdds != null" >
+        #{drawOdds,jdbcType=DOUBLE},
+      </if>
+      <if test="loseOdds != null" >
+        #{loseOdds,jdbcType=DOUBLE},
+      </if>
+      <if test="rqWinOdds != null" >
+        #{rqWinOdds,jdbcType=DOUBLE},
+      </if>
+      <if test="rqDrawOdds != null" >
+        #{rqDrawOdds,jdbcType=DOUBLE},
+      </if>
+      <if test="rqLoseOdds != null" >
+        #{rqLoseOdds,jdbcType=DOUBLE},
+      </if>
+      <if test="memberCount != null" >
+        #{memberCount,jdbcType=INTEGER},
+      </if>
+      <if test="profitAmount != null" >
+        #{profitAmount,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+       <if test="isReturn != null" >
+        #{isReturn,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.visolink.entity.GuessGame" >
+    update tb_guess_game
+    <set >
+      <if test="expertsId != null" >
+        experts_id = #{expertsId,jdbcType=VARCHAR},
+      </if>
+      <if test="onlineTime != null" >
+        online_time = #{onlineTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gameDateTime != null" >
+        game_date_time = #{gameDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="leagueName != null" >
+        league_name = #{leagueName,jdbcType=VARCHAR},
+      </if>
+      <if test="homeName != null" >
+        home_name = #{homeName,jdbcType=VARCHAR},
+      </if>
+      <if test="awayName != null" >
+        away_name = #{awayName,jdbcType=VARCHAR},
+      </if>
+      <if test="letTheCount != null" >
+        let_the_count = #{letTheCount,jdbcType=INTEGER},
+      </if>
+      <if test="homeScore != null" >
+        home_score = #{homeScore,jdbcType=INTEGER},
+      </if>
+      <if test="awayScore != null" >
+        away_score = #{awayScore,jdbcType=INTEGER},
+      </if>
+      <if test="winOdds != null" >
+        win_odds = #{winOdds,jdbcType=DOUBLE},
+      </if>
+      <if test="drawOdds != null" >
+        draw_odds = #{drawOdds,jdbcType=DOUBLE},
+      </if>
+      <if test="loseOdds != null" >
+        lose_odds = #{loseOdds,jdbcType=DOUBLE},
+      </if>
+      <if test="rqWinOdds != null" >
+        rq_win_odds = #{rqWinOdds,jdbcType=DOUBLE},
+      </if>
+      <if test="rqDrawOdds != null" >
+        rq_draw_odds = #{rqDrawOdds,jdbcType=DOUBLE},
+      </if>
+      <if test="rqLoseOdds != null" >
+        rq_lose_odds = #{rqLoseOdds,jdbcType=DOUBLE},
+      </if>
+      <if test="profitAmount != null" >
+        profit_amount = #{profitAmount,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=BIT},
+      </if>
+      <if test="isReturn != null" >
+        is_return = #{isReturn,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.visolink.entity.GuessGame" >
+    update tb_guess_game
+    set experts_id = #{expertsId,jdbcType=VARCHAR},
+      online_time = #{onlineTime,jdbcType=TIMESTAMP},
+      game_date_time = #{gameDateTime,jdbcType=TIMESTAMP},
+      league_name = #{leagueName,jdbcType=VARCHAR},
+      home_name = #{homeName,jdbcType=VARCHAR},
+      away_name = #{awayName,jdbcType=VARCHAR},
+      let_the_count = #{letTheCount,jdbcType=INTEGER},
+      home_score = #{homeScore,jdbcType=INTEGER},
+      away_score = #{awayScore,jdbcType=INTEGER},
+      win_odds = #{winOdds,jdbcType=DOUBLE},
+      draw_odds = #{drawOdds,jdbcType=DOUBLE},
+      lose_odds = #{loseOdds,jdbcType=DOUBLE},
+      rq_win_odds = #{rqWinOdds,jdbcType=DOUBLE},
+      rq_draw_odds = #{rqDrawOdds,jdbcType=DOUBLE},
+      rq_lose_odds = #{rqLoseOdds,jdbcType=DOUBLE},
+      profit_amount = #{profitAmount,jdbcType=INTEGER},
+      status = #{status,jdbcType=BIT},
+      is_return = #{isReturn,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectGuessGamelistPage" resultMap="BaseResultMap" parameterType="page" >
+    select 
+    a.id, a.experts_id, a.online_time, a.game_date_time, a.league_name,a.home_name, a.away_name,
+    a.home_score, a.away_score,a.profit_amount,a.status,b.experts_name as expertsName,
+    (SELECT COUNT(id) FROM tb_member_guess AS tmg WHERE tmg.guess_game_id=a.id) AS member_count 
+    from tb_guess_game a,tb_experts b
+    where a.experts_id=b.experts_id
+      <if test="pd.expertsId != null and pd.expertsId != ''" >
+        and a.experts_id = #{pd.expertsId,jdbcType=VARCHAR}
+      </if>
+      <if test="pd.status != null" >
+        and a.status = #{pd.status,jdbcType=BIT}
+      </if>
+    order by a.online_time desc
+  </select>
+  
+  <select id="selectOnlineGame" resultMap="BaseResultMap" parameterType="string">
+  	SELECT a.* 
+  	FROM tb_guess_game a
+  	inner join tb_experts b on a.experts_id=b.experts_id
+  	WHERE <![CDATA[online_time<now()]]>
+  	and b.experts_code=#{expertCode}
+  	ORDER BY online_time DESC 
+  	LIMIT 1
+  </select>
+  
+   <select id="getGuessGameByIdAndPage" resultMap="BaseResultMap" parameterType="pd" >
+    select 
+    a.id, a.experts_id, a.online_time, a.game_date_time, a.league_name, a.home_name, a.away_name, a.let_the_count, 
+    a.home_score, a.away_score, a.win_odds, a.draw_odds, a.lose_odds, a.rq_win_odds, a.rq_draw_odds, 
+    a.rq_lose_odds, a.profit_amount, a.status
+    <!-- a.id,a.game_date_time as gameDateTime,a.home_name as homeName,a.away_name as awayName,a.home_score as homeScore,a.away_score as awayScore -->
+    from tb_guess_game a
+    inner join tb_experts b on a.experts_id=b.experts_id
+    where b.experts_code=#{experts_code}
+    <if test="page == null">
+    	and id = #{guessGameId,jdbcType=INTEGER}
+    </if>
+    <if test="page != null">
+    	<if test="page==1">
+    		and id > #{guessGameId,jdbcType=INTEGER}
+    		order by online_time
+    	</if>
+    	<if test="page==-1">
+    		and  <![CDATA[id < #{guessGameId,jdbcType=INTEGER}]]>
+    		order by online_time desc
+    	</if>
+    </if>
+    limit 1
+  </select>
+  
+</mapper>

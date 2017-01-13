@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>我的跟投记录</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="css/myVote.css"/>
+    <style type="text/css">
+    body,
+    html {
+        margin: 0;
+        ,
+        padding: 0;
+    }
+    
+    @media screen and (max-width: 980px) {}
+    
+    @media screen and (max-width: 650px) {}
+    
+    @media screen and (max-width: 480px) {
+        html {
+            -webkit-text-size-adjust: none;
+        }
+    }
+    
+    @media screen and (max-width: 560px) {}
+    .list_shigong li div{
+    	width: 25%;
+    }
+    .blockCon{
+		text-align: center;
+		min-height: 300px;
+	}
+	.mybtn{
+		display: block;
+	    width: 94%;
+	    height: 40px;
+	    line-height: 40px;
+	    margin-top: 10px; 
+	    margin-left: 3%; 
+	    margin-bottom: 0px; 
+	    border-radius: 5px; 
+	    text-decoration: none; 
+	    background: RGB(215,185,71);
+	    text-align: center;
+	    font-size: 1.25rem;
+	}
+	.popTxt{
+		margin-top: 200px;
+	}
+	
+    </style>
+    <script type="text/javascript" charset="utf-8">
+    mui.init();
+    </script>
+</head>
+
+<body style="padding: 0;">
+    <div id="myTabContent" class="tab-content" >
+        <div class="tab-pane fade in active">
+            <ul class="list_shigong">
+  				<li>
+  					<div>
+  						<p>2016-12-19</p>
+  						<p>投注:1000</p>
+  					</div>
+  					<div>
+  						<p>京城虎哥</p>
+  						<p>单场</p>
+  					</div>
+  					<div>
+  						<p>场数</p>
+  						<p>中奖</p>
+  					</div>
+  					<div>
+  						<p>10场</p>
+  						<p></p>
+  					</div>
+  				</li>
+  				<li>
+  					<div>
+  						<p>2016-12-19</p>
+  						<p>投注:1000</p>
+  					</div>
+  					<div>
+  						<p>京城虎哥</p>
+  						<p>单场</p>
+  					</div>
+  					<div>
+  						<p>场数</p>
+  						<p class="highColor">等待开奖</p>
+  					</div>
+  					<div>
+  						<p>10场</p>
+  						<p></p>
+  					</div>
+  				</li>
+  				<li>
+  					<div>
+  						<p>2016-12-19</p>
+  						<p>投注:1000</p>
+  					</div>
+  					<div>
+  						<p>京城虎哥</p>
+  						<p>单场</p>
+  					</div>
+  					<div>
+  						<p>场数</p>
+  						<p class="highColor">等待开奖</p>
+  					</div>
+  					<div>
+  						<p>10场</p>
+  						<p></p>
+  					</div>
+  				</li>  				
+            </ul>
+        </div>
+    </div>
+	<!--
+    	作者：1632276537@qq.com
+    	时间：2017-01-04
+    	描述：无记录显示页
+    -->
+	<div class="blockCon" style="display: none;">
+		<p class="popTxt">还没有跟投记录，赶紧一单挣积分吧！</p>
+		<a class="mybtn">跟投大厅</a>
+	</div>    
+</body>
+
+</html>

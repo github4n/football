@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FavoriteMapper">
+	
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into h5_member_favorite(
+			MEMBER_ID,	
+			OBJ_ID,
+			OBJ_NAME,	
+			OBJ_TYPE,	
+			ADDTIME
+		) 
+select 
+			#{MEMBER_ID},	
+			#{OBJ_ID},
+			#{OBJ_NAME},	
+			#{OBJ_TYPE},	
+			#{ADDTIME}
+		from dual 
+		where not exists (select 1 from  h5_member_favorite where MEMBER_ID=#{MEMBER_ID} and 
+		OBJ_ID=#{OBJ_ID} and OBJ_TYPE=#{OBJ_TYPE} and OBJ_NAME=#{OBJ_NAME})
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from h5_member_favorite
+		where 
+			ID = #{ID}
+	</delete>
+	
+	<!-- 删除-->
+	<delete id="deleteByObjIdAndMemberId" parameterType="pd">
+		delete from h5_member_favorite
+		where 
+			obj_ID = #{objId} and member_id=#{memberId} and obj_type=#{objType}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  h5_member_favorite
+			set 
+			ID = ID
+			where 
+				ID = #{ID}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			ID,	
+			MEMBER_ID,	
+			OBJ_ID,
+			OBJ_NAME,		
+			OBJ_TYPE,	
+			ADDTIME
+		from 
+			h5_member_favorite
+		where 
+			ID = #{ID}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.ID,	
+				a.MEMBER_ID,	
+				a.OBJ_ID,	
+				a.OBJ_NAME,
+				a.OBJ_TYPE,	
+				a.ADDTIME
+		from 
+				h5_member_favorite a
+				
+					where
+			1 = 1
+		<if test="pd.obj_name!= null and pd.obj_name!= ''"><!-- 名称检索 -->
+			and a.OBJ_NAME like CONCAT(CONCAT('%', #{pd.obj_name}),'%') 
+		</if>
+		<if test="pd.obj_type != null and pd.obj_type != ''"><!-- 类型检索 -->
+			and a.OBJ_TYPE=#{pd.obj_type} 
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.ID,	
+				a.MEMBER_ID,	
+				a.OBJ_ID,
+				a.OBJ_NAME,	
+				a.OBJ_TYPE,	
+				a.ADDTIME
+		from 
+				h5_member_favorite a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from h5_member_favorite
+		where 
+			ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	
+	<!-- 通过memberId获取不同类别的objId -->
+	<select id="selectObjIdByMemberIdAndType" parameterType="pd" resultType="pd">
+	SELECT  obj_id FROM h5_member_favorite
+where member_id=#{member_id} and obj_type=#{obj_type}
+order by addtime desc
+	</select>
+	
+	<delete id="deleteByIdAndType"  parameterType="map">
+	delete from h5_member_favorite
+		where member_id=#{memberId}
+		and obj_id=#{objId}
+		and obj_type=#{objType}
+	</delete>
+	
+</mapper>

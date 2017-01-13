@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ServiceMapper">
+	
+		<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into tb_service(
+			id,service_code,service_name,add_time,add_user,update_time,update_user,is_used,is_pk,fk_experts_id,service_type,fk_company_id,rule,type,service_order,play_type)
+		values
+			(#{id},#{service_code} ,#{service_name},#{add_time},#{add_user},#{update_time},#{update_user} ,#{is_used},#{is_pk},#{fk_experts_id},#{service_type},#{fk_company_id},#{rule},#{type},#{service_order},#{play_type})
+	</insert>
+	
+	<insert id="edit" parameterType="pd">
+		update tb_service
+		set
+			<if test="is_used != null and is_used != ''" >
+		       is_used = #{is_used,jdbcType=INTEGER},
+		    </if>
+			service_code = #{service_code},
+			service_name = #{service_name},
+			service_type = #{service_type},
+			fk_company_id = #{fk_company_id},
+			type = #{type},
+			update_time = #{update_time},
+			update_user = #{update_user}
+		where id=#{service_id}
+	</insert>
+	
+	<!-- 列表(根据expertsId获取service的list) -->
+	<select id="datalist" parameterType="String" resultType="pd">
+		select 
+		       a.id,a.service_code,a.service_name,a.fk_experts_id,
+		       b.models_name,b.fk_models_id,
+		       (select sm.id from tb_service_models as sm where sm.fk_service_id = a.id and sm.status = 3  order by add_time desc limit 1) as smid 
+		from 
+		     tb_service as a  
+		left join  
+			`tb_service_models`  as b 
+		on 
+			b. `id`  = (select sm.id from tb_service_models as sm where sm.fk_service_id = a.id and sm.status = 3 order by add_time desc limit 1)
+		where 
+			a.fk_experts_id = #{expertsId} and play_type=1  order by service_code
+		
+	</select>
+	
+	<!-- 专家单联赛列表 -->
+	<select id="singleLeagueList" parameterType="pd" resultType="pd">
+		select 
+		       a.id,a.service_code,a.service_name,a.fk_experts_id,
+		       b.models_name,b.fk_models_id,c.experts_name,
+		       (select sm.id from tb_service_models as sm where sm.fk_service_id = a.id and sm.status = 3  order by add_time desc limit 1) as smid 
+		from 
+		     tb_service as a  
+		left join  
+			`tb_service_models`  as b 
+		on 
+			b. `id`  = (select sm.id from tb_service_models as sm where sm.fk_service_id = a.id and sm.status = 3 order by add_time desc limit 1)
+		left join 
+			tb_experts c
+		on
+			a.fk_experts_id = c.experts_id
+		where 
+			a.fk_experts_id = #{expertsId} and play_type=2  
+		<if test="serviceName!=null and serviceName!=''">
+			and a.service_name = #{serviceName}
+		</if>	
+		<if test="serviceCode!=null and serviceCode!=''">
+			and a.service_code = #{serviceCode}
+		</if>
+		order by a.add_time
+		
+	</select>
+	
+	<!-- 专家其他联赛列表 -->
+	<select id="otherLeagueList" parameterType="map" resultType="pd">
+		select 
+		       a.id,a.service_code,a.service_name,a.fk_experts_id,b.experts_name,a.is_used
+		from 
+		     tb_service as a  
+		left join 
+			tb_experts b
+		on
+			a.fk_experts_id = b.experts_id
+		where 
+			a.fk_experts_id = #{expertsId}
+			and a.play_type=3  
+			<if test="serviceCode != null and serviceCode != ''" >
+		       and a.service_code = #{serviceCode} 
+		    </if>
+			
+		order by a.add_time
+		
+	</select>
+	
+		<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		       a.*,b.`experts_name`,b.experts_code,a.id as service_id
+		from 
+			   tb_service as a         
+		left join
+			`tb_experts` as b on b.`experts_id` = a.fk_experts_id       
+
+		where a.id = #{service_id}	
+	</select>
+	
+	<!-- 通过专家code获取某个专家正在使用的所有服务-->
+	<select id="findByExpert" parameterType="pd" resultType="pd">
+		select 
+		       a.id,a.service_code,a.service_name,a.is_pk,a.fk_experts_id, service_type,a.fk_company_id,a.rule,a.type,a.play_type
+		from 
+			   tb_service as a  
+		left join 
+			   tb_experts as b
+		on
+			   a.fk_experts_id = b.experts_id	   	          
+		where 
+				b.experts_code = #{experts_code}	
+		and a.is_used = 1
+		
+		order by service_order 
+	</select>
+	
+	<!-- 通过专家code获取某个专家所有服务-->
+	<select id="findAllByExpert" parameterType="pd" resultType="pd">
+		select 
+		       a.id,a.service_code,a.service_name,a.is_pk,a.fk_experts_id, service_type,a.fk_company_id,a.rule,a.type
+		from 
+			   tb_service as a  
+		left join 
+			   tb_experts as b
+		on
+			   a.fk_experts_id = b.experts_id	   	          
+		where 
+				b.experts_code = #{experts_code}
+			and	a.play_type=1 
+		
+		order by service_order 
+	</select>
+		
+	<update id = "setUse" parameterType="pd">
+		update tb_service 
+			set
+				is_used = #{isUsed}
+			where
+				id = #{service_id}	
+	</update>
+	
+	<delete id="deleteServiceById" parameterType="String">
+		delete from tb_service where id=#{serviceId}
+	</delete>
+	
+	<delete id="deleteServiceModelByServiceId" parameterType="String">
+		delete from tb_service_models where fk_service_id=#{serviceId}
+	</delete>
+	
+	<select id="selectAllIsUseService" resultType="pd">
+		select id,service_code,service_type 
+		from tb_service
+		where is_used=1
+		and fk_experts_id='b3d9fb05f9b74aeb9e1544922fbcf079'
+	</select>
+	
+	<select id="selectTodayStrategyNum" resultType="pd" parameterType="map">
+		SELECT COUNT(DISTINCT d.id) as num,a.id
+		FROM tb_service AS a
+		INNER JOIN tb_experts AS b ON a.fk_experts_id=b.experts_id
+		INNER JOIN tb_betting_strategy_for_single AS c ON a.id=c.service_id 
+		INNER JOIN tb_betting_game AS d ON c.fk_betting_game_id=d.id
+		WHERE 
+		b.experts_code=#{expertCode}
+		AND d.game_date_time &gt;= #{startDate} 
+		AND d.game_date_time &lt;= #{endDate} 
+		GROUP BY a.id
+		
+		union all  
+		
+		SELECT COUNT(DISTINCT d.id) as num,a.id
+		FROM tb_service AS a
+		INNER JOIN tb_experts AS b ON a.fk_experts_id=b.experts_id
+		INNER JOIN tb_asian_handicap_betting_strategy AS c ON a.id=c.service_id 
+		INNER JOIN tb_betting_game AS d ON c.fk_betting_game_id=d.id
+		WHERE b.experts_code=#{expertCode}
+		AND d.game_date_time &gt;= #{startDate}
+		AND d.game_date_time &lt;= #{endDate} 
+		GROUP BY a.id
+		
+		union all  
+		
+		SELECT COUNT(DISTINCT c.id),a.id
+		FROM tb_service AS a
+		INNER JOIN tb_experts AS b ON a.fk_experts_id=b.experts_id
+		INNER JOIN tb_two_on_one_matches AS c ON a.id=c.service_id 
+		INNER JOIN tb_two_on_one_betting_strategy AS d ON c.id=d.fk_t_two_on_one_matches
+		INNER JOIN tb_betting_game AS e ON (c.match_one_id=e.id)
+		WHERE b.experts_code=#{expertCode}
+		AND e.game_date_time &gt;= #{startDate}
+		AND e.game_date_time &lt;= #{endDate} 
+		GROUP BY a.id
+		
+	</select>
+	
+</mapper>

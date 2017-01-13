@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TransactionMapper">
+	
+	<insert id="saveTransaction" parameterType="pd">
+		insert into tb_transaction(
+			transaction_id,transaction_number,transaction_amount,transaction_create_time,service_start_time,service_end_time,transaction_status,fk_service_id,fk_memeber_id,remark,type
+		) values (
+			#{transaction_id},#{transaction_number},#{transaction_amount},#{transaction_create_time},#{service_start_time},	#{service_end_time},#{transaction_status},#{fk_service_id},#{fk_memeber_id},#{remark},#{type}
+		)
+	</insert>
+	
+	<insert id="saveTransactionDetaile" parameterType="pd">
+		insert into tb_transaction_detail(
+			id,statement,create_time,money_amount,fk_transaction_id,fk_points_consumption_id,fk_member_coupon_id,fk_points_obtain_id,prepayid
+		) values (
+			#{id},#{statement},#{create_time},#{money_amount},#{fk_transaction_id},	#{fk_points_consumption_id},#{fk_member_coupon_id},#{fk_points_obtain_id},#{prepayid}
+		)
+	</insert>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+	 	select 
+		        a.*,b.`phone_number`,b.weixin,b.membe_point,c.`service_name`,d.experts_id,d.experts_code,d.experts_name,e.*,f.points_number as consumption_points_number,g.points_number as obtain_points_number,i.coupon_name
+		 from  
+		        tb_transaction as a  
+		 left join
+		 		tb_transaction_detail as e on e.fk_transaction_id = a.transaction_id          
+		 left join  
+		       `tb_member` as b on b.`member_id` = a.`fk_memeber_id`
+		 left join  
+		       `tb_service` as c on  c.id = a.`fk_service_id`
+		 left join
+		 		tb_experts as d on d.experts_id = b.fk_experts_id 
+  		 left join
+  		 		tb_points_consumption as f on f.id = e.fk_points_consumption_id     
+  		 left join
+  		 		tb_points_obtain as g on g.id = e.fk_points_obtain_id
+  		 left join
+  		 		tb_member_coupon as h on h.id =  e.fk_member_coupon_id
+  		 left join 
+  		 		tb_coupon_detail as i on i.id = h.fk_coupon_detail_id						 
+		where 
+			a.transaction_id = #{transaction_id}
+	</select>
+	
+	<!-- 通过订单号获取数据 -->
+	<select id="findByTransationNum" parameterType="pd" resultType="pd">
+	 	select 
+		        a.*,b.*
+		 from  
+		        tb_transaction as a  
+		 left join
+		 		tb_transaction_detail as b on b.fk_transaction_id = a.transaction_id          
+		where 
+			a.transaction_number = #{transaction_number} limit 1
+	</select>
+	
+	<!-- 微信端订单详情-->
+	<select id="getDetaileByTid" parameterType="pd" resultType="pd">
+		select
+		       a.transaction_id as tid, a.transaction_number,a.transaction_amount, a.transaction_create_time,transaction_status,a.type,a.service_start_time,a.service_end_time,
+		       b.id as tdid, statement,money_amount ,wx_transaction_id,
+		       c.id as serviceId,c.service_name,c.play_type,c.service_code,
+		       d.points_number as consumption_num,
+		       e.points_number as obtain_num,
+		       g.coupon_name,g.coupon_type,g.discount,g.money,
+		       h.invalid_days,h.validity_days
+		from 
+			  tb_transaction as a  
+		       left join `tb_transaction_detail` as b on b.`fk_transaction_id` = a.`transaction_id`
+		       left join `tb_service` as c on c.id =  a.fk_service_id
+		       left join tb_points_consumption as d on d.id = b.fk_points_consumption_id
+		       left join tb_points_obtain as e on e.id = b.fk_points_obtain_id
+		       left join tb_member_coupon as f on f.id = b.fk_member_coupon_id
+		       left join tb_coupon_detail as g on g.id = f.fk_coupon_detail_id
+		       left join tb_coupon as h on h.coupon_id = g.id
+	     where	a.transaction_id = #{tid} limit 1;       
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		 select 
+		        a.*,b.`phone_number`,b.member_name,c.`service_name`,c.`service_code`,c.play_type,d.experts_name,e.*
+		 from  
+		        tb_transaction as a  FORCE INDEX(CREATE_TIME) 
+		 left join  
+		       `tb_member` as b on a.`fk_memeber_id` = b.`member_id`
+		 left join  
+		       `tb_service` as c on a.`fk_service_id` = c.id
+		 left join
+		 		tb_experts as d on b.fk_experts_id = d.experts_id
+		 left join
+		 		tb_transaction_detail as e on e.fk_transaction_id = a.transaction_id   		             
+		 where
+			 	1 = 1 and b.`member_id` is not null 
+		<if test="pd.expert_id != null and pd.expert_id != ''"><!-- 专家检索 -->
+			and d.experts_id = #{pd.expert_id}
+		</if>
+		<if test="pd.transaction_status != null and pd.transaction_status != ''"><!-- 定制状态 -->
+			and a.transaction_status=#{pd.transaction_status} 
+		</if>
+		<if test="pd.wf != null and pd.wf != ''"><!-- 定制玩法 -->
+			and c.service_code=#{pd.wf} 
+		</if>
+		<if test="pd.member_name!= null and pd.member_name!= ''"><!-- 用户名检索 -->
+			and b.member_name like CONCAT(CONCAT('%', #{pd.member_name}),'%') 
+		</if>
+		<if test="pd.create_timeStart!=null and pd.create_timeStart!=''"><!-- 创建时间检索 -->
+			and a.transaction_create_time &gt;= #{pd.create_timeStart} 
+		</if>
+		<if test="pd.create_timeEnd!=null and pd.create_timeEnd!=''"><!-- 创建时间检索 -->
+			and a.transaction_create_time &lt;= #{pd.create_timeEnd} 
+		</if>
+		<if test="pd.transaction_number!= null and pd.transaction_number!= ''"><!-- 订单号检索 -->
+			and a.transaction_number like CONCAT(CONCAT('%', #{pd.transaction_number}),'%') 
+		</if>
+		order by a.transaction_create_time desc
+		
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.*,b.*
+		from 
+				tb_transaction a
+		left join
+		 		tb_transaction_detail as b on b.fk_transaction_id = a.transaction_id  		
+	</select>
+	
+	<select id="getWaitPayList" parameterType="pd" resultType="pd">
+		select
+				a.*,b.*
+		from 
+				tb_transaction a
+		left join
+		 		tb_transaction_detail as b on b.fk_transaction_id = a.transaction_id
+		where a.transaction_status is null 
+		AND b.statement=0
+	</select>
+	
+	<!--我的方案 -->
+	<select id="listByMember" parameterType="pd" resultType="pd">
+	select
+		a.transaction_id as tid,a.`transaction_create_time` as create_time,a.`service_end_time` as end_time, a.service_start_time as start_time,
+		b.id as service_id,b.service_code,b.service_name,b.is_pk,b.service_type,b.fk_company_id,b.type,b.play_type
+	from 
+	     `tb_transaction` as a 
+	left join 
+	     `tb_service` as b on a.`fk_service_id` = b.`id`
+	left join 
+	      `tb_member` as c on a.`fk_memeber_id` = c.member_id
+	left join
+		 tb_experts as d on d.experts_id = c.fk_experts_id      
+
+	where `transaction_status` = 1  and c.`phone_number` = #{pd.phoneNum} and d.experts_code = #{pd.experts_code} and a.type=1
+	
+	    <if test="pd.type == 0">  <!-- 有效 -->
+     		and a.service_end_time &gt;=#{pd.nowDate} 
+     	</if>
+     	
+     	<if test="pd.type == 1"> <!-- 失效 -->
+     		and a.service_end_time &lt; #{pd.nowDate} 
+     	</if>
+	    order by a.transaction_create_time desc
+     	
+     	limit #{currentResult} ,#{showCount}
+	</select>
+	
+		
+	<update id="editTransaction" parameterType="pd">
+		update 
+			tb_transaction 
+		set 
+			transaction_status = #{transaction_status} 
+		where 
+			transaction_id = #{transaction_id}
+	</update>
+	
+		<update id="editTransactionDetaile" parameterType="pd">
+		update 
+			tb_transaction_detail 
+		set 
+			
+			<if test="wx_transaction_id!= null and wx_transaction_id!= ''">
+     		wx_transaction_id=#{wx_transaction_id} , 
+     		</if>
+     		<if test="fk_points_obtain_id!= null and fk_points_obtain_id!= ''">
+     		fk_points_obtain_id=#{fk_points_obtain_id} , 
+     		</if>
+     		statement = #{statement}
+		where 
+			id = #{id}
+	</update>
+	
+	<select id="hasTransaction" parameterType="pd" resultType="pd">
+		select 
+			a.* 
+		from 
+			`tb_transaction` as a 
+		where 
+			a.transaction_status = '1'
+		and  
+			a.fk_memeber_id = #{member_id}  
+		and 
+			a.service_end_time  &gt;=#{schemeDate} 
+		and 
+			a.fk_service_id	= #{serviceId}	
+		and a.type=1
+	</select>
+	
+	<select id="findByMemberIdAndTime" parameterType="pd" resultType="pd">
+	 	select 
+		        a.transaction_id
+		 from  
+		        tb_transaction as a  
+		 left join
+		 		tb_transaction_detail as b on b.fk_transaction_id = a.transaction_id          
+		where 
+			a.fk_memeber_id=#{memberId}	
+			and a.service_start_time = #{service_start_time}
+			and a.service_end_time = #{service_end_time}
+			and a.transaction_status=1 
+			and a.type=2
+			and a.fk_service_id=#{serviceId}
+			and b.statement=2
+	</select>
+	
+	<select id="getSuccessTransaction" parameterType="pd" resultType="pd">
+		SELECT a.fk_memeber_id as memberId,b.membe_point as memberPoint
+		FROM tb_transaction a,tb_member b,tb_transaction_detail c
+		WHERE a.fk_memeber_id = b.member_id
+		AND a.transaction_id=c.fk_transaction_id
+		AND a.service_start_time = #{date}
+		AND a.transaction_status=1 
+		AND a.fk_service_id=#{serviceId}
+		AND a.type=1
+		AND a.remark='现金购买方案'
+		AND c.wx_transaction_id is not null
+		
+	</select>
+	
+</mapper>

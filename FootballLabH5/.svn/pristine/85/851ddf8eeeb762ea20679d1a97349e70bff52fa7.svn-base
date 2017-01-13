@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>我的优惠券</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/iscroll-probe.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+    </style>
+</head>
+<body style="padding: 0;">
+    <!--<p class="headerTou"><a href="javascript:history.go(-1);" class="pull-left"></a>我的优惠券<img src="img/home.png" onclick="GoToUrl_T('index.html')" style="float:right;margin-top:10px;width:24px;height:24px;" /></p>-->
+    <div id="wrapper" style="top:0px;bottom:50px;">
+        <div id="scroller">
+            <ul class="list_shigong list_shigongB" id="list">
+            </ul>
+        </div>
+    </div>
+    <a class="dbtn" id="btnyhj_o" href="javascript:GoToUrl_n()" style="bottom:0px;position:absolute;width:100%;margin:0 0 0 0;">查看已过期的优惠券</a>
+
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script src="js/iscroll.init.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+        $(function () {
+            var data_o = GetData(fl_url.myCoupon, {
+                phoneNum: fl_user.Mobile(),
+                type: 1,
+                showCount: showCount,
+                currentPage: currentPage
+            });
+            data_o = JSON.parse(data_o);
+            if (data_o.length == 0) {
+                $("#btnyhj_o").hide();
+            }
+
+            dataUrl = fl_url.myCoupon;
+            dataParam = {
+                phoneNum: fl_user.Mobile(),
+                type: 0,
+                showCount: showCount,
+                currentPage: currentPage
+            };
+
+            loaded();
+
+            sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+            shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+            shartlink = "http://www.01588.com/wechat/index.html?experts_code=" + getQueryString("experts_code");
+            Init();
+        });
+
+        function GoToUrl_n() {
+            location.href = "myCoupon_overdue.html?experts_code=" + getQueryString("experts_code");
+        }
+        function GoToUrl_T(u) {
+            location.href = u + "?experts_code=" + getQueryString("experts_code");
+        }
+
+        // 绑定数据html
+        function BindData(data) {
+            var html = "";
+            data = JSON.parse(data);
+            console.log(data);
+            if (typeof (data) != undefined && data != null && data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    html += "<li class=\"mTop10\">";
+                    html += "<div class=\"content_shigong flexBox clearBoth\">";
+                    html += "<div class=\"conLeft flexBox_zi1\">";
+                    html += "<h3 class=\"colorh\" style=\"margin-top: 8px;\">" + data[i].coupon_name + "</h3>";
+                    html += "<p><time class=\"pull-left\">有效期至&nbsp;" + data[i].invalid_time + "</time></p>";
+
+                    html += "</div>";
+
+                    html += "</div>";
+                    html += "<button class=\"posiButton\" onclick=\"GoToUrl('" + data[i].mcid + "','" + data[i].coupon_type + "','" + data[i].coupon_name + "')\">立即使用</button>";
+                    html += "<div style=\"clear: both;\"></div>";
+                    html += "</li>";
+                }
+            } else {
+                html += "<div style='text-align:center;margin-top:40%;'><img src=\"img/myCoupon_not.jpg\"/></div>";
+            }
+            $("#list").append(html);
+        }
+
+        function GoToUrl(mcid, type, name) {
+
+            // 获取方案ID
+            var serviceId;
+            var data = GetData(fl_url.index, {});
+            data = JSON.parse(data);
+            for (var i = 0; i < data.length; i++) {
+                if (type == "01" && data[i].service_code == "JCSPF" || type == "02" && data[i].service_code == "JCRQSPF" || type == "03" && data[i].service_code == "JCECY" || type == "04" && data[i].service_code == "JCRQECY" || type == "05" && data[i].service_code == "YP" || type == "06" && data[i].service_code == "DC") {
+                    serviceId = data[i].id;
+                    break;
+                }
+            }
+
+            if (serviceId != undefined) {
+                // 获取方案状态
+                var memberInfo;
+                if (fl_user.IsLogin()) {
+                    memberInfo = GetData(fl_url.memberInfo, { phoneNum: fl_user.Mobile(), serviceId: serviceId });
+                    memberInfo = JSON.parse(memberInfo);
+                }
+                // 验证是否定制
+                if (memberInfo.hasTransaction != "0") {
+                    alert_error("<lable style=\"color:#000000;font-size:16px;\">提示</lable><br><div style=\"text-align:center;color:#000;line-height:24px;\">该玩法已定制，无需使用此券。</div>", "查看方案", function () {
+                        var u = "";
+                        for (var i = 0; i < data.length; i++) {
+                            if (type == "01" && data[i].service_code == "JCSPF" || type == "02" && data[i].service_code == "JCRQSPF" || type == "03" && data[i].service_code == "JCECY" || type == "04" && data[i].service_code == "JCRQECY" || type == "05" && data[i].service_code == "YP" || type == "06" && data[i].service_code == "DC") {
+                                u = "expertPlan.html?serviceType=" + data[i].service_type + "&type=" + data[i].type + "&serviceId=" + data[i].id + "&service_code=" + data[i].service_code + "&companyId=" + data[i].fk_company_id + "&experts_code=" + getQueryString("experts_code");
+                                break;
+                            }
+                        }
+                        location.href = u;
+                    });
+                    return;
+                }
+            }
+
+            if (type == "01" || type == "02" || type == "03" || type == "04" || type == "05" || type == "06" || type == "1" || type == "4") {
+                //location.href = "useCoupon.html?mcid=" + mcid + "&type=" + type + "&name=" + encodeURI(encodeURI(name)) + "&experts_code=" + getQueryString("experts_code");
+           		location.href = "index.html?experts_code=" + getQueryString("experts_code");
+            } else {
+                location.href = "index.html?experts_code=" + getQueryString("experts_code");
+            }
+        }
+    </script>
+</body>
+</html>

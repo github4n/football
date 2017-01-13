@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>一场夺分</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/jquery.marquee.min.js"></script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/activity.css" rel="stylesheet" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/marquee.css" />
+	<body>
+		<!--顶部主视图-->
+        <div class="banner" id="banner">
+        	<img src="img/bannerBgnew2.jpg" width="100%"/>
+        	<div class="topIcon">
+        		<img width="100%" src="img/topLog.png"/>
+        	</div>
+        	<div class="bannerCon">
+	            <table id="bannerBox" class="bannerBox clearfix">
+	            	<tr><td colspan="3" class="matchName" id="leagueName"></td></tr>
+	            	<tr>
+		            	<td class="leftCell" id="homeName"></td>
+		            	<td class="centerCell"><img width="100%" src="img/vsIcon.png"/></td>
+		            	<td class="rightCell" id="awayName"></td>	            		
+	            	</tr>
+	            </table>
+	            <p class="btTxt" id="gameDateTime"></p>        		
+        	</div>
+
+        </div>
+       
+        <!--内容列表-->
+        <div class="content">
+            <div class="integral">
+                <ul>
+                    <li class="integralNum" id="point">盈利前三名可获奖励</li>
+                    <li class="tochange pull-right"><a href="javascript:GoToUrl_T('myGuess.html')">投注记录>></a></li>
+                </ul>
+            </div>
+            <!-- 榜单 -->
+        	<div class="grid_box" id="grid_box">
+            	<img src="img/icon-jiangpin.png" class="leftTopIcon" width="12%" />
+            	<ul class="grid_list clearfix">
+            		<li>
+            			<div class="interBox">
+            				<i class="icon_Medal icon_First"></i>
+            				<img src="img/icon-jinbi.png"/>
+            				<span class="btTap">2000积分</span>
+            			</div>
+            		</li>
+            		<li>
+            			<div class="interBox">
+            				<i class="icon_Medal icon_Second"></i>
+            				<img src="img/icon-jinbi.png"/>
+            				<span class="btTap">1000积分</span>
+            			</div>
+            		</li>
+            		<li>
+            			<div class="interBox">
+            				<i class="icon_Medal icon_Third"></i>
+            				<img src="img/icon-jinbi.png"/>
+            				<span class="btTap">500积分</span>
+            			</div>
+            		</li>
+              		<li>
+              			<div class="lastBox">
+	 						<i class="joinNum" id="joinNum"></i>
+							<a class="ranking" href="javascript:GoToRanking()">盈利榜 ></a>             				
+              			</div>
+            		</li>
+            	</ul>
+				<div class="advBox">
+					<div class="lefticon ico-horn"></div>
+			       	<div class="topscro" > 
+					    <ul id="marquee" class="marquee" >        
+					    </ul> 
+			        </div>		
+				</div>            	
+            </div>
+            <div class="team">
+                <ul class="tableList" id="tableList">
+                    <li class="listCell">
+                    	<h1 class="titleTxt">猜胜平负</h1>
+                        <ul class="spf">
+  							<li>
+  								<p>主胜</p>
+  								<p class="scaleNum" id="winOdds" item="winAmount"></p>
+  							</li>
+  							<li>
+   								<p>主平</p>
+  								<p class="scaleNum" id="drawOdds" item="drawAmount"></p> 								
+  							</li>
+  							<li>
+  								<p>主负</p>
+  								<p class="scaleNum" id="loseOdds" item="loseAmount"></p>  								
+  							</li>
+                        </ul>
+                    </li>
+                    <li class="listCell">
+                    	<h1 class="titleTxt">猜让球胜平负<span class="popTxt" id="letTheCount"></span></h1>
+                        <ul class="rqspf">
+  							<li>
+  								<p>主胜</p>
+  								<p class="scaleNum" id="rqWinOdds" item="rqWinAmount"></p>
+  							</li>
+  							<li>
+   								<p>主平</p>
+  								<p class="scaleNum" id="rqDrawOdds" item="rqDrawAmount"></p> 								
+  							</li>
+  							<li>
+  								<p>主负</p>
+  								<p class="scaleNum" id="rqLoseOdds" item="rqLoseAmount"></p>  								
+  							</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <footer class="footerBox">
+          <div id="toggleBox" class="toggleBox clearfix">
+	        <div id="mySelect" class="mySelect pull-left upIcon">
+	          	<p class="selectVal">投<i id="inputAmount"></i>积分</p>
+		          	<ul class="selectList">
+		          		<li>投<i>2000</i>积分</li>
+		          		<li>投<i>1000</i>积分</li>
+		          		<li class="defaultVal">投<i>500</i>积分</li>
+		          		<li>投<i>200</i>积分</li>
+		          		<li>投<i>100</i>积分</li>
+		          	</ul>
+		    </div>
+	        <p class="pull-right rtTxt">预计收入<span id="intergalNum" class="intergalNum"></span>积分</p>
+	      </div>
+          <input type="button" id="js-submit" class="betBtn" disabled  value="确认积分投注" onClick="touzhu();">
+        </footer>
+		<script src="js/common.js"></script>
+	    <script src="js/data.js"></script>
+	    <script src="js/weixin_com.js"></script>
+		<script src="js/active.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			var guessGameId;
+			var sharttitle = "“老料”送红包啦！";
+   			var shartcontent = "一大波奖品来袭，看方案就找“斗球老料”";
+			$(function(){
+			
+				if(fl_user.focus_status()!=1){
+					$("#js-submit").attr("onClick","showGuanZhu()");
+				}else{
+					var UserInfo = sessionStorage.UserInfo;
+	            	UserInfo = JSON.parse(UserInfo);
+	            	
+	            	if (UserInfo.phone_number == undefined) {
+		                $("#js-submit").attr("onClick","register()");
+		            }/* else{
+		            	$("#point").html("当前积分&nbsp;:&nbsp;"+fl_user.Integral());
+		            }  */
+				} 
+				var data = GetData(fl_url.getOnlineGuessGame,null);
+				BindData(data);
+				
+				$("#marquee").marquee({
+					yScroll: "bottom",
+					showSpeed:500
+				});
+				
+				
+				Init();
+				
+			});
+			
+			function BindData(data){
+				var guessGame = data.guessGame;
+				$("#gameDateTime").html("比赛时间&nbsp;"+GetDateYMDHMS2(guessGame.gameDateTime.time));
+				$("#leagueName").html(guessGame.leagueName);
+				$("#homeName").html(guessGame.homeName+"<i>[主]</i>");
+				$("#awayName").html(guessGame.awayName);
+				$("#winOdds").html(guessGame.winOdds.toFixed(2));
+				$("#drawOdds").html(guessGame.drawOdds.toFixed(2));
+				$("#loseOdds").html(guessGame.loseOdds.toFixed(2));
+				$("#rqWinOdds").html(guessGame.rqWinOdds.toFixed(2));
+				$("#rqDrawOdds").html(guessGame.rqDrawOdds.toFixed(2));
+				$("#rqLoseOdds").html(guessGame.rqLoseOdds.toFixed(2));
+				if(guessGame.letTheCount>0){
+					$("#letTheCount").css("color","red").html("(+"+guessGame.letTheCount+")");
+				}else{
+					$("#letTheCount").html("("+guessGame.letTheCount+")");
+				}
+				guessGameId = guessGame.id;
+				
+				$("#joinNum").html(data.guessNum+"人参与");
+				for(var i in data.marqueeList){
+					$("#marquee").append("<li>"+data.marqueeList[i]+"</li>");
+				}
+				
+			}
+			
+			function touzhu(){
+			
+				var validateData = GetData(fl_url.validateCanGuess,{guessGameId:guessGameId});
+				if(validateData.code!=200){
+					tishi_error(validateData.msg);
+					return;
+				}
+				
+				var param ={};
+				var inputAmount=$("#inputAmount").html();
+				var item = $("#tableList .listCell li.active").find('.scaleNum').attr("item");
+				param[item] = inputAmount;
+				param['phoneNum'] = fl_user.Mobile();
+				param['guessGameId'] = guessGameId;
+				param['inputAmount'] = inputAmount;
+				param['experts_code'] = getQueryString("experts_code");
+				param['token'] =  $.base64.btoa(fl_user.Mobile()+guessGameId+"&"+(new Date()).getTime(),true);
+				
+				sessionStorage.setItem("pointRechargeInfo",JSON.stringify(param));
+				
+				if(fl_user.Integral()<inputAmount){
+					location.href="guessRecharge.html?experts_code=" + getQueryString("experts_code");
+					return;
+				}
+				
+	        	var result = GetData(fl_url.memberGuessGame,param);
+			    if(result.code==200){
+			    	alert_error("<lable style=\"color:#000000;font-size:16px;\">提示</lable><br><div style=\"text-align:center;color:#000;line-height:24px;margin-left:8px;\">"+result.msg+"</div>", "确定", function () {GoToUrl_T('guessGame.html')});
+			    }else{
+			    	tishi_error(result.msg);
+			    }
+			}
+			
+			function GoToRanking(){
+				location.href="guessRanking.html?experts_code=" + getQueryString("experts_code")+"&guessGameId="+guessGameId;
+			}
+			window.onload=function(){
+				$('#grid_box li').eq(3).height($('#grid_box li').eq(0).height())				
+				var high1=$("#bannerBox").height();
+				var high2=$("#banner").height();
+				$("#bannerBox").css('margin-top',(high2-high1)/2)	
+			}
+			
+		</script>
+	</body>
+</html>

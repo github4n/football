@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WxEventMapper">
+
+
+	<!-- 列表(全部) -->
+	<select id="subscribeListAll" parameterType="pd" resultType="pd">
+		select
+			a.*
+		from
+			tb_wx_subscribe as a
+		where a.experts_code = #{experts_code}	
+	</select>
+
+</mapper>

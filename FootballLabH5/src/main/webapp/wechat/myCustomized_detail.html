@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>定制信息</title>
+
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+    </style>
+</head>
+<body style="padding: 0;">
+    <!--<p class="headerTou"><a href="javascript:history.go(-1);" class="pull-left"></a>定制信息<img src="img/home.png" onclick="GoToUrl_T('index.html')" style="float:right;margin-top:10px;width:24px;height:24px;" /></p>-->
+    <p class="titLie"></p>
+    <ul class="list_shigong list_shigongLie" id="faul" style="display:none">
+        <li class="">
+            <span class="pull-right" id="lbl1"></span><span class="pull-left">付款金额</span>
+        </li>
+        <li class="">
+            <span class="pull-right" id="lbl2"></span><span class="pull-left">定制产品</span>
+        </li>
+        <li class="">
+            <span class="pull-right" id="lbl3"></span> <span class="pull-left">订单号</span>
+        </li>
+
+        <li class="">
+            <span class="pull-right" id="lbl4">微信支付</span> <span class="pull-left">交易方式</span>
+        </li>
+        <li class="">
+            <span class="pull-right" id="lbl5"></span> <span class="pull-left">交易时间</span>
+        </li>
+
+    </ul>
+    
+    <ul class="list_shigong list_shigongLie" id="ddul" style="display:none">
+        <li class="">
+            <span class="pull-right" id="lbl1"></span><span class="pull-left">付款金额</span>
+        </li>
+        <li class="">
+            <span class="pull-right" id="lbl2"></span><span class="pull-left">活动类型</span>
+        </li>
+        <li class="" style="height:100px;">
+            <span class="pull-right" id="lbl3"></span><span class="pull-left">方案时间范围</span>
+        </li>
+        <li class="">
+            <span class="pull-right" id="lbl4"></span> <span class="pull-left">订单号</span>
+        </li>
+
+        <li class="">
+            <span class="pull-right" id="lbl5">微信支付</span> <span class="pull-left">交易方式</span>
+        </li>
+        <li class="">
+            <span class="pull-right" id="lbl6"></span> <span class="pull-left">交易时间</span>
+        </li>
+
+    </ul>
+    
+    <a class="dbtn dbtn123" id="dbtn" href="javascript:GoToUrl();">查看专家推荐方案</a>
+
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+        $(function () {
+            // 获取参数
+            var type = getQueryString("type");
+            var tid = getQueryString("tid");
+
+            // 展示详情，隐藏定制信息和按钮
+            if (type == "detail") {
+                $(".titLie").hide();
+                $(".dbtn").hide();
+            }
+
+            var data = GetData(fl_url.tradeDetaile, {
+                tid:tid
+            });
+            data = JSON.parse(data);
+            //$("#lbl1").text(data.transaction_amount);
+            
+            if(data.type=="2"){
+	            $("#faul").remove();
+	            $("#ddul").show();
+            	$(".titLie").html("支付成功！");
+            	$("#lbl1").text(data.money_amount+"元");
+            	$("#lbl2").text(data.service_name+"-不盈双倍返");
+            	$("#lbl3").html(data.service_start_time.substring(0,10)+" 11:30:00<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;至<br/>"+data.service_end_time.substring(0,10)+" 11:30:00");
+	            $("#lbl4").text(data.transaction_number);
+	            if (data.money_amount == "0") {
+	                $("#lbl5").text("优惠券");
+	            } else {
+	                $("#lbl5").text("微信支付");
+	            }
+	            $("#lbl6").text(data.transaction_create_time);
+            }else{
+            	$("#ddul").remove();
+            	$("#faul").show();
+	            $("#dbtn").show();
+	            $(".titLie").html("定制成功！");
+            	$("#lbl1").text(data.money_amount+"元");
+            	//TODO /wanfan/30tian
+            	var playName = "";
+            	if(data.play_type!=1){
+					if(data.service_code=="JCSPF"){
+						playName = "/竞彩胜平负";
+					}else if(data.service_code=="JCECY"){
+						playName = "/竞彩二串一";
+					}else if(data.service_code=="JCRQSPF"){
+						playName = "/竞彩让球胜平负";
+					}else if(data.service_code=="JCRQECY"){
+						playName = "/竞彩让球二串一";
+					}else if(data.service_code=="DC"){
+						playName = "/单场";
+					}else if(data.service_code=="YP"){
+						playName = "/亚盘";
+					}
+				}
+            	if(data.validity_days == undefined){
+            		//$("#lbl2").text(data.service_name+"推荐方案("+DateDiff(data.service_start_time,data.service_end_time)+"天)");
+            		$("#lbl2").text(data.service_name+playName+"/"+DateDiff(data.service_start_time,data.service_end_time)+"天");
+            	}else{
+            		//$("#lbl2").text(data.service_name+"推荐方案("+data.validity_days+"天)");
+            		$("#lbl2").text(data.service_name+playName+"/"+data.validity_days+"天");
+            	}
+	            $("#lbl3").text(data.transaction_number);
+	            if (data.money_amount == "0") {
+	            	if(parseInt(data.consumption_num)==0){
+	            	 	$("#lbl4").text("优惠券");
+	            	}else{
+	            		$("#lbl4").text("积分兑换");
+	            	}
+	               
+	            } else {
+	                $("#lbl4").text("微信支付");
+	            }
+            	$("#lbl5").text(data.transaction_create_time);
+            }
+
+            sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+            shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+            shartlink = "http://www.01588.com/wechat/index.html?experts_code=" + getQueryString("experts_code");
+            Init();
+        });
+        function GoToUrl_T(u) {
+            location.href = u + "?experts_code=" + getQueryString("experts_code");
+        }
+        function GoToUrl() {
+            if (sessionStorage.expertTodayPlanUrl == undefined) {
+            	if(sessionStorage.successPlanUrl == undefined){
+            		location.href = "index.html?experts_code=" + getQueryString("experts_code");
+            	}else{
+            		location.href = sessionStorage.successPlanUrl;
+            	}
+                
+            } else {
+                location.href = sessionStorage.expertTodayPlanUrl;
+            }
+        }
+        
+    </script>
+</body>
+</html>

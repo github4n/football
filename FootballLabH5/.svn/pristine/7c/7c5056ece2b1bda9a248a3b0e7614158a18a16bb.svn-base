@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>专家详情</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link href="css/timeline.css" rel="stylesheet" type="text/css" />
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="css/expertDetail.css"/>
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+    <script src="./js/common.js"></script>
+    <style type="text/css">
+
+    /*盈利走势图css */
+    
+    @media screen and (max-width: 980px) {}
+    
+    @media screen and (max-width: 650px) {}
+    
+    @media screen and (max-width: 480px) {
+        html {
+            -webkit-text-size-adjust: none;
+        }
+    }
+    
+    @media screen and (max-width: 560px) {}
+    
+
+    </style>
+    <script type="text/javascript" charset="utf-8">
+    	mui.init();
+    </script>
+</head>
+
+<body style="padding: 0;">
+    <table class="table tiaoM">
+        <tr style="background: #d6b947;;">
+            <td class="leftT" width="33.33%" style="padding: 5px 8px;">
+                <span style="color: #333;font-size:1.2rem">本金&nbsp;<i class="colorH" style="color: #333;">50000</i>元</span>
+            </td>
+            <td width="33.33%" style="padding: 5px 8px;">
+                <span style="color: #333;font-size:1.2rem">盈利&nbsp;<i class="colorH" style="color: #333;">+1000</i></span>
+            </td>
+            <td class="rightT" width="33.33%" style="    text-align: -webkit-right;text-align: right;padding: 5px 8px;">
+                <span style="color: #333;font-size:1.2rem">余额&nbsp;<i class="colorH" style="color: #333;">50000</i>元</span>
+            </td>
+        </tr>
+    </table>
+    <div class="subMenu-t">
+        <div class="subNav-t align_left">盈利累计走势图</div>
+        <div class="subNav-t align_right">名联赛盈利情况</div>
+    </div>
+    <header class="header" style="height: auto;">
+        <div id="owl-demo">
+            <div id="container" style="height: 150px; width: 100%;"></div>      
+        </div>
+    </header>
+    <div class="btn_box clearfix">
+    	<a class="mybtn dbtn123" href="#">竞猜盈亏</a>
+    	<a class="mybtn dbtn123" href="#">立即跟投</a>
+    </div>
+    
+    <section class="padding8">
+     	<h2 class="bt_line"></h2>
+    </section>
+    <div class="content">
+        <article>
+            <section>
+                <span class="point-time"></span>
+                <time datetime="04-30">
+                    <span>04-30</span>
+                </time>
+                <aside>
+                    <div class="paddC">
+                        <div class="timgLeft pull-left">
+                            <p>投入1000斗</p>
+                            <p>中奖2000斗</p>
+                        </div>
+                        <div class="timgRight pull-left">
+                            盈利1000斗<span class="jiao pull-right"></span>
+                        </div>
+                    </div>
+                </aside>
+            </section>
+            <section>
+                <span class="point-time"></span>
+                <time datetime="2013-03">
+                    <span>04-29</span>
+                </time>
+                <aside>
+                    <div class="paddC">
+                        <div class="timgLeft pull-left">
+                            <p>投入1000斗</p>
+                            <p>中奖2000斗</p>
+                        </div>
+                        <div class="timgRight pull-left">
+                    		盈利1000斗
+                            <span class="jiao pull-right"></span>
+                        </div>
+                    </div>
+                </aside>
+            </section>
+            <section>
+                <span class="point-time"></span>
+                <time datetime="2013-03">
+                    <span>04-27</span>
+                </time>
+                <aside>
+                    <div class="paddC">
+                        <div class="timgLeft pull-left">
+                            <p>投入1000斗</p>
+                            <p>中奖2000斗</p>
+                        </div>
+                        <div class="timgRight pull-left">
+                            盈利1000斗<span class="jiao pull-right"></span>
+                        </div>
+                    </div>
+                </aside>
+            </section>
+            <section>
+                <span class="point-time"></span>
+                <time datetime="2013-03">
+                    <span>04-26</span>
+                </time>
+                <aside>
+                    <div class="paddC">
+                        <div class="timgLeft pull-left">
+                            <p>投入1000斗</p>
+                            <p>中奖2000斗</p>
+                        </div>
+                        <div class="timgRight pull-left">
+                            盈利1000斗<span class="jiao pull-right"></span>
+                        </div>
+                    </div>
+                </aside>
+            </section>
+            <section>
+                <span class=""></span>
+                <img src="img/jiantou.png" width="10" class="jiantou" />
+            </section>
+        </article>
+    </div>
+
+  
+
+    <script src="js/Highstock-4.2.5/highstock.js"></script>
+    <script src="js/Highstock-4.2.5/modules/exporting.js"></script>
+    <script>
+    	//参照expertPlan.html
+    	BindChat([2016-12-14,2016-12-15,2016-12-16,2016-12-17,2016-12-18],'container');
+        function BindChat(data,divId) {
+            var xAxis = new Array(), series = new Array();
+            //data = JSON.parse(data);
+            var minNum = 0;
+            var maxNum = 0;
+            var isMin = true;
+            var isMax = true;
+            var yisMin = true;
+            var yisMax = true;
+            var s_n_3 = 0;
+            
+    
+            $('#'+divId).highcharts({
+                chart: {
+                    type: 'line',
+                    backgroundColor: '#344d87',
+                    plotBorderWidth: 0.5,
+                    plotBorderColor: "#ddd",
+                    marginTop: 10,
+                    marginLeft: 5,
+                    marginRight: 5,
+                    marginBottom: 20
+                },
+                margin: 0,
+                colors: ["#d7b947"],
+                title: {
+                    text: ''
+                },
+                subtitle: {
+                    text: ''
+                },
+                credits: {
+                    enabled: false     //去掉highcharts网站url  
+                },
+                xAxis: {
+                    categories: xAxis,
+                    tickInterval: 5,
+                    labels: {
+
+                        style: {
+                            color: '#ccc'
+                        },
+                        rotation: 0,
+                    },
+                    lineWidth: 0,
+                    tickLength: 3,
+                    tickPosition: "inside"
+                },
+                yAxis: {
+                    tickInterval: 1000,
+                    max: maxNum + 1100,
+                    min: minNum - 1000,
+                    gridLineWidth: 0,
+                    plotLines: [{
+                        label: { text: '44', align: 'left', style: { color: "#ddd" }, x: 10 },
+                        value: maxNum,
+                        dashStyle: 'LongDashDot',
+                        width: 0.5,
+                        color: '#ccc',
+                    }, {
+                        label: { text: '25', align: 'left', y: 10, style: { color: "#ddd" }, x: 10 },
+                        value: minNum,
+                        dashStyle: 'LongDashDot',
+                        width: 0.5,
+                        color: '#ccc',
+                    }, {
+                        label: { text: 0, align: 'left', y: 5, style: { color: "#ddd" }, x: 10 },
+                        value: 0,
+                        width: 0.5,
+                        color: '#ccc'
+                    }],
+                    labels: {
+                        align: "left",
+                        enabled: false,
+                    }
+                },
+                tooltip: {
+                    valueSuffix: ''
+                },
+                legend: {
+                    enabled: false
+                },
+                exporting: {
+                    enabled: false
+                },
+                plotOptions: {
+                    line: {
+                        dataLabels: {
+                            enabled: false,
+                            color: "#000",
+                            backgroundColor: "#d7b947",
+                            formatter: function () {
+                                if (isMax && this.y == maxNum) {
+                                    isMax = false;
+                                    return this.y;
+                                }
+                                if (isMin && this.y == minNum) {
+                                    isMin = false;
+                                    return this.y;
+                                }
+                            }
+                        },
+                        enableMouseTracking: false
+                    }
+                },
+                series: [{ name: "盈利", data: [-2300,440,450,785,1008,230,150] }]
+            });
+            
+            if(minNum < 0){
+            	MyNum = 10000 - minNum;
+            }else{
+            	MyNum = 10000;
+            }
+        }    	
+    </script>
+</body>
+
+</html>

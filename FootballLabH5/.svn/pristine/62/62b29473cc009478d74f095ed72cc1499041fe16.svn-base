@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>我的定制</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/iscroll-probe.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+    </style>
+</head>
+<body style="padding: 0;">
+    <!--<p class="headerTou"><a href="javascript:history.go(-1);" class="pull-left"></a>我的定制<img src="img/home.png" onclick="GoToUrl_T('index.html')" style="float:right;margin-top:10px;width:24px;height:24px;" /></p>-->
+    <div id="wrapper" style="top:0px;">
+        <div id="scroller">
+            <ul class="list_shigong list_shigongBack list_border0" id="list">
+            </ul>
+        </div>
+    </div>
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script src="js/iscroll.init.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+        $(function () {
+            dataUrl = fl_url.myCustomized;
+            dataParam = {
+                phoneNum: fl_user.Mobile(),
+                type: 1,
+                showCount: showCount,
+                currentPage: currentPage
+            };
+            loaded();
+
+            sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+            shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+            shartlink = "http://www.01588.com/wechat/index.html?experts_code=" + getQueryString("experts_code");
+            Init();
+        });
+
+        function GoToUrl_T(u) {
+            location.href = u + "?experts_code=" + getQueryString("experts_code");
+        }
+        // 绑定数据html
+        function BindData(data) {
+            var html = "";
+            data = JSON.parse(data);
+            
+            if (typeof (data) != undefined && data != null && data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                	var playName = "";
+					if(data[i].play_type!=1){
+						if(data[i].service_code=="JCSPF"){
+							playName = "/竞彩胜平负";
+						}else if(data[i].service_code=="JCECY"){
+							playName = "/竞彩二串一";
+						}else if(data[i].service_code=="JCRQSPF"){
+							playName = "/竞彩让球胜平负";
+						}else if(data[i].service_code=="JCRQECY"){
+							playName = "/竞彩让球二串一";
+						}else if(data[i].service_code=="DC"){
+							playName = "/单场";
+						}else if(data[i].service_code=="YP"){
+							playName = "/亚盘";
+						}
+					}
+                    html += "<li class=\"mTop10\" onclick=\"GoToNextUrl('expertPlan.html?serviceType=" + data[i].service_type + "&type=" + data[i].type + "&serviceId=" + data[i].service_id + "&service_code=" + data[i].service_code + "&companyId=" + data[i].fk_company_id + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(data[i].service_name) + "','" + data[i].service_name+ "')\">";
+                    html += "<div class=\"content_shigong flexBox clearBoth\">";
+                    html += "<div class=\"conLeft flexBox_zi1\">";
+                    html += "<h3>";
+                    html += "<span class=\"pull-right yiliD1\"><i class=\"colorh\">"
+                    if (data[i].number4 == 0) {
+                        html += 0;
+                    }
+                    else {
+                        html += parseInt(data[i].number3 / data[i].number4 * 100);
+                    }
+                    html +="%</i><br />盈利</span>";//colorlv
+                    html += data[i].service_name +playName+ "</h3>";
+                    html += "<p><time class=\"pull-left\">" + data[i].create_time + "</time></p>";
+                    html += "</div>";
+                    html += "</div>";
+                    html += "<span class=\"posi posi2\"><i>已过期</i></span>";
+                    html += "<span class=\"jiao jiaoN1 pull-right\" style=\"right: 10%; top: 14px;\"></span>";
+                    html += "<div style=\"clear: both;\"></div>";
+                    html += "</li>";
+                }
+            } else {
+                html += "<div style='text-align:center;margin-top:40%;'><img src=\"img/myCustomized_not.jpg\"/></div>";
+            }
+            $("#list").append(html);
+        }
+
+        function GoToNextUrl(nexurl, name) {
+            sessionStorage.setItem("selectPlanName", name);
+            sessionStorage.setItem("selectPlanUrl", nexurl);
+            window.open(nexurl, "_top");
+        }
+    </script>
+</body>
+</html>

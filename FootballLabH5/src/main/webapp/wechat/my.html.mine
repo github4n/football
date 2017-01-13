@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>我的</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+    <link href="css/activity.css" rel="stylesheet" />
+    
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+        @media screen and (max-width: 980px) {
+        }
+        @media screen and (max-width: 650px) {
+        }
+        @media screen and (max-width: 480px) {
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+        @media screen and (max-width: 560px) {
+        }
+    </style>
+</head>
+<body style="padding: 0;">
+    <!--<p class="headerTou"><a href="javascript:history.go(-1);" class="pull-left"></a>我的<img src="img/home.png" onclick="GoToUrl('index.html')" style="float:right;margin-top:10px;width:24px;height:24px;" /></p>-->
+    <dl style="margin: 10px 0 10px 0;">
+        <dt>
+            <img id="imgTouxiang" src="img/wode.png" height="40" style="display: block; margin: 0 auto;" /></dt>
+        <dd style="text-align: center; font-size: 1.2rem; margin-top: 9px;" id="ddMobile">未登录</dd>
+    </dl>
+    <!-- //////////////////////////////模拟//////////////////////// -->
+<!-- <ul> -->
+<!-- 	<li class="" onclick="javascript:GoToUrl('myPayment.html')"  > -->
+<!--            <span class=""><i  class="colorh" style="font-size: 1.2rem;" id="iIntegral">0</i>分</span><span class="pull-left">我的积分</span> -->
+<!--     </li> -->
+<!--     <li onclick="javascript:GoToUrl('payment.html')"> -->
+<!--     	<span>积分充值</span> -->
+<!--     </li> -->
+<!-- </ul> -->
+<!-- /////////////////////////////// 模拟////////////////////////////////////-->
+    <ul class="list_shigong list_shigongLie list_shigongLieW1">
+        <li class="" onclick="javascript:GoToUrl('myCustomized.html')">
+            <span class="jiao jiaoN1 pull-right"></span><span class="pull-right">&nbsp;&nbsp;&nbsp;</span> <span class="pull-left">
+                <img class="imgIcon" src="img/img01.png" />我的定制</span>
+        </li>
+        <li class="" onclick="javascript:GoToUrl('myGuess.html')" id="plan">
+            <span class="jiao jiaoN1 pull-right"></span><span class="pull-right">&nbsp;&nbsp;&nbsp;</span><span class="pull-left"><img class="imgIcon" src="img/img02.png" />一场夺分</span>
+        </li>
+        <li class="" onclick="javascript:GoToUrl('myTrade.html')" style="margin-bottom: 10px;">
+            <span class="jiao jiaoN1 pull-right"></span><span class="pull-right">&nbsp;&nbsp;&nbsp;</span><span class="pull-left"><img class="imgIcon" src="img/img03.png" />交易记录</span>
+        </li>
+        <li class="" onclick="javascript:GoToUrl('myCoupon.html')">
+            <span class="jiao jiaoN1 pull-right"></span><span class="pull-right">&nbsp;&nbsp;&nbsp;</span> <span class="pull-left">
+                <img class="imgIcon" src="img/img04.png" />我的优惠券</span>
+        </li>
+        
+        <li class="" onclick="javascript:GoToUrl('myPayment.html')" style="margin-bottom: 10px;">
+            <span class="jiao jiaoN1 pull-right"></span><span class="pull-right">&nbsp;&nbsp;&nbsp;</span><span class="pull-left"><img class="imgIcon" src="img/img03.png" />跟单记录</span>
+        </li>
+        
+        <li class="" onclick="javascript:GoToUrl('myPoints.html')">
+            <span class="jiao jiaoN1 pull-right"></span><span class="pull-right"><i class="colorh" style="font-size: 1.2rem;" id="iIntegral">0</i>分&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="pull-left"><img class="imgIcon" src="img/img06.png" />我的积分</span>
+        </li>
+
+        <li class="" onclick="javascript:GoToUrl('LuckDraw.html')" style="margin-bottom: 60px;">
+            <span class="jiao jiaoN1 pull-right"></span><span class="pull-right">&nbsp;&nbsp;&nbsp;</span><span class="pull-left"><img class="imgIcon" src="img/img05.png" />积分抽奖</span>
+        </li>
+    </ul>
+    <footer class="footer">
+        <ul class="clearfix" >
+            <li id="expertPlan" onclick="GoToUrl('index.html');">
+                <a href="#">专家方案</a>
+            </li>
+            <li class="footer_show" onclick="GoToUrl('my.html');">
+                <a href="#">我的</a>
+            </li>
+        </ul>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(function () {
+        
+            if (fl_user.focus_status() != 1) {
+                confirm_error1("<lable style=\"color:#000000;font-size:16px;\">提示！</lable><br>请先 +关注"
+                            , function () {
+                                if (getQueryString("experts_code") == "jinghu") {
+                                    location.href = "http://mp.weixin.qq.com/s?__biz=MzAxMjk1NjYwMA==&mid=2247483654&idx=1&sn=66ed8863ea21271f03880c7338e8bad4&scene=0#wechat_redirect";
+                                } else {
+                                    location.href = "http://mp.weixin.qq.com/s?__biz=MzIxODQ5MTY4Mw==&mid=2247483666&idx=1&sn=2c38aac6da365d49afc1f468d99bff1e&scene=0#wechat_redirect";
+                                }
+                            }, function () {
+                            }, "取消", "+关注");
+            }
+
+            // 加载用户信息
+            if (fl_user.Mobile().length > 0) {
+                $("#ddMobile").text(fl_user.Mobile());
+                $("#iIntegral").text(fl_user.Integral());
+                $("#imgTouxiang").attr("src",fl_user.headimgurl());
+            }
+
+            sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+            shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+            shartlink = "http://www.01588.com/wechat/index.html?experts_code=" + getQueryString("experts_code");
+            Init();
+        });
+
+        function GoToUrl(url) {
+            location.href = url + "?experts_code=" + getQueryString("experts_code");
+        }
+    </script>
+</body>
+</html>

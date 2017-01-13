@@ -1,0 +1,78 @@
+package com.visolink.interceptor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.apache.shiro.codec.Base64;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.visolink.util.RedisUtils;
+
+public class WechatParamsInterceptor implements HandlerInterceptor{
+	
+	private Logger log = Logger.getLogger(WechatParamsInterceptor.class);
+	
+	private static List<String> uriList = new ArrayList<String>();
+	
+	static{
+		uriList.add("saveActivityData");
+		uriList.add("pointExchange");
+		uriList.add("guessGame");
+	}
+
+	@Override
+	public boolean preHandle(HttpServletRequest request,
+			HttpServletResponse response, Object handler) throws Exception {
+		
+		Map<String, String[]> map = request.getParameterMap();
+		String[] array = map.get("token");
+		String[] uriArray =  request.getRequestURI().split("/");
+		if(array==null){
+			if(uriList.indexOf(uriArray[uriArray.length-1])!=-1){
+				return false;
+			}else{
+				return true;
+			}
+		}else{
+			try {
+				String key = uriArray[uriArray.length-1]+":"+request.getHeader("X-Real-IP");
+				
+				//判断redis中存储对应的时间戳是否和请求中的一样
+				String timestamp = new String(Base64.decode(array[0])).split("&")[1];
+				String dbtimestamp = RedisUtils.getString(key, 3);
+				
+				if(dbtimestamp==null  || !timestamp.equals(dbtimestamp)){
+					RedisUtils.add(key, timestamp, 60*60, 3);
+					return true;
+				}else{
+					return false;
+				}
+			} catch (Exception e) {
+				log.error("参数解析错误",e);
+				return false;
+			}
+		}
+	}
+
+	@Override
+	public void postHandle(HttpServletRequest request,
+			HttpServletResponse response, Object handler,
+			ModelAndView modelAndView) throws Exception {
+		
+	}
+
+	@Override
+	public void afterCompletion(HttpServletRequest request,
+			HttpServletResponse response, Object handler, Exception ex)
+			throws Exception {
+		
+	}
+	
+	
+}

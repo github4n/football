@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>06我的方案</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+   
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"/>  
+    
+    <link href="css/mui.css" rel="stylesheet"/>
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+    
+    <style type="text/css">
+    	body,html{margin: 0;,padding: 0;}
+    	
+    	@media screen and (max-width: 980px) { 
+	   
+} 
+
+@media screen and (max-width: 650px) { 
+   
+} 
+
+@media screen and (max-width: 480px) { 
+ 
+    html { 
+        -webkit-text-size-adjust: none; 
+    } 
+ 
+   
+ 
+} 
+
+@media screen and (max-width: 560px) { 
+ 
+   
+ 
+} 
+
+    	
+    </style>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+    </script>
+</head>
+<body style="padding: 0;">
+	
+	<p class="headerTou"><a href="javascript:history.go(-1);" class="pull-left"></a>我的方案<span class="pull-right">●●●</span></p>
+	<div class="waiTab">
+		<ul id="myTab" class="nav nav-tabs nav-tabs-jin">
+		   <li class="active"> <a href="#home" data-toggle="tab">我的方案</a></li>
+		   <li class="pull-right"><a href="#ios" data-toggle="tab">专家方案</a></li>
+		</ul>
+	</div>
+	<div id="myTabContent" class="tab-content">
+	   <div class="tab-pane fade in active" id="home">
+			  <ul class="list_shigong">
+				<li class="mTop10" onclick="window.open('我的方案详情.html','_self')">
+					<div class="content_shigong flexBox clearBoth">
+						<div class="conLeft flexBox_zi1">
+							<p class="font14"><span class="pull-right rightTextR" style="font-size: 1.2rem;"><i>10场</i>场数：</span><time class="pull-left">2016-01-01 16:43:20</time></p>
+							<h3 style="font-size: 1.2rem;"><span style="font-size: 1.2rem;" class="pull-right rightTextR"><i class="colorh colorlv" style="font-size: 1.2rem;">-1000斗</i>盈利： </span>投注：1000斗</h3>
+							
+						</div>
+					</div>
+					
+					<div style="clear: both;"></div>
+				</li>
+				<li class="mTop10" onclick="window.open('我的方案详情.html','_self')">
+					<div class="content_shigong flexBox clearBoth">
+						<div class="conLeft flexBox_zi1">
+							<p class="font14"><span class="pull-right rightTextR" style="font-size: 1.2rem;"><i>10场</i>场数：</span><time class="pull-left">2016-01-01 16:43:20</time></p>
+							<h3 style="font-size: 1.2rem;"><span style="font-size: 1.2rem;" class="pull-right rightTextR"><i class="colorh" style="font-size: 1.2rem;">2000斗</i>盈利： </span>投注：1000斗</h3>
+							
+						</div>
+					</div>
+					
+					<div style="clear: both;"></div>
+				</li>
+				<li class="mTop10" onclick="window.open('我的方案详情.html','_self')">
+					<div class="content_shigong flexBox clearBoth">
+						<div class="conLeft flexBox_zi1">
+							<p class="font14"><span class="pull-right rightTextR" style="font-size: 1.2rem;"><i>10场</i>场数：</span><time class="pull-left">2016-01-01 16:43:20</time></p>
+							<h3 style="font-size: 1.2rem;"><span style="font-size: 1.2rem;" class="pull-right rightTextR"><i class="colorh" style="font-size: 1.2rem;">1000斗</i>盈利： </span>投注：1000斗</h3>
+							
+						</div>
+					</div>
+					
+					<div style="clear: both;"></div>
+				</li>
+				<li class="mTop10" onclick="window.open('我的方案详情.html','_self')">
+					<div class="content_shigong flexBox clearBoth">
+						<div class="conLeft flexBox_zi1">
+							<p class="font14"><span class="pull-right rightTextR" style="font-size: 1.2rem;"><i>10场</i>场数：</span><time class="pull-left">2016-01-01 16:43:20</time></p>
+							<h3 style="font-size: 1.2rem;"><span style="font-size: 1.2rem;" class="pull-right rightTextR"><i class="colorh colorlv" style="font-size: 1.2rem;">-1000斗</i>盈利： </span>投注：1000斗</h3>
+							
+						</div>
+					</div>
+					
+					<div style="clear: both;"></div>
+				</li>
+				<li class="mTop10" onclick="window.open('我的方案详情.html','_self')">
+					<div class="content_shigong flexBox clearBoth">
+						<div class="conLeft flexBox_zi1">
+							<p class="font14"><span class="pull-right rightTextR" style="font-size: 1.2rem;"><i>10场</i>场数：</span><time class="pull-left">2016-01-01 16:43:20</time></p>
+							<h3 style="font-size: 1.2rem;"><span style="font-size: 1.2rem;" class="pull-right rightTextR"><i class="colorh colorlv" style="font-size: 1.2rem;">-1000斗</i>盈利： </span>投注：1000斗</h3>
+						</div>
+					</div>
+					
+					<div style="clear: both;"></div>
+				</li>
+			
+				
+			</ul>
+	   </div>
+	   <div class="tab-pane fade" id="ios">
+	       <ul class="list_shigong">
+				<li class="mTop10" onclick="window.open('我的方案详情.html','_self')">
+					<div class="content_shigong flexBox clearBoth">
+						<div class="conLeft flexBox_zi1">
+							<p class="font14"><span class="pull-right rightTextR" style="font-size: 1.2rem;"><i>10场</i>场数：</span><time class="pull-left">2016-01-01 16:43:20</time></p>
+							<h3 style="font-size: 1.2rem;"><span style="font-size: 1.2rem;" class="pull-right rightTextR"><i class="colorh colorlv" style="font-size: 1.2rem;">-1000斗</i>盈利： </span>投注：1000斗</h3>
+							
+						</div>
+					</div>
+					
+					<div style="clear: both;"></div>
+				</li>
+				<li class="mTop10" onclick="window.open('我的方案详情.html','_self')">
+					<div class="content_shigong flexBox clearBoth">
+						<div class="conLeft flexBox_zi1">
+							<p class="font14"><span class="pull-right rightTextR" style="font-size: 1.2rem;"><i>10场</i>场数：</span><time class="pull-left">2016-01-01 16:43:20</time></p>
+							<h3 style="font-size: 1.2rem;"><span style="font-size: 1.2rem;" class="pull-right rightTextR"><i class="colorh" style="font-size: 1.2rem;">2000斗</i>盈利： </span>投注：1000斗</h3>
+							
+						</div>
+					</div>
+					
+					<div style="clear: both;"></div>
+				</li>
+				<li class="mTop10" onclick="window.open('我的方案详情.html','_self')">
+					<div class="content_shigong flexBox clearBoth">
+						<div class="conLeft flexBox_zi1">
+							<p class="font14"><span class="pull-right rightTextR" style="font-size: 1.2rem;"><i>10场</i>场数：</span><time class="pull-left">2016-01-01 16:43:20</time></p>
+							<h3 style="font-size: 1.2rem;"><span style="font-size: 1.2rem;" class="pull-right rightTextR"><i class="colorh" style="font-size: 1.2rem;">1000斗</i>盈利： </span>投注：1000斗</h3>
+							
+						</div>
+					</div>
+					
+					<div style="clear: both;"></div>
+				</li>
+				<li class="mTop10" onclick="window.open('我的方案详情.html','_self')">
+					<div class="content_shigong flexBox clearBoth">
+						<div class="conLeft flexBox_zi1">
+							<p class="font14"><span class="pull-right rightTextR" style="font-size: 1.2rem;"><i>10场</i>场数：</span><time class="pull-left">2016-01-01 16:43:20</time></p>
+							<h3 style="font-size: 1.2rem;"><span style="font-size: 1.2rem;" class="pull-right rightTextR"><i class="colorh colorlv" style="font-size: 1.2rem;">-1000斗</i>盈利： </span>投注：1000斗</h3>
+							
+						</div>
+					</div>
+					
+					<div style="clear: both;"></div>
+				</li>
+				<li class="mTop10" onclick="window.open('我的方案详情.html','_self')">
+					<div class="content_shigong flexBox clearBoth">
+						<div class="conLeft flexBox_zi1">
+							<p class="font14"><span class="pull-right rightTextR" style="font-size: 1.2rem;"><i>10场</i>场数：</span><time class="pull-left">2016-01-01 16:43:20</time></p>
+							<h3 style="font-size: 1.2rem;"><span style="font-size: 1.2rem;" class="pull-right rightTextR"><i class="colorh colorlv" style="font-size: 1.2rem;">-1000斗</i>盈利： </span>投注：1000斗</h3>
+						</div>
+					</div>
+					
+					<div style="clear: both;"></div>
+				</li>
+			
+				
+			</ul>
+	   </div>
+	  
+	</div>
+
+	
+	
+	
+	
+	
+	
+
+
+		
+</body>
+</html>

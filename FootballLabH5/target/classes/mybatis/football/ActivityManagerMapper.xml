@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ActivityManagerMapper">
+	
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into tb_activity_manager(
+			prize_name,	
+			state,	
+			id,
+			fk_experts_id
+		) values (
+			#{prize_name},	
+			#{state},	
+			#{id},
+			#{expert_id}
+		)
+	</insert>
+	<insert id="saveDetaile" parameterType="pd">
+		insert into tb_activity_detaile(
+			id,
+			prize_name,	
+			scale,
+			fk_tb_activity_manager_id,
+			<if test="coupon_detail_id != null and coupon_detail_id != ''">
+			fk_tb_coupon_detail_id,
+			</if>
+			<if test="number != null and number != ''">
+			number,	
+			</if>
+			approval_state
+		) values (
+			#{id},
+			#{prize_name},	
+			#{scale},
+			#{activity_manager_id},
+			<if test="coupon_detail_id != null and coupon_detail_id != ''">
+			#{coupon_detail_id,jdbcType=VARCHAR},
+			</if>
+			<if test="number != null and number != ''">
+			#{number,jdbcType=VARCHAR},  
+			</if>
+			#{approval_state}
+		)
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="editStatus" parameterType="pd">
+		update  tb_activity_manager
+			set 
+				state = #{state}
+			where 
+				id = #{id}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			a.prize_name,	
+			a.state,	
+			a.id,
+			a.fk_experts_id,
+			(select count(b.id) from tb_activity_detaile as b where b.fk_tb_activity_manager_id  = a.id and approval_state = 3) as num
+		from 
+			tb_activity_manager as a
+		where 
+			a.id = #{id}
+	</select>
+	
+	<!-- 删除-->
+	<delete id="delDetaile" parameterType="pd">
+		delete from tb_activity_detaile
+		where 
+			id = #{id} 
+	</delete>
+	
+	<delete id="delDetaileByManagerId" >
+		delete from tb_activity_detaile
+		where 
+			fk_tb_activity_manager_id = #{managerId} 
+			and approval_state = #{approvalState} 
+			
+	</delete>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.prize_name,	
+				a.state,	
+				a.id,
+				a.fk_experts_id,
+				b.experts_name
+		from 
+				tb_activity_manager a
+		left join tb_experts as b  on a.fk_experts_id = b.experts_id		
+	</select>
+	
+	<!-- 详情-->
+	<select id="detaileList" parameterType="pd" resultType="pd">
+		select
+				a.*
+		from 
+				tb_activity_detaile a
+		where a.fk_tb_activity_manager_id = #{id}	 and  a.approval_state = #{approval_state}
+		
+		order by a.prize_name desc
+	</select>
+	
+	<!-- 修改 -->
+	<update id="editDetaile" parameterType="pd">
+		update  tb_activity_detaile
+			set 
+				prize_name = #{prize_name},
+				number = #{number},
+				scale = #{scale},
+				fk_tb_coupon_detail_id = #{coupon_detail_id}
+			where 
+				id = #{id}
+	</update>
+	
+		
+	<!-- 列表 -->
+	<select id="getActivityData" parameterType="page" resultType="pd">
+		select
+				a.id,
+				a.prize_name,	
+				a.scale,
+				a.fk_tb_coupon_detail_id as coupon_id,
+				a.number,
+				d.coupon_type
+		from 
+			tb_activity_detaile a
+		left join 
+			tb_activity_manager as b  on a.fk_tb_activity_manager_id = b.id	
+		left join 
+			tb_experts as c on b.fk_experts_id = c.experts_id	
+		left join 
+			tb_coupon_detail as	d on d.id = a.fk_tb_coupon_detail_id
+		left join 
+			tb_coupon e on e.coupon_id=d.id
+						
+		where c.experts_code = #{experts_code}	and b.state = '0' and a.approval_state = '3'
+	</select>
+	
+	
+		<!-- 通过ID获取数据 -->
+	<select id="getDetaileById" parameterType="pd" resultType="pd">
+		select 
+			*
+		from 
+			tb_activity_detaile
+		where 
+			id = #{id}
+	</select>
+	
+	<select id="editByCouponId" parameterType="pd" resultType="pd">
+			update  tb_activity_detaile
+			set 
+				fk_tb_coupon_detail_id = #{coupon_detail_id}
+			where 
+				
+				fk_tb_coupon_detail_id
+			 in 
+			 	(select a.coupon_id 
+			 		from tb_coupon as a 
+			 		left join tb_coupon_detail as b on a.coupon_id = b.id
+			 	 where b.coupon_type = #{coupon_type} and a.expert_id = #{expert_id} and a.approval_state = '3')
+	</select>
+	
+	<update id="approve" parameterType="pd">
+		update  tb_activity_detaile set
+			approval_state = #{approval_state}
+		where 	fk_tb_activity_manager_id = #{managerId} and approval_state = #{now_approval_state}
+	</update>
+	
+</mapper>

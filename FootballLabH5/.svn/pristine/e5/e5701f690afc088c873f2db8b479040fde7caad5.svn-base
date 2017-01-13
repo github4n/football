@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>积分充值</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+    <link href="css/activity.css" rel="stylesheet" />
+	</head>
+	<body>
+		<div class="payCon">
+			<div class="left_title titleTxt">*1元=100积分</div>
+			<ul id="ul_grid" class="ul_grid clearfix">
+				<li>
+					<div class="checkBox">
+						<i class="Count">5</i>元
+					</div>
+				</li>
+				<li>
+					<div class="checkBox">
+						<i class="Count">10</i>元
+					</div>							
+				</li>
+				<li>
+					<div class="checkBox">
+						<i class="Count">50</i>元
+					</div>								
+				</li>   
+				<li>
+					<div class="checkBox active">
+						<i class="Count">100</i>元
+					</div>
+				</li>
+				<li>
+					<div class="checkBox">
+						<i class="Count">500</i>元
+					</div>								
+				</li>
+				<li>
+					<div class="inptBox">
+						<input class="otherAmount" name="otherAmount" id="otherAmount" placeholder="其他金额" value="" /><i class="pix">元</i>						
+					</div>						
+				</li>    				
+			</ul>
+			<input type="button" id="js-submit" class="betBtn bet-active" value="立即支付"  onClick="javascript:recharge();">			
+		</div>
+		
+	</body>
+<script src="js/common.js"></script>
+<script src="js/data.js"></script>
+<script src="js/weixin_com.js"></script>
+
+<script>
+	
+	var temp_click = 0;
+	var amountNum = 0;
+	
+	$(function(){
+		$("ul").find(".checkBox").click(function(){
+// 			$("#otherAmount").attr("value","");
+			$("ul").find(".checkBox").removeClass("active");
+			$(this).addClass("active");
+			amountNum = $(this).children(".Count").text();
+// 			alert(amountNum);
+		})
+	})
+	//输入其他金额时，使固定金额失焦
+	$("#otherAmount").focus(function(){
+		$("ul").find(".checkBox").removeClass("active");
+		amountNum =$(".otherAmount").val();
+	})
+
+	function recharge(){
+// 		if(fl_user.openid() != "oI0nWv2fNXxnSr6ueWXAB3aKIJ7w"){
+// 			return ;
+// 		}
+		
+		 // 如果用户多次点击，则只进行一次调用 
+         if (temp_click > 0) {
+             return;
+         }
+         temp_click = 1;
+         
+        if(amountNum != ""){
+        	amountNum = parseInt(amountNum);
+        }else{
+        	
+        	amountNum =$(".otherAmount").val();
+        }
+     
+         var data = GetData(fl_url.payConfig, {
+             pointNum: amountNum * 100,
+            //充值金额
+            // amountNum : amountNum ,
+             phoneNum: fl_user.Mobile(),
+             type: 3,
+             payType: 2
+         });
+         
+         // 验证支付
+         if (data == "{msg:'payFail'}") {
+             tishi_error("支付暂不可用，稍后再试。");
+             temp_click = 0;
+             return;
+         }
+         
+         data = JSON.parse(data);
+
+         if (data.appId != undefined) {
+        	 PayWeiXinByPoint(data.appId, data.timeStamp, data.nonceStr, data.package, data.signType, data.paySign, data.tid,2);
+         }
+         temp_click = 0;
+	}
+</script>
+
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>积分兑奖</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/jquery.marquee.min.js"></script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+    <link href="css/cashPrize.css" rel="stylesheet" />
+    <style type="text/css">
+    	.con{
+    		padding:25px!important;
+    	}
+    </style>
+	</head>
+	<body>
+		<!--顶部轮播文字-->
+		<div class="advBox">
+			<div class="lefticon ico-horn"></div>
+	       	<div class="topscro" > 
+			    <ul id="marquee" class="marquee" >        
+			    </ul> 
+	        </div>			
+		</div>
+		<div class="content">
+			<ul class="cardList" id="cardList">
+				
+			</ul>
+			
+			<div class="activeRule">
+				<p class="Ruletitle">兑奖流程：</p>
+				<p>     
+					1、成功兑换奖品后将扣除相应积分，积分不足不予兑奖，奖品数量有限，先到先得。<br /><br />
+					2、<em class="highColor" style="font-size: 12px;">成功兑换奖品用户，需添加斗球微信号douqiu310，<br />
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;并提供注册时所用的手机号，核实无误后进行奖品派发。</em><br /><br />
+					3、周六日及法定节假日不进行奖品派发。<br /><br />
+					4、以任何方法进行作弊的用户，一经查实，将不予兑换，并扣<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;除通过作弊形式所获得的积分。<br /><br />
+					5、本活动最终解释权归北京周天体育科技有限责任公司所有。<br /><br /><br />
+				</p>
+	
+			</div>			
+		</div>
+	</body>
+	<script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		var sharttitle = "“老料”送红包啦！";
+   		var shartcontent = "一大波奖品来袭，看方案就找“斗球老料”";
+ 		$(function(){
+ 		
+ 			var data = GetData(fl_url.exchange,null);
+ 		
+ 			var exchangeList =data.exchangeList;
+ 			
+ 			var pointExchangeList =data.pointExchangeList;
+ 			bindData(pointExchangeList);
+ 			
+ 			
+ 			for(i in exchangeList){
+ 				$("#marquee").append("<li>"+exchangeList[i]+"&nbsp;&nbsp;&nbsp;"+"</li>")
+ 			}
+ 			
+ 			$("#marquee").marquee({
+					yScroll: "bottom",
+					showSpeed:300
+			});
+ 			
+ 			if(fl_user.focus_status()!=1){
+				$(".btn").attr("href","javascript:showGuanZhu()");
+			}else{
+				var UserInfo = sessionStorage.UserInfo;
+            	UserInfo = JSON.parse(UserInfo);
+            	
+            	if (UserInfo.phone_number == undefined) {
+	                $(".btn").attr("href","javascript:register()");
+	            } 
+			} 
+ 			Init();
+ 		});
+ 		
+ 		function bindData(data){
+ 			var html = "";
+ 			for(i in data){
+ 				var divClass="";
+ 				if(i==0){
+ 					divClass="pull-left";
+ 				}else if(i==data.length-1){
+ 					divClass="pull-right";
+ 				}
+ 			
+ 				html += "<li><div class='cardBox "+divClass+"'>";
+				html += "<img width='90%' src='"+data[i].imgUrl+"'/>";
+				html += "<div class='textbox'>";
+				html += "<p>"+data[i].name+"</p>";
+				html += "<p class='highColor'>"+data[i].point+"积分</p>";
+				html += "</div>";
+				if(data[i].canExchange){
+					html += "<a class='btn btn-highbg' href='javascript:exchange("+data[i].id+","+data[i].point+")'>立即兑换</a>";
+				}else{
+					html += "<a class='btn btn-highbg btn-disabled' href='javascript:void(0)'>已抢光</a>";
+				}
+				
+				html += "</div></li>";
+				
+ 			}
+ 			$("#cardList").append(html);
+ 		}
+ 		
+ 		function exchange(productId,pointNum){
+ 		
+ 			if(fl_user.Integral()<pointNum){
+ 				confirm_error1("对不起，您当前积分不足！",function(){GoToUrl_T('guessGame.html')},function(){},"取消","去挣分")
+ 			}else{
+ 				confirm_error1("本次兑换需扣除您"+pointNum+"积分，确定兑换？"
+                    , function () {
+                    	var token = $.base64.btoa(fl_user.MemberId+productId+"&"+(new Date()).getTime(),true);
+                        var param ={};
+			 			param['memberId'] = fl_user.MemberId;
+			 			param['productId'] = productId;
+			 			param['token'] = token;
+			 			
+			 			var result;
+			 			$.ajax({
+					        type: "post",
+					        url: fl_app.AjaxHome+"/webChat/pointExchange",
+					        data: param,
+					        async: false,
+					        datatype: "json",
+					        success: function (data) {
+					        	result = data;
+					        },
+					    });
+					    
+					    if(result.code==200){
+					    	alert_error("<lable style=\"color:#000000;font-size:16px;\">积分已扣除！</lable><br><div style=\"text-align:center;color:#000;line-height:24px;margin-left:8px;\">请加微信号douqiu310，提供您的注册手机号，工作人员核实后将奖品派发。</div>", "确定", function () {});
+					    }else if(result.code==202){
+					    	confirm_error1("对不起，您当前积分不足！",function(){GoToUrl_T('guessGame.html')},function(){},"取消","去挣分")
+					    }else if(result.code==203){
+					    	alert_error(result.msg, "确定", function () {GoToUrl_T('pointExchange.html')});
+					    }else{
+					    	tishi_error(result.msg);
+					    }
+                    }, function () {
+                    }, "取消", "确定");
+ 			}
+		    
+ 		}
+	</script>
+</html>

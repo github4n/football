@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>一场夺分</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/marquee.css" />
+    <link href="css/activity.css" rel="stylesheet" />
+    <script src="js/jquery.marquee.min.js"></script>
+	</head>
+    <body>
+        <!--顶部主视图-->
+        <div class="banner" id="banner">
+        	<img src="img/bannerBgnew2.jpg" width="100%"/>
+        	<div class="topIcon">
+        		<img width="100%" src="img/topLog.png"/>
+        	</div>
+        	<div class="bannerCon">
+	            <table id="bannerBox" class="bannerBox clearfix">
+	            	<tr><td colspan="3" class="matchName">马刺</td></tr>
+	            	<tr>
+		            	<td class="leftCell">埃弗顿<i>[主]</i></td>
+		            	<td class="centerCell"><img width="100%" src="img/vsIcon.png"/></td>
+		            	<td class="rightCell">阿森纳</td>	            		
+	            	</tr>
+	            </table>
+	            <p class="btTxt">比赛时间2016-12-14 03:45:00</p>        		
+        	</div>
+
+        </div>
+        <!--内容列表-->
+        <div class="content">
+            <div class="integral">
+                <ul>
+                    <li class="integralNum">当前积分&nbsp;:&nbsp;100</li>
+                    <li class="tochange pull-right"><a href="#">兑换奖品>></a></li>
+                </ul>
+            </div>
+            <!--
+            	作者：1632276537@qq.com
+            	时间：2016-12-20
+            	描述：积分奖品
+            -->
+            <div class="grid_box" id="grid_box">
+            	<img src="img/icon-jiangpin.png" class="leftTopIcon" width="12%" />
+            	<ul class="grid_list clearfix">
+            		<li>
+            			<div class="interBox">
+            				<i class="icon_Medal icon_First"></i>
+            				<img src="img/icon-jinbi.png"/>
+            				<span class="btTap">3000积分</span>
+            			</div>
+            		</li>
+            		<li>
+            			<div class="interBox">
+            				<i class="icon_Medal icon_Second"></i>
+            				<img src="img/icon-jinbi.png"/>
+            				<span class="btTap">2000积分</span>
+            			</div>
+            		</li>
+            		<li>
+            			<div class="interBox">
+            				<i class="icon_Medal icon_Third"></i>
+            				<img src="img/icon-jinbi.png"/>
+            				<span class="btTap">1000积分</span>
+            			</div>
+            		</li>
+              		<li>
+              			<div class="lastBox">
+	 						<i class="joinNum">100人参与</i>
+							<a class="ranking">投注榜 ></a>             				
+              			</div>
+            		</li>
+            	</ul>
+				<div class="advBox">
+					<div class="lefticon ico-horn"></div>
+			       	<div class="topscro" > 
+					    <ul id="marquee" class="marquee" >        
+						    <li>1</li>       
+						    <li>2</li>        
+						    <li>3</li>   
+						    <li>4</li>       
+						    <li>5</li>        
+						    <li>6</li>
+					    </ul> 
+			        </div>		
+				</div>            	
+            </div>
+             <!--
+            	作者：1632276537@qq.com
+            	时间：2016-12-20
+            	描述：积分奖品结束
+            -->           
+            <div class="team">
+                <ul class="tableList" id="tableList">
+                    <li class="listCell">
+                    	<h1 class="titleTxt">猜胜平负</h1>
+                        <ul class="spf">
+  							<li>
+  								<p>主胜</p>
+  								<p class="scaleNum">6.56</p>
+  							</li>
+  							<li>
+   								<p>主平</p>
+  								<p class="scaleNum">5.45</p> 								
+  							</li>
+  							<li>
+  								<p>主负</p>
+  								<p class="scaleNum">4.23</p>  								
+  							</li>
+                        </ul>
+                    </li>
+                    <li class="listCell">
+                    	<h1 class="titleTxt">猜让球胜平负<span class="popTxt">(-1)</span></h1>
+                        <ul class="rqspf">
+  							<li>
+  								<p>主胜</p>
+  								<p class="scaleNum">1.85</p>
+  							</li>
+  							<li>
+   								<p>主平</p>
+  								<p class="scaleNum">2.85</p> 								
+  							</li>
+  							<li>
+  								<p>主负</p>
+  								<p class="scaleNum">3.85</p>  								
+  							</li>
+                        </ul>
+                    </li>                  
+                </ul>   
+            </div>
+        </div>
+    	<footer class="footerBox">
+     		<div id="toggleBox" class="toggleBox clearfix">
+                <div id="mySelect" class="mySelect pull-left upIcon">
+                	<p class="selectVal">投<i></i>积分</p>
+                	<ul class="selectList">
+                		<li class="defaultVal">投<i>2000</i>积分</li>
+                		<li>投<i>1000</i>积分</li>
+                		<li>投<i>500</i>积分</li>
+                		<li>投<i>200</i>积分</li>
+                		<li>投<i>100</i>积分</li>
+                	</ul>
+                </div>
+                <p class="pull-right rtTxt">预计收入<span id="intergalNum" class="intergalNum"></span>积分</p>
+            </div>
+
+            <input type="button" id="js-submit" class="betBtn" value="确认积分投注">   				
+		</footer>
+        <script src="js/active.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(function(){      
+				$("#marquee").marquee({
+					yScroll: "bottom",
+					showSpeed:500
+				});
+	
+			});  
+			window.onload=function(){
+				var high1=$("#bannerBox").height();
+				var high2=$("#banner").height();				
+				$('#grid_box li').eq(3).height($('#grid_box li').eq(0).height())				
+				$("#bannerBox").css('margin-top',(high2-high1)/2)				
+			}
+		</script>    
+    </body>
+
+</html>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.visolink.h5.mapper.DesignerUserMapper" >
+  <resultMap id="BaseResultMap" type="com.visolink.h5.entity.DesignerUser" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+   <!--  <result column="Designer_ID" property="designerId" jdbcType="INTEGER" /> -->
+    <result column="Designer_Name" property="designerName" jdbcType="VARCHAR" />
+    <result column="Gender" property="gender" jdbcType="INTEGER" />
+    <result column="Designer_Avatar" property="designerAvatar" jdbcType="VARCHAR" />
+    <result column="Designer_Level_ID" property="designerLevelId" jdbcType="INTEGER" />
+    <result column="Designer_Level_Name" property="designerLevelName" jdbcType="VARCHAR" />
+    <result column="Designer_Desc" property="designerDesc" jdbcType="VARCHAR" />
+    <result column="Honor" property="honor" jdbcType="VARCHAR" />
+    <result column="Job_Age_Limit" property="jobAgeLimit" jdbcType="INTEGER" />
+    <result column="Designer_Type_ID" property="designerTypeId" jdbcType="INTEGER" />
+    <result column="Designer_Type_Name" property="designerTypeName" jdbcType="VARCHAR" />
+    <result column="Company_ID" property="companyId" jdbcType="INTEGER" />
+    <result column="Company_Name" property="companyName" jdbcType="VARCHAR" />
+    <result column="City_ID" property="cityId" jdbcType="INTEGER" />
+    <result column="City_Name" property="cityName" jdbcType="VARCHAR" />
+    <result column="Shop_ID" property="shopId" jdbcType="VARCHAR" />
+    <result column="Style_ID" property="styleId" jdbcType="INTEGER" />
+    <result column="Style_Name" property="styleName" jdbcType="VARCHAR" />
+    <result column="Layout_ID" property="layoutId" jdbcType="INTEGER" />
+    <result column="Layout_Name" property="layoutName" jdbcType="VARCHAR" />
+    <result column="Square_ID" property="squareId" jdbcType="INTEGER" />
+    <result column="Square_Name" property="squareName" jdbcType="VARCHAR" />
+    <result column="Project_Total" property="projectTotal" jdbcType="INTEGER" />
+    <result column="Like_Total" property="likeTotal" jdbcType="INTEGER" />
+    <result column="Creator_ID" property="creatorId" jdbcType="VARCHAR" />
+    <result column="Create_Date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="Update_Time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="Status" property="status" jdbcType="INTEGER" />
+    <result column="Is_Del" property="isDel" jdbcType="INTEGER" />
+    
+    <result column="shop_Name" property="shopName" jdbcType="VARCHAR" />
+  </resultMap>
+  <!--  包含Designer_ID版本
+  ID, Designer_ID, Designer_Name, Gender, Designer_Avatar, Designer_Level_ID, Designer_Level_Name, 
+    Designer_Desc, Honor, Job_Age_Limit, Designer_Type_ID, Designer_Type_Name, Company_ID, 
+    Company_Name, City_ID, City_Name, Shop_ID, Style_ID, Style_Name, Layout_ID, Layout_Name, 
+    Square_ID, Square_Name, Project_Total, Like_Total, Creator_ID, Create_Date, Update_Time, 
+    Status, Is_Del-->
+  <sql id="Base_Column_List" >
+    ID, Designer_Name, Gender, Designer_Avatar, Designer_Level_ID, Designer_Level_Name, 
+    Designer_Desc, Honor, Job_Age_Limit, Designer_Type_ID, Designer_Type_Name, Company_ID, 
+    Company_Name, City_ID, City_Name, Shop_ID, Style_ID, Style_Name, Layout_ID, Layout_Name, 
+    Square_ID, Square_Name, Project_Total, Like_Total, Creator_ID, Create_Date, Update_Time, 
+    Status, Is_Del
+  </sql>
+   <select id="findAllUser" resultMap="BaseResultMap"  parameterType="com.visolink.h5.entity.DesignerUser" >
+    select 
+    <include refid="Base_Column_List" />
+    from designer_user
+    where Status=1 and Is_Del=0
+	order by Create_Date desc
+	limit #{p},#{pageSize}
+  </select>
+  <!--  包含Designer_ID版本
+   select 
+    designer_user.ID, designer_user.Designer_ID, designer_user.Designer_Name, designer_user.Gender, designer_user.Designer_Avatar, 
+    designer_user.Designer_Level_ID, designer_user.Designer_Level_Name, 
+    designer_user.Designer_Desc, designer_user.Honor, designer_user.Job_Age_Limit, designer_user.Designer_Type_ID, 
+    designer_user.Designer_Type_Name, designer_user.Company_ID, 
+    designer_user.Company_Name, designer_user.City_ID, designer_user.City_Name, 
+    designer_user.Shop_ID, designer_user.Style_ID, designer_user.Style_Name, designer_user.Layout_ID, 
+    designer_user.Layout_Name, 
+    designer_user.Square_ID, designer_user.Square_Name, designer_user.Project_Total, designer_user.Like_Total, 
+    designer_user.Status, designer_user.Is_Del,designer_shop.shop_Name
+    from designer_user
+    left join designer_shop on designer_user.Shop_ID=designer_shop.ID
+    where designer_user.ID = #{id,jdbcType=INTEGER}-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    designer_user.ID, designer_user.Designer_Name, designer_user.Gender, designer_user.Designer_Avatar, 
+    designer_user.Designer_Level_ID, designer_user.Designer_Level_Name, 
+    designer_user.Designer_Desc, designer_user.Honor, designer_user.Job_Age_Limit, designer_user.Designer_Type_ID, 
+    designer_user.Designer_Type_Name, designer_user.Company_ID, 
+    designer_user.Company_Name, designer_user.City_ID, designer_user.City_Name, 
+    designer_user.Shop_ID, designer_user.Style_ID, designer_user.Style_Name, designer_user.Layout_ID, 
+    designer_user.Layout_Name, 
+    designer_user.Square_ID, designer_user.Square_Name, designer_user.Project_Total, designer_user.Like_Total, 
+    designer_user.Status, designer_user.Is_Del,designer_shop.shop_Name
+    from designer_user
+    left join designer_shop on designer_user.Shop_ID=designer_shop.ID
+    where designer_user.ID = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 通过案例id查找设计师 -->
+  <!-- 包含Designer_ID版本
+   select 
+    designer_user.ID, designer_user.Designer_ID, designer_user.Designer_Name, designer_user.Gender, designer_user.Designer_Avatar, 
+    designer_user.Designer_Level_ID, designer_user.Designer_Level_Name, 
+    designer_user.Designer_Desc, designer_user.Honor, designer_user.Job_Age_Limit, designer_user.Designer_Type_ID, 
+    designer_user.Designer_Type_Name, designer_user.Company_ID, 
+    designer_user.Company_Name, designer_user.City_ID, designer_user.City_Name, 
+    designer_user.Shop_ID, designer_user.Style_ID, designer_user.Style_Name, designer_user.Layout_ID, 
+    designer_user.Layout_Name, 
+    designer_user.Square_ID, designer_user.Square_Name, designer_user.Project_Total, designer_user.Like_Total, 
+    designer_user.Status, designer_user.Is_Del,designer_shop.shop_Name
+    from designer_user
+    left join designer_shop on designer_user.Shop_ID=designer_shop.ID
+    where designer_user.ID = 
+    (select Designer_ID from Designer_Project where id=#{projectID,jdbcType=INTEGER})
+   -->
+  <select id="findUserByProjectId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    designer_user.ID, designer_user.Designer_Name, designer_user.Gender, designer_user.Designer_Avatar, 
+    designer_user.Designer_Level_ID, designer_user.Designer_Level_Name, 
+    designer_user.Designer_Desc, designer_user.Honor, designer_user.Job_Age_Limit, designer_user.Designer_Type_ID, 
+    designer_user.Designer_Type_Name, designer_user.Company_ID, 
+    designer_user.Company_Name, designer_user.City_ID, designer_user.City_Name, 
+    designer_user.Shop_ID, designer_user.Style_ID, designer_user.Style_Name, designer_user.Layout_ID, 
+    designer_user.Layout_Name, 
+    designer_user.Square_ID, designer_user.Square_Name, designer_user.Project_Total, designer_user.Like_Total, 
+    designer_user.Status, designer_user.Is_Del,designer_shop.shop_Name
+    from designer_user
+    left join designer_shop on designer_user.Shop_ID=designer_shop.ID
+    where designer_user.ID = 
+    (select Designer_ID from Designer_Project where id=#{projectID,jdbcType=INTEGER})
+    
+  </select>
+  
+  <!-- 通过shopid查找设计师 -->
+  <!-- 
+  select 
+    designer_user.ID, designer_user.Designer_ID, designer_user.Designer_Name, designer_user.Gender, designer_user.Designer_Avatar, 
+    designer_user.Designer_Level_ID, designer_user.Designer_Level_Name, 
+    designer_user.Designer_Desc, designer_user.Honor, designer_user.Job_Age_Limit, designer_user.Designer_Type_ID, 
+    designer_user.Designer_Type_Name, designer_user.Company_ID, 
+    designer_user.Company_Name, designer_user.City_ID, designer_user.City_Name, 
+    designer_user.Shop_ID, designer_user.Style_ID, designer_user.Style_Name, designer_user.Layout_ID, 
+    designer_user.Layout_Name, 
+    designer_user.Square_ID, designer_user.Square_Name, designer_user.Project_Total, designer_user.Like_Total, 
+    designer_user.Status, designer_user.Is_Del,designer_shop.shop_Name
+    from designer_user
+    left join designer_shop on designer_user.Shop_ID=designer_shop.ID
+    where designer_user.Status=1 and designer_user.Is_Del=0
+    and designer_user.Shop_ID = #{shopId}
+   -->
+  <select id="findDesignerUserByShopId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    designer_user.ID,  designer_user.Designer_Name, designer_user.Gender, designer_user.Designer_Avatar, 
+    designer_user.Designer_Level_ID, designer_user.Designer_Level_Name, 
+    designer_user.Designer_Desc, designer_user.Honor, designer_user.Job_Age_Limit, designer_user.Designer_Type_ID, 
+    designer_user.Designer_Type_Name, designer_user.Company_ID, 
+    designer_user.Company_Name, designer_user.City_ID, designer_user.City_Name, 
+    designer_user.Shop_ID, designer_user.Style_ID, designer_user.Style_Name, designer_user.Layout_ID, 
+    designer_user.Layout_Name, 
+    designer_user.Square_ID, designer_user.Square_Name, designer_user.Project_Total, designer_user.Like_Total, 
+    designer_user.Status, designer_user.Is_Del,designer_shop.shop_Name
+    from designer_user
+    left join designer_shop on designer_user.Shop_ID=designer_shop.ID
+    where designer_user.Status=1 and designer_user.Is_Del=0
+    and designer_user.Shop_ID = #{shopId}
+    
+  </select>
+  
+   <!-- 设计师筛选 -->
+  <select id="findDesignerUserBySearch" resultMap="BaseResultMap"  parameterType="com.visolink.h5.entity.DesignerUser">
+    select 
+    <include refid="Base_Column_List" />
+    from designer_user
+    where Status=1 and Is_Del=0
+    and  designer_user.City_ID = ${cityId }
+    <if test="designerName != null  and designerName != ''" >
+        and Designer_Name like CONCAT('%','${designerName}','%' )
+</if>
+<if test="gender != null  and  gender != 999" >
+        and designer_user.gender = ${gender }
+</if>
+<if test="styleId != null  and  styleId != 999" >
+        and designer_user.Style_ID = ${styleId }
+</if>
+	order by Create_Date desc
+        limit #{p},#{pageSize}
+  </select>
+  
+  <!-- 
+  where Designer_ID in 
+   -->
+  <select id="findDesignerUserByIdList"  resultMap="BaseResultMap"  parameterType="list">
+  select 
+    <include refid="Base_Column_List" />
+    from designer_user
+    where id in 
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+  </select>
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.visolink.h5.mapper.LovequestionMapper" >
+
+<insert id="insertLoveAnswer"  parameterType="com.visolink.h5.entity.LoveQuestion">
+INSERT  INTO `h5_lovequestion`
+    ( `blood`,        `gender`,        `birthday`,        `age`,        `constellation`,        `partner`,        `child`,        `oldman`,        `man1`,
+        `man2`,        `man3`,        `man4`,        `women1`,        `women2`,        `women3`,        `women4`,        `child1`,
+        `child2`,        `child3`,        `child4`,        `oldman1`,        `oldman2`,        `oldman3`,        `oldman4`,`member_id`,`addtime`
+    )
+    VALUES
+    (#{blood},        #{gender},        #{birthday},        #{age},        #{constellation},        #{partner},        #{child},        #{oldman},        #{man1},
+        #{man2},        #{man3},        #{man4},        #{women1},        #{women2},        #{women3},        #{women4},        #{child1},
+        #{child2},        #{child3},        #{child4},        #{oldman1},        #{oldman2},        #{oldman3},        #{oldman4} ,#{member_id} ,now()
+    )
+
+</insert>
+
+</mapper>

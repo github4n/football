@@ -1,0 +1,204 @@
+body{
+	margin: 0px;
+	padding: 0px;
+	
+}
+.content{
+	padding: 10px;
+}
+.banner{
+	width: 100%;
+	position: relative;
+	background-size: 100%;
+	background: url(../img/ranking_bg.png) no-repeat;
+	background-size: 100% 100%;
+}
+
+.bannerCon{
+	margin-left: 50px;
+	margin-right: 50px;
+	position: relative;
+}
+.icon-arrow{
+	position: absolute;
+	width: 15px;
+	height: 24px;
+	top: 50%;
+	margin-top: -12px;
+	cursor: pointer;
+}
+.icon-arrow.icon-rightArrow{
+	right: -20px;
+	background: url(../img/icon-rightarrow.png) no-repeat;
+	background-size: 100%;
+	transform:rotate(180deg);
+	-ms-transform:rotate(180deg); 	/* IE 9 */
+	-moz-transform:rotate(180deg); 	/* Firefox */
+	-webkit-transform:rotate(180deg); /* Safari 和 Chrome */
+	-o-transform:rotate(180deg); 	/* Opera */
+}
+.icon-arrow.icon-leftArrow{
+	left: -20px;
+	background: url(../img/icon-rightarrow.png) no-repeat;
+	background-size: 100%;
+}
+.bannerBox li{
+	float: left;
+}
+.bannerBox{
+	margin-top: 30px;
+	margin-bottom: 30px;
+	width: 100%;
+}
+.bannerBox .leftCell,.bannerBox .rightCell{
+	text-align: center;
+	font-size: 20px;
+	color: RGB(251,241,56);
+	width: 45%;
+}
+.bannerBox .leftCell i{
+	color: RGB(251,241,56);
+}
+.bannerBox .centerCell{
+	text-align: center;
+	width: 10%;
+	font-size: 14px;
+}
+.bannerBox td{
+	vertical-align: middle;
+	padding: 5px;
+	color: RGB(251,241,56);
+}
+.btTxt{
+	width: 100%;
+	text-align: center;
+}
+.rankingList{
+	margin-top: 20px;
+	position: relative;
+}
+.rankingList_title{
+	border-radius: 5px 5px 0 0;
+	background:url(../img/bt_bowen.png) repeat-x;
+	background-position: bottom;
+	overflow: hidden;
+}
+.rankingList_title li{
+	background: RGB(53,82,140);
+	box-sizing: border-box;
+	margin-bottom: 4px;
+}
+.rankingList_title div{
+	color: #999;
+}
+.icon-rankJp{
+	position: absolute;
+	bottom: 0px;
+	left: 50%;
+	margin-left: -10px;
+}
+.rankingList_con{
+	margin-top: 5px;
+}
+.rankingList_con li{
+	background: RGB(53,82,140);
+	box-sizing: border-box;
+	border-bottom: 1px solid RGB(48,63,96);
+}
+.rankingList ul div{
+	float: left;
+	text-align: center;
+	font-size: 14px;
+	height: 35px;
+	line-height: 35px;
+	position: relative;
+}
+.rankingList .rankingList_title div{
+	height: 30px;
+	line-height: 30px;	
+}
+.rankingList .rankingList_title .rank,.rankingList .rank{
+	color: #999;
+	width: 20%;
+}
+.rankingList .rankingList_title .userName,.rankingList .userName{
+	width: 60%;
+}
+.rankingList .rankingList_title .intergal,.rankingList .intergal{
+	width: 20%;
+	color: RGB(216,184,71);
+}
+.rankingList2 .rankingList_title .rank,.rankingList2 .rank{
+	color: #999;
+	width: 20%;
+}
+.rankingList2 .rankingList_title .userName,.rankingList2 .userName{
+	width: 40%;
+}
+.rankingList2 .rankingList_title .intergal,.rankingList2 .rewardIntgl{
+	width: 20%;
+	color: RGB(216,184,71);
+}
+.rankingList2 .rankingList_title .intergal,.rankingList2 .rewardIntgl{
+	width: 20%;
+	color: RGB(216,184,71);
+}
+.rankingList .rankingList_title .intergal,.rankingList2 .rankingList_title .rewardIntgl{
+	color: #999;
+}
+
+.integralBox ul{
+	overflow: hidden;
+}
+.integralBox ul li{
+	float: left;
+}
+.integralNum{
+	font-size: 14px;
+	color: RGB(216,184,71);
+}
+.integralBox ul li a{
+	font-size: 12px;
+	color: #eb6100;
+	text-decoration: none;
+	border-bottom: 1px solid #eb6100; 
+}
+#scroller {
+    position: absolute;
+    z-index: 1;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    width: 100%;
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-text-size-adjust: none;
+    -moz-text-size-adjust: none;
+    -ms-text-size-adjust: none;
+    -o-text-size-adjust: none;
+    text-size-adjust: none;
+}
+
+#scroller ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    text-align: left;
+}
+#wrapper {
+    position: absolute;
+    z-index: 1;
+    top: 42px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+
+}

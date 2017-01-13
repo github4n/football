@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.visolink.h5.mapper.DictCompanyMapper" >
+  <resultMap id="BaseResultMap" type="com.visolink.h5.entity.DictCompany" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="Company_Name" property="companyName" jdbcType="VARCHAR" />
+    <result column="Company_Desc" property="companyDesc" jdbcType="VARCHAR" />
+    <result column="Address" property="address" jdbcType="VARCHAR" />
+    <result column="Contacts" property="contacts" jdbcType="VARCHAR" />
+    <result column="City_ID" property="cityId" jdbcType="INTEGER" />
+    <result column="City_Name" property="cityName" jdbcType="VARCHAR" />
+    <result column="Area_ID" property="areaId" jdbcType="INTEGER" />
+    <result column="Area_Name" property="areaName" jdbcType="VARCHAR" />
+    <result column="Status" property="status" jdbcType="INTEGER" />
+    <result column="Shop_Total" property="shopTotal" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, Company_Name, Company_Desc, Address, Contacts, City_ID, City_Name, Area_ID, Area_Name, 
+    Status, Shop_Total
+  </sql>
+  </mapper>

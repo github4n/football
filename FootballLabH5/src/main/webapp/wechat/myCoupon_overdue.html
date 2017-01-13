@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>我的优惠券-已过期</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/iscroll-probe.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+    </style>
+</head>
+<body style="padding: 0;">
+    <!--<p class="headerTou"><a href="javascript:history.go(-1);" class="pull-left"></a>我的优惠券-已过期<img src="img/home.png" onclick="GoToUrl_T('index.html')" style="float:right;margin-top:10px;width:24px;height:24px;" /></p>-->
+    <div id="wrapper" style="top:0px;">
+        <div id="scroller">
+            <ul class="list_shigong list_shigongBack list_shigongB list_border0 " id="list">
+            </ul>
+        </div>
+    </div>
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script src="js/iscroll.init.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+        $(function () {
+            dataUrl = fl_url.myCoupon;
+            dataParam = {
+                phoneNum: fl_user.Mobile(),
+                type: 1,
+                showCount: showCount,
+                currentPage: currentPage
+            };
+            loaded();
+
+            sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+            shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+            shartlink = "http://www.01588.com/wechat/index.html?experts_code=" + getQueryString("experts_code");
+            Init();
+        });
+        function GoToUrl_T(u) {
+            location.href = u + "?experts_code=" + getQueryString("experts_code");
+        }
+
+        // 绑定数据html
+        function BindData(data) {
+            var html = "";
+            data = JSON.parse(data);
+            console.log(data);
+            if (typeof (data) != undefined && data != null && data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    html += "<li class=\"mTop10\" onclick=\"window.open('#','_self')\">";
+                    html += "<div class=\"content_shigong flexBox clearBoth\">";
+                    html += "<div class=\"conLeft flexBox_zi1\">";
+                    html += "<h3 class=\"\" style=\"margin-top: 8px;\">" + data[i].coupon_name + "</h3>";
+                    html += "<p><time class=\"pull-left\">有效期至&nbsp;" + data[i].invalid_time + "</time></p>";
+                    html += "</div>";
+                    html += "</div>";
+                    html += "<button class=\"posiButton\">已过期</button>";
+                    html += "<div style=\"clear: both;\"></div>";
+                    html += "</li>";
+                }
+            } else {
+                html += "<div style='text-align:center;margin-top:40%;'><img src=\"img/myCoupon_not.jpg\"/></div>";
+            }
+            $("#list").append(html);
+        }
+    </script>
+
+</body>
+</html>

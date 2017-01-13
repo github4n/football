@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AsianMapper">
+	
+	<sql id="asianBaseSql">
+		select 
+			 a.id as tb_betting_strategy_for_single_id,a.strategy,a.betting_amount,a.create_time,a.fk_betting_game_id,a.fk_company_id,a.service_id,
+			 b.id as tb_betting_game_id, b.league_id,b.league_name,b.away_name,b.home_name,b.game_date_time,b.home_score,b.away_score,b.league_time_id,b.league_time_name,b.round,b.home_score_half,b.away_score_half,b.let_the_count,
+			 c.id as tb_company_odds_id,c.fk_betting_game_id as betting_game_id,c.lose_odds,c.win_odds,c.handicap,c.handicap_name
+		from 
+			tb_asian_handicap_betting_strategy as a 
+		left join 
+			tb_betting_game as b on a.fk_betting_game_id=b.id 
+		left join 
+			tb_company_odds_asian_handicap as c on c.company_id = a.fk_company_id and b.id=c.fk_betting_game_id 
+	</sql>
+	
+	<select id="asianDayList" parameterType="pd" resultType="com.visolink.entity.AsianVO">
+		<include refid="asianBaseSql" />
+		where 
+			b.game_date_time &gt; #{beginTime}
+		and 
+			b.game_date_time &lt;= #{endTime}
+		and
+			a.service_id = #{serviceId}
+	</select>
+	<select id="asianDayListDesc" parameterType="pd" resultType="com.visolink.entity.AsianVO">
+		<include refid="asianBaseSql" />
+		where 
+			b.game_date_time &gt; #{beginTime}
+		and 
+			b.game_date_time &lt;= #{endTime}
+		and
+			a.service_id = #{serviceId}
+		order by b.game_date_time desc
+	</select>
+
+	<select id="asianTimeList" parameterType="pd" resultType="com.visolink.entity.GameMapper">
+		select 
+			game_date_time,sum(1) as num 
+		from 
+			(
+				<include refid="asianBaseSql" />
+				where 
+					b.game_date_time &gt; #{beginTime}
+				and 
+					b.game_date_time &lt;= #{endTime}
+				and
+					a.service_id = #{serviceId}
+			) as aa
+		group 
+			by game_date_time 
+		order 
+			by game_date_time
+	</select>
+	
+	<!-- 比赛数据 -->
+	<select id="bettingGameList" parameterType="pd" resultType="com.visolink.entity.BettingGame">
+		select 
+			 b.id , b.league_id,b.league_name,b.away_name,b.home_name,b.game_date_time,b.home_score,b.away_score,b.league_time_id,b.league_time_name,b.round,b.home_score_half,b.away_score_half,b.let_the_count
+		from 
+			tb_betting_game as b
+		where  
+			b.id 
+		in 
+			(
+				select tb_betting_game_id from 
+					(
+				   		<include refid="asianBaseSql" />	
+				   		where 
+				   			b.game_date_time = #{gameDate}
+						and
+							a.service_id = #{serviceId}
+					 ) as aa
+			  )
+	
+	</select>
+	
+	<!-- 赔率数据 -->
+	<select id="getCompanyOdds" resultType="com.visolink.entity.CompanyOddsAsian">
+		select 
+			id,handicap, handicap_name, lose_odds,win_odds,fk_betting_game_id as betting_game_id
+		from 
+			tb_company_odds_asian_handicap 
+		where 
+			fk_betting_game_id= #{betting_game_id}
+	</select>
+	
+	<!-- 比赛推荐情况-->
+	<select id="getGameStrategyList" resultType="com.visolink.entity.BettingStrategyForAsian">
+		select 
+			id,strategy,betting_amount,create_time,fk_betting_game_id,fk_company_id,service_id
+		from 
+			tb_asian_handicap_betting_strategy s 
+		where 
+			s.fk_betting_game_id= #{betting_game_id}
+		and 
+			s.service_id= #{serviceId}
+	</select>
+	
+</mapper>

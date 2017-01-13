@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>我的方案</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/iscroll-probe.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+    </style>
+</head>
+<body style="padding: 0;">
+    <!--<p class="headerTou"><a href="javascript:GoToUrl();" class="pull-left"></a>我的方案<img src="img/home.png" onclick="GoToUrl_T('index.html')" style="float:right;margin-top:10px;width:24px;height:24px;" /></p>-->
+    <div id="wrapper" style="top:0px;">
+        <div id="scroller">
+            <ul class="list_shigong" id="list">
+            </ul>
+        </div>
+    </div>
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script src="js/iscroll.init.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+        $(function () {
+            dataUrl = fl_url.myPlan;
+            dataParam = {
+                phoneNum: fl_user.Mobile(),
+                showCount: showCount,
+                currentPage: currentPage
+            };
+            console.log(dataParam);
+            loaded();
+
+            sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+            shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+            shartlink = "http://www.01588.com/wechat/index.html?experts_code=" + getQueryString("experts_code");
+            Init();
+        });
+
+        function GoToUrl() {
+            location.href = "my.html?experts_code=" + getQueryString("experts_code");
+        }
+        function GoToUrl_T(u) {
+            location.href = u + "?experts_code=" + getQueryString("experts_code");
+        }
+
+        // 绑定数据html
+        function BindData(data) {
+            var html = "";
+            
+            data = JSON.parse(data);
+            console.log(data);
+            if (typeof (data) != undefined && data != null && data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+
+                    var c_d_t = data[i].create_time.substring(0, 10);
+                    if (parseInt(GetDateFByTime("hh",data[i].create_time)) < 11 ||  parseInt(GetDateFByTime("hh",data[i].create_time)) == 11 && parseInt(GetDateFByTime("mm",data[i].create_time)) < 30){
+                        c_d_t = GetDateStrP(-1, data[i].create_time);
+                    }
+
+                    html += "<li class=\"mTop10\">";
+                    html += "<div class=\"content_shigong flexBox clearBoth\">";
+                    html += "<div class=\"conLeft flexBox_zi1\" style=\"height: 100px;\">";
+                    html += "<h3 class=\"colorh baoTit\" style=\"margin-top: 9px;\"><span class=\"pull-right\">" + data[i].create_time.substring(0, 10) + "至" + data[i].end_time.substring(0, 10) + "</span>" + data[i].service_name + "</h3>";
+                    html += "<dl class=\"width40B pull-left\" onclick=\"window.open('myPlan_next.html?beginDate=" + c_d_t + "&endDate=" + data[i].end_time.substring(0, 10) + "&type=" + data[i].type + "&serviceId=" + data[i].service_id + "&service_type=" + data[i].service_type + "&service_code=" + data[i].service_code + "&companyId=" + data[i].fk_company_id + "&experts_code=" + getQueryString("experts_code") + "','_self')\">";
+                    html += "<dt>我的PK</dt>";
+
+                    var wdN4 = data[i].myNumber3 == 0 ? "0%" : parseInt(data[i].myNumber3 / data[i].myNumber4 * 100) + "%";
+
+                    html += "<dd class=\"dd\">" + parseInt(data[i].myNumber3) + "(" + data[i].myNumber2 + "场)&nbsp;&nbsp;" + wdN4 + "</dd>";
+                    html += "</dl>";
+                    html += "<dl class=\"width60B pull-left\" onclick=\"window.open('myPlan_next.html?beginDate=" + c_d_t + "&endDate=" + data[i].end_time.substring(0, 10) + "&type=" + data[i].type + "&serviceId=" + data[i].service_id + "&service_type=" + data[i].service_type + "&service_code=" + data[i].service_code + "&companyId=" + data[i].fk_company_id + "&experts_code=" + getQueryString("experts_code") + "&&n_d_type=2" + "','_self')\">";
+                    html += "<dt>专家 </dt>";
+
+                    var zjN4 = data[i].number3 == 0 ? "0%" : parseInt(data[i].number3 / data[i].number4 * 100) + "%";
+
+                    html += "<dd>" + parseInt(data[i].number3) + "(" + data[i].number2 + "场)&nbsp;&nbsp;" + zjN4 + "</dd>";
+                    html += "</dl>";
+                    html += "</div>";
+                    html += "<div style=\"clear: both;\"></div>";
+                    html += "</div>";
+                    html += "</li>";
+                }
+            } else {
+                html += "<div style='text-align:center;margin-top:40%;'><img src=\"img/myPlan_not.jpg\"/></div>";
+            }
+            $("#list").append(html);
+        }
+    </script>
+</body>
+</html>

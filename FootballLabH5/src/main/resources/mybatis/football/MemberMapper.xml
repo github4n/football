@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MemberMapper">
+	
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into TB_MEMBER(
+			member_id,
+			member_name,	
+			weixin,	
+			phone_number,
+			membe_point,
+			focus_status,
+			focus_time,
+			register_status,
+			register_time,
+			member_status,
+			fk_experts_id,
+			open_id,
+			headimgurl,
+			fk_qrcode_id
+		) values (
+			#{member_id},
+			#{member_name},	
+			#{weixin},	
+			#{phone_number},
+			#{membe_point},
+			#{focus_status},
+			#{focus_time},
+			#{register_status},
+			#{register_time},
+			#{member_status},
+			#{fk_experts_id},
+			#{open_id},
+			#{headimgurl},
+			#{fk_qrcode_id}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from TB_MEMBER
+		where 
+			MEMBER_ID = #{MEMBER_ID}
+	</delete>
+
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update tb_member
+		set
+		<if test="member_name != null and member_name != ''">
+			member_name=#{member_name},
+		</if>
+		<if test="weixin != null and weixin != ''">
+			weixin=#{weixin},
+		</if>
+		<if test="phone_number != null and phone_number != ''">
+			phone_number=#{phone_number},
+		</if>
+		<if test="membe_point != null and membe_point != ''">
+			membe_point=#{membe_point},
+		</if>
+		<if test="focus_status != null and focus_status != ''">
+			focus_status=#{focus_status},
+		</if>
+		<if test="focus_time != null and focus_time != ''">
+			focus_time=#{focus_time},
+		</if>
+		<if test="register_status != null and register_status != ''">
+			register_status=#{register_status},
+		</if>
+		<if test="register_time != null and register_time != ''">
+			register_time=#{register_time},
+		</if>
+		<if test="member_status != null and member_status != ''">
+			member_status=#{member_status},
+		</if>
+		<if test="open_id != null and open_id != ''">
+			open_id=#{open_id},
+		</if>
+		<if test="headimgurl != null and headimgurl != ''">
+			headimgurl=#{headimgurl},
+		</if>
+		<if test="fk_qrcode_id != null and fk_qrcode_id != ''">
+			fk_qrcode_id=#{fk_qrcode_id},
+		</if>
+		member_id = #{member_id}
+		where
+		member_id = #{member_id}
+	</update>
+	
+	
+	<!-- 修改 -->
+	<update id="editOpenIdNull" parameterType="pd">
+		update tb_member
+		set
+		open_id = null where open_id = #{openId}
+	</update>
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			MEMBER_NAME,	
+			WEIXIN,	
+			PHONE_NUMBER,	
+			MEMBE_POINT,	
+			FOCUS_STATUS,	
+			FOCUS_TIME,	
+			REGISTER_STATUS,	
+			REGISTER_TIME,	
+			MEMBER_STATUS,	
+			FK_EXPERTS_ID,	
+			MEMBER_ID,
+			OPEN_ID,
+			HEADIMGURL,
+			EXPERTS_NAME
+		from 
+			TB_MEMBER left join TB_EXPERTS as b on fk_experts_id = b.experts_id
+		where 
+			MEMBER_ID = #{MEMBER_ID}
+	</select>
+	
+		<!-- 通过ID获取数据 -->
+	<select id="findByMemberId" parameterType="pd" resultType="pd">
+		select 
+			a.*
+		from 
+			tb_member as a
+		where 
+			a.member_id = #{member_id}
+	</select>
+	
+	<!-- 通过phoneNum获取数据 -->
+	<select id="findByPhoneNum" parameterType="pd" resultType="pd">
+		select 
+			a.*
+		from 
+			tb_member as a
+		left join
+			tb_experts as b
+		on 	
+			a.fk_experts_id = b.experts_id		
+		where 
+			a.phone_number = #{phoneNum}
+		and
+		    b.experts_code = #{experts_code}	
+		limit 1	
+	</select>
+	
+	<!-- 通过openId获取数据 -->
+	<select id="findByOpenId" parameterType="pd" resultType="pd">
+		select 
+			a.*
+		from 
+			tb_member as a
+		left join
+			tb_experts as b
+		on 	
+			a.fk_experts_id = b.experts_id		
+		where 
+			a.open_id = #{openId}
+		and
+		    b.experts_code = #{experts_code}	
+		limit 1	
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.MEMBER_NAME,	
+				a.WEIXIN,	
+				a.PHONE_NUMBER,	
+				a.MEMBE_POINT,	
+				a.FOCUS_STATUS,	
+				a.FOCUS_TIME,	
+				a.REGISTER_STATUS,	
+				a.REGISTER_TIME,	
+				a.MEMBER_STATUS,	
+				a.FK_EXPERTS_ID,	
+				a.MEMBER_ID, b.EXPERTS_NAME,c.NAME as QR_NAME
+		from 
+				TB_MEMBER a 
+		left join
+				tb_experts as b on a.fk_experts_id = b.experts_id
+		left join 
+				tb_qrcode as c on c.qrcode_id = a.fk_qrcode_id		
+				where
+			open_id is not null
+		<if test="pd.fk_experts_id != null and pd.fk_experts_id != ''"><!-- 专家检索 -->
+			and a.fk_experts_id=#{pd.fk_experts_id} 
+		</if>
+		<if test="pd.member_name!= null and pd.member_name!= ''"><!-- 用户名检索 -->
+			and a.member_name like CONCAT(CONCAT('%', #{pd.member_name}),'%') 
+		</if>
+		<if test="pd.weixin!= null and pd.weixin!= ''"><!-- 用微信检索 -->
+			and a.weixin like CONCAT(CONCAT('%', #{pd.weixin}),'%') 
+		</if>
+		<if test="pd.phone_number!= null and pd.phone_number!= ''"><!-- 用手机号检索 -->
+			and a.phone_number like CONCAT(CONCAT('%', #{pd.phone_number}),'%') 
+		</if>
+		<if test="pd.registerStart!=null and pd.registerStart!=''"><!-- 注册日期检索 -->
+			and a.register_time &gt;= #{pd.registerStart} 
+		</if>
+		<if test="pd.registerEnd!=null and pd.registerEnd!=''"><!-- 注册日期检索 -->
+			and a.register_time &lt;= #{pd.registerEnd} 
+		</if>
+		<if test="pd.focusStart!=null and pd.focusStart!=''"><!-- 关注日期检索 -->
+			and a.focus_time &gt;= #{pd.focusStart} 
+		</if>
+		<if test="pd.focusEnd!=null and pd.focusEnd!=''"><!-- 关注日期检索 -->
+			and a.focus_time &lt;= #{pd.focusEnd} 
+		</if>
+		<if test="pd.register_status != null and pd.register_status != ''"><!-- 注册状态 -->
+			and a.register_status=#{pd.register_status} 
+		</if>
+		<if test="pd.focus_status != null and pd.focus_status != ''"><!-- 关注状态 -->
+			and a.focus_status=#{pd.focus_status} 
+		</if>
+		<if test="pd.fk_qrcode_id != null and pd.fk_qrcode_id != '' and pd.fk_qrcode_id != 'other'">
+			and a.fk_qrcode_id=#{pd.fk_qrcode_id} 
+		</if>
+		<if test="pd.fk_qrcode_id == 'other'">
+			and a.fk_qrcode_id is null
+		</if>
+		order by a.focus_time desc
+		
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" resultType="pd">
+		select
+				a.*,b.experts_name
+		from 
+				TB_MEMBER a 
+		left join
+				tb_experts as b on a.fk_experts_id = b.experts_id
+				
+				where
+			open_id is not null
+		<if test="fk_experts_id != null and fk_experts_id != ''"><!-- 专家检索 -->
+			and fk_experts_id=#{fk_experts_id} 
+		</if>
+		<if test="member_name!= null and member_name!= ''"><!-- 用户名检索 -->
+			and member_name like CONCAT(CONCAT('%', #{member_name}),'%') 
+		</if>
+		<if test="weixin!= null and weixin!= ''"><!-- 用微信检索 -->
+			and weixin like CONCAT(CONCAT('%', #{weixin}),'%') 
+		</if>
+		<if test="registerStart!=null and registerStart!=''"><!-- 注册日期检索 -->
+			and register_time &gt;= #{registerStart} 
+		</if>
+		<if test="registerEnd!=null and registerEnd!=''"><!-- 注册日期检索 -->
+			and register_time &lt;= #{registerEnd} 
+		</if>
+		<if test="focusStart!=null and focusStart!=''"><!-- 关注日期检索 -->
+			and focus_time &gt;= #{pd.focusStart} 
+		</if>
+		<if test="focusEnd!=null and focusEnd!=''"><!-- 关注日期检索 -->
+			and focus_time &lt;= #{pd.focusEnd} 
+		</if>
+		<if test="register_status != null and register_status != ''"><!-- 注册状态 -->
+			and register_status=#{register_status} 
+		</if>
+		<if test="focus_status != null and focus_status != ''"><!-- 关注状态 -->
+			and focus_status=#{focus_status} 
+		</if>
+		
+		order by a.focus_time desc
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from TB_MEMBER
+		where 
+			MEMBER_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<update id="editMemberPoint" parameterType="pd">
+		update  tb_member
+			set 
+			membe_point = #{membe_point}
+			where 
+				member_id = #{member_id}
+	</update>
+	
+	
+	<select id="focusCount" resultType="pd" parameterType="pd">
+	select  
+       DATE_FORMAT(focus_time,'%Y-%m-%d') as days ,count(*) as member_count
+  	from 
+  		`tb_member`  as a  
+  	where 
+  		 a.focus_time is not null    
+  		 
+  		 and focus_time &gt;=#{beginDate}  and focus_time &lt;=#{endDate} 
+  		 
+  		 group by days   order by days 
+	</select>			
+	
+		<select id="registerCount" resultType="pd" parameterType="pd">
+	select  
+       DATE_FORMAT(register_time,'%Y-%m-%d') as days ,count(*) as member_count
+  	from 
+  		`tb_member`  as a  
+  	where 
+  		 a.focus_time is not null    
+  		 
+  		 and a.register_time &gt;=#{beginDate}  and a.register_time &lt;=#{endDate} 
+  		 
+  		 group by days   order by days 
+	</select>	
+	
+	<select id="selectAllPhoneNum" resultType="string" parameterType="java.lang.Integer">
+		SELECT DISTINCT 
+		  phone_number 
+		FROM
+		  tb_member 
+		WHERE fk_experts_id = "b3d9fb05f9b74aeb9e1544922fbcf079" 
+		  AND focus_status = 0 
+		  AND register_status = 1 
+		  AND phone_number IS NOT NULL 
+		limit #{begin},100
+	</select>
+	
+	<update id="giveMemberPoint" parameterType="map">
+		update tb_member 
+		set membe_point = membe_point+#{giveAmount,jdbcType=INTEGER} 
+		where member_id=#{memberId,jdbcType=VARCHAR}
+	</update>
+	
+</mapper>

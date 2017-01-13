@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>微信入口</title>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"/>     <link href="css/mui.css" rel="stylesheet"/>
+    <style type="text/css">
+    	body,html{margin: 0;,padding: 0;}
+    	
+    	@media screen and (max-width: 980px) { 
+	   
+} 
+
+@media screen and (max-width: 650px) { 
+   
+   
+ 
+} 
+
+@media screen and (max-width: 480px) { 
+ 
+    html { 
+        -webkit-text-size-adjust: none; 
+    } 
+ 
+   
+ 
+} 
+
+@media screen and (max-width: 560px) { 
+ 
+   
+ 
+} 
+		.posi a{
+			opacity: 0;
+			border:0;
+		}
+    	.posi{
+    		width: auto;
+    		height: auto;
+    		position: relative;
+    	}
+    .posi .a1 {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 16.6%;
+    background: #333;
+    left: 0;
+    top: 26.7%;
+    margin-top: -13%;
+    z-index: 9;
+}
+    	.posi .a1-1 {
+	    position: absolute;
+	    display: block;
+	    width: 33.3%;
+	    height: 7.6%;
+	    background: #333;
+	    left: 33.3%;
+	    margin-top: -16.65%;
+	    bottom: 0;
+	    z-index: 9;
+	}
+    	.posi .a1-0{
+    		    position: absolute;
+    display: block;
+    width: 30.3%;
+    height: 7.6%;
+    background: #f33;
+    left: 21%;
+    margin-top: -16.65%;
+    bottom: 0;
+    z-index: 9;
+    z-index: 9;
+    		
+    		
+    		z-index: 9;
+    	}
+    	.posi .a1-2 {
+    position: absolute;
+    display: block;
+    width: 24%;
+    height: 5.45%;
+    background: #f3f;
+    left: 75%;
+    margin-top: -5.72%;
+   top: 46.41%;
+    z-index: 9;
+    z-index: 9;
+}
+      	.posi .a1-3 {
+    position: absolute;
+    display: block;
+    width: 11%;
+    height: 5.45%;
+    background: #ff3;
+    left: 0;
+    margin-top: -5.72%;
+    top: 7.41%;
+    z-index: 9;
+    z-index: 9;
+}
+    
+    	
+    	.posi .a1-4 {
+    position: absolute;
+    display: block;
+    width: 10%;
+    height: 5.45%;
+    background: #ff3;
+    right: 0;
+    margin-top: -5.72%;
+    top: 7.41%;
+    z-index: 9;
+    z-index: 9;
+}
+		
+		.posi .a1-5 {
+        position: absolute;
+    display: block;
+    width: 100%;
+    height: 28.45%;
+    background: #f3f;
+    left: 0;
+    margin-top: -5.72%;
+    top: 11.41%;
+    z-index: 9;
+    z-index: 9;
+}
+    	
+    	
+    </style>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+    </script>
+</head>
+<body>
+	<div class="container">
+		<div class="row posi">
+			<img src="img/weixin.png" width="100%" />
+			
+			<!--<a class="a1-0" href="竞彩胜平负专家推荐.html"></a> -->
+			<a class="a1-0" href="首页.html"></a> 
+			
+			<a class="a1-5" href="博彩胜平负专家推荐-已注册.html"></a> 
+			<a class="a1-hong" href="我的.html"></a> 
+			
+		</div>
+	</div>
+	
+</body>
+</html>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.visolink.h5.mapper.VillageCommunityMapper" >
+  <resultMap id="BaseResultMap" type="com.visolink.h5.entity.VillageCommunity" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="Name" property="name" jdbcType="VARCHAR" />
+    <result column="Img_Path" property="imgPath" jdbcType="VARCHAR" />
+    <result column="Province_ID" property="provinceId" jdbcType="INTEGER" />
+    <result column="Province_Name" property="provinceName" jdbcType="VARCHAR" />
+    <result column="City_ID" property="cityId" jdbcType="INTEGER" />
+    <result column="City_Name" property="cityName" jdbcType="VARCHAR" />
+    <result column="Area_ID" property="areaId" jdbcType="INTEGER" />
+    <result column="Area_Name" property="areaName" jdbcType="VARCHAR" />
+    <result column="Address" property="address" jdbcType="VARCHAR" />
+    <result column="Recommend" property="recommend" jdbcType="INTEGER" />
+    <result column="Development" property="development" jdbcType="VARCHAR" />
+    <result column="Order_No" property="orderNo" jdbcType="INTEGER" />
+    <result column="Status" property="status" jdbcType="INTEGER" />
+    <result column="Remark" property="remark" jdbcType="VARCHAR" />
+    <result column="Longitude" property="longitude" jdbcType="VARCHAR" />
+    <result column="Dimensions" property="dimensions" jdbcType="VARCHAR" />
+    <result column="Create_Date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="Update_Time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="Creator_ID" property="creatorId" jdbcType="VARCHAR" />
+    <result column="Developed_Age_Limit" property="developedAgeLimit" jdbcType="TIMESTAMP" />
+    <result column="Delivery_Age_Limit" property="deliveryAgeLimit" jdbcType="TIMESTAMP" />
+    <result column="AreaType_ID" property="areatypeId" jdbcType="INTEGER" />
+    <result column="AreaType_Name" property="areatypeName" jdbcType="VARCHAR" />
+    <result column="ProjectType_Name" property="projecttypeName" jdbcType="VARCHAR" />
+    <result column="Project_Total" property="projectTotal" jdbcType="INTEGER" />
+    <result column="Building_Count" property="buildingCount" jdbcType="INTEGER" />
+    <result column="Occupancy_Rate" property="occupancyRate" jdbcType="VARCHAR" />
+    <result column="Population_Count" property="populationCount" jdbcType="INTEGER" />
+    
+    <result column="areaCount" property="areaCount" jdbcType="INTEGER" />
+    <result column="projectCount" property="projectCount" jdbcType="INTEGER" />
+    <result column="layoutCount" property="layoutCount" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, Name, Img_Path, Province_ID, Province_Name, City_ID, City_Name, Area_ID, Area_Name, 
+    Address, Recommend, Development, Order_No, Status, Remark, Longitude, Dimensions, 
+    Create_Date, Update_Time, Creator_ID, Developed_Age_Limit, Delivery_Age_Limit, AreaType_ID, 
+    AreaType_Name, ProjectType_Name, Project_Total, Building_Count, Occupancy_Rate, Population_Count
+  </sql>
+  <!--  当前城市的区县数量-->
+  <select id="findOptimizationAreaByCity2"   resultMap="BaseResultMap"   parameterType="com.visolink.h5.entity.VillageCommunity" >
+  select 
+    City_ID,Area_ID,Area_Name,count(id) areaCount
+    from Village_Community
+    where Recommend = 1 and Status = 1
+    <if test="cityId != null" >
+        and Village_Community.City_ID = ${cityId }
+	</if>
+	<if test="areaId != null" >
+        and Village_Community.Area_ID = ${areaId }
+	</if>
+	<if test="name != null" >
+        and Village_Community.Name like  CONCAT('%','${name }','%' ) 
+	</if>
+	group by City_ID,Area_ID
+	order by Order_No
+  </select>
+  
+  <!--  当前城市的区县数量-->
+  <select id="findOptimizationCommunityByCity2"   resultMap="BaseResultMap"   parameterType="com.visolink.h5.entity.VillageCommunity" >
+  select City_ID, City_Name, Area_ID, Area_Name, village_community.ID,`Name`,Project_Total ,Address,
+layoutCount,village_community.Img_Path from village_community
+left JOIN
+(SELECT Community_ID,COUNT(id) layoutCount from village_apartment GROUP BY Community_ID) tmpa
+ON village_community.ID=tmpa.Community_ID
+    where Recommend = 1 and Status = 1
+    <if test="cityId != null" >
+        and Village_Community.City_ID = ${cityId }
+	</if>
+	<if test="areaId != null" >
+        and Village_Community.Area_ID = ${areaId }
+	</if>
+	<if test="name != null" >
+        and Village_Community.Name like  CONCAT('%','${name }','%' ) 
+	</if>
+	order by Order_No
+  </select>
+  
+  <select id="findVillageCommunityById"   resultMap="BaseResultMap"   parameterType="java.lang.Integer" >
+  select
+  <include refid="Base_Column_List"></include>
+   from village_community
+   where Recommend = 1 and Status = 1
+   and id=#{id}
+  </select>
+  
+  <select id="findVillageCommunityByIdList"  resultMap="BaseResultMap"  parameterType="list">
+  select 
+   City_ID, City_Name, Area_ID, Area_Name, village_community.ID,`Name`,Project_Total ,Address,
+layoutCount,village_community.Img_Path from village_community
+left JOIN
+(SELECT Community_ID,COUNT(id) layoutCount from village_apartment GROUP BY Community_ID) tmpa
+ON village_community.ID=tmpa.Community_ID
+   where Recommend = 1 and Status = 1
+    and village_community.ID in  
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+  </select>
+  
+  </mapper>

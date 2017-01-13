@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>投注榜</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="../wechat/js/iscroll-probe.js"></script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/joinRanking.css" rel="stylesheet" />
+</head>
+
+<body onload="loaded()">
+    <div class="banner" id="banner">
+        <div class="bannerCon">
+            <span class="icon-arrow icon-leftArrow"></span>
+            <table id="bannerBox" class="bannerBox">
+                <tr>
+                    <td width="100%" colspan="3">
+                        <p class="btTxt">比赛时间2016-12-14 03:45:00</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="leftCell">埃弗顿<i>[主]</i></td>
+                    <td class="centerCell">3:0</td>
+                    <td class="rightCell">阿森纳</td>
+                </tr>
+            </table>
+            <span class="icon-arrow icon-rightArrow"></span>
+        </div>
+    </div>
+    <div class="content">
+        <div class="integralBox">
+            <ul>
+                <li class="integralNum">*盈利排在前3名可以获得相应的奖品</li>
+                <li class="tochange pull-right"><a href="#">一场夺分>></a></li>
+            </ul>
+        </div>
+        <!--
+        	作者：1632276537@qq.com
+        	时间：2016-12-23
+        	描述：3列
+        -->
+        <div class="rankingList">
+            <ul class="rankingList_title">
+                <li class="clearfix">
+                    <div class="rank">排名</div>
+                    <div class="userName">用户名</div>
+                    <div class="intergal">盈利积分</div>
+                </li>
+            </ul>
+            <div id="wrapper" class="tab-content">
+                <div id="scroller" class="tab-pane fade in active">
+                    <ul class="rankingList_con ">
+                        <li class="clearfix">
+                            <div class="rank"><img class="icon-rankJp" src="img/icon-rankFirst.png" width="20" /></div>
+                            <div class="userName">18330221026</div>
+                            <div class="intergal">2000</div>
+                        </li>
+                        <li class="clearfix">
+                            <div class="rank"><img class="icon-rankJp" src="img/icon-rankSecond.png" width="20" /></div>
+                            <div class="userName">18330221026</div>
+                            <div class="intergal">2000</div>
+                        </li>
+                        <li class="clearfix">
+                            <div class="rank"><img class="icon-rankJp" src="img/icon-rankThird.png" width="20" /></div>
+                            <div class="userName">18330221026</div>
+                            <div class="intergal">2000</div>
+                        </li>
+                        <li class="clearfix">
+                            <div class="rank">4</div>
+                            <div class="userName">18330221026</div>
+                            <div class="intergal">2000</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--
+        	作者：1632276537@qq.com
+        	时间：2016-12-23
+        	描述：4列
+        -->        
+        <!--<div class="rankingList rankingList2">
+            <ul class="rankingList_title">
+                <li class="clearfix">
+                    <div class="rank">排名</div>
+                    <div class="userName">用户名</div>
+                    <div class="intergal">盈利积分</div>
+ 					 <div class="rewardIntgl">奖励积分</div>
+                </li>
+            </ul>
+            <div id="wrapper" class="tab-content">
+                <div id="scroller" class="tab-pane fade in active">
+                    <ul class="rankingList_con ">
+                        <li class="clearfix">
+                            <div class="rank"><img class="icon-rankJp" src="img/icon-rankFirst.png" width="20" /></div>
+                            <div class="userName">18330221026</div>
+                            <div class="intergal">2000</div>
+                            <div class="rewardIntgl">2000</div>
+                        </li>
+                        <li class="clearfix">
+                            <div class="rank"><img class="icon-rankJp" src="img/icon-rankSecond.png" width="20" /></div>
+                            <div class="userName">18330221026</div>
+                            <div class="intergal">2000</div>
+                            <div class="rewardIntgl">2000</div>
+                        </li>
+                        <li class="clearfix">
+                            <div class="rank"><img class="icon-rankJp" src="img/icon-rankThird.png" width="20" /></div>
+                            <div class="userName">18330221026</div>
+                            <div class="intergal">2000</div>
+                            <div class="rewardIntgl">2000</div>
+                        </li>
+                        <li class="clearfix">
+                            <div class="rank">4</div>
+                            <div class="userName">18330221026</div>
+                            <div class="intergal">2000</div>
+                            <div class="rewardIntgl">2000</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>    -->
+    </div>
+    <script src="../wechat/js/iscroll.init.js"></script>
+    <script>
+    var high = ($('.rankingList_con li').size() + 1) * 36;
+    var highmax = $(window).height() - $("#banner").height() - 90;
+    if (high > highmax) {
+        $(".rankingList").height(highmax);
+    } else {
+        $(".rankingList").height(high - 1)
+    }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+body{
+	margin: 0px;
+	padding: 0px;
+}
+.current .hd{
+	position: fixed;
+	top: 0px;
+	width: 100%;
+	z-index: 1;
+	box-shadow: 0px 1px 3px #333;
+}
+.slideTxtBox {
+    width: 100%;
+    text-align: left;
+}
+
+.slideTxtBox .hd {
+    height: 40px;
+    line-height: 30px;
+    background: #35528c;
+    position: relative;
+    width: 100%;
+    font-size: 1.25rem;
+    margin-bottom: 2px;
+}
+.slideTxtBox .hd span{
+	font-size: 1.25rem;
+}
+
+.slideTxtBox .hd ul {
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    height: 30px;
+    /*padding: 0 15px;*/
+}
+
+.slideTxtBox .hd ul li {
+    width: 33.33333%;
+    height: 40px;
+    line-height: 40px;
+    float: left;
+    cursor: pointer;
+    text-align: center;
+    font-size: 1.25rem;
+}
+.slideTxtBox .hd ul li.on span{
+	color: RGB(215,185,71);
+}
+.slideTxtBox .hd ul li.on{
+	border-bottom: 1px solid RGB(215,185,71);
+}
+.list_layout .item_block{
+	display: table;
+	width: 100%;
+	text-align: center;
+	padding: 10px 20px;
+	background: RGB(53,82,140);
+	margin-bottom: 1px;
+	position: relative;
+}
+.list_layout .item_block div{
+	display: table-cell;
+	vertical-align: middle;
+}
+.hignColorSize{
+	display: block;
+	font-size: 1.25rem;
+	color: RGB(215,185,71);
+	line-height: 1.5;
+}
+.list_layout .item_block:after{
+	content: "";
+	position: absolute;
+	background:url(../img/fanhui1.png) no-repeat;
+	background-size: 100%;
+	width: 10px;
+	height: 20px;
+	right: 10px;
+	top: 50%;
+	margin-top: -10px;
+	
+}

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="OtherLeagueGameInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.visolink.entity.OtherLeagueGameInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="expert_id" property="expertId" jdbcType="VARCHAR" />
+    <result column="service_code" property="serviceCode" jdbcType="VARCHAR" />
+    <result column="service_id" property="serviceId" jdbcType="VARCHAR" />
+    <result column="input_amount" property="inputAmount" jdbcType="DOUBLE" />
+    <result column="win_amount" property="winAmount" jdbcType="DOUBLE" />
+    <result column="profit_amount" property="profitAmount" jdbcType="DOUBLE" />
+    <result column="game_id_one" property="gameIdOne" jdbcType="INTEGER" />
+    <result column="game_id_two" property="gameIdTwo" jdbcType="INTEGER" />
+    <result column="two_on_one_macth_id" property="twoOnOneMacthId" jdbcType="INTEGER" />
+    <result column="game_date_time" property="gameDateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="BIT" />
+	<result column="experts_name" property="expertName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, expert_id, service_code, service_id, input_amount, win_amount, profit_amount, 
+    game_id_one, game_id_two, two_on_one_macth_id, game_date_time, status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_other_league_game_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_other_league_game_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.visolink.entity.OtherLeagueGameInfo" >
+    insert into tb_other_league_game_info (id, expert_id, service_code, 
+      service_id, input_amount, win_amount, 
+      profit_amount, game_id_one, game_id_two, 
+      two_on_one_macth_id, game_date_time, status
+      )
+    values (#{id,jdbcType=INTEGER}, #{expertId,jdbcType=VARCHAR}, #{serviceCode,jdbcType=VARCHAR}, 
+      #{serviceId,jdbcType=VARCHAR}, #{inputAmount,jdbcType=DOUBLE}, #{winAmount,jdbcType=DOUBLE}, 
+      #{profitAmount,jdbcType=DOUBLE}, #{gameIdOne,jdbcType=INTEGER}, #{gameIdTwo,jdbcType=INTEGER}, 
+      #{twoOnOneMacthId,jdbcType=INTEGER}, #{gameDateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.visolink.entity.OtherLeagueGameInfo" >
+    insert into tb_other_league_game_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="expertId != null" >
+        expert_id,
+      </if>
+      <if test="serviceCode != null" >
+        service_code,
+      </if>
+      <if test="serviceId != null" >
+        service_id,
+      </if>
+      <if test="inputAmount != null" >
+        input_amount,
+      </if>
+      <if test="winAmount != null" >
+        win_amount,
+      </if>
+      <if test="profitAmount != null" >
+        profit_amount,
+      </if>
+      <if test="gameIdOne != null" >
+        game_id_one,
+      </if>
+      <if test="gameIdTwo != null" >
+        game_id_two,
+      </if>
+      <if test="twoOnOneMacthId != null" >
+        two_on_one_macth_id,
+      </if>
+      <if test="gameDateTime != null" >
+        game_date_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="expertId != null" >
+        #{expertId,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceCode != null" >
+        #{serviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceId != null" >
+        #{serviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="inputAmount != null" >
+        #{inputAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="winAmount != null" >
+        #{winAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="profitAmount != null" >
+        #{profitAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="gameIdOne != null" >
+        #{gameIdOne,jdbcType=INTEGER},
+      </if>
+      <if test="gameIdTwo != null" >
+        #{gameIdTwo,jdbcType=INTEGER},
+      </if>
+      <if test="twoOnOneMacthId != null" >
+        #{twoOnOneMacthId,jdbcType=INTEGER},
+      </if>
+      <if test="gameDateTime != null" >
+        #{gameDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.visolink.entity.OtherLeagueGameInfo" >
+    update tb_other_league_game_info
+    <set >
+      <if test="expertId != null" >
+        expert_id = #{expertId,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceCode != null" >
+        service_code = #{serviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceId != null" >
+        service_id = #{serviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="inputAmount != null" >
+        input_amount = #{inputAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="winAmount != null" >
+        win_amount = #{winAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="profitAmount != null" >
+        profit_amount = #{profitAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="gameIdOne != null" >
+        game_id_one = #{gameIdOne,jdbcType=INTEGER},
+      </if>
+      <if test="gameIdTwo != null" >
+        game_id_two = #{gameIdTwo,jdbcType=INTEGER},
+      </if>
+      <if test="twoOnOneMacthId != null" >
+        two_on_one_macth_id = #{twoOnOneMacthId,jdbcType=INTEGER},
+      </if>
+      <if test="gameDateTime != null" >
+        game_date_time = #{gameDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.visolink.entity.OtherLeagueGameInfo" >
+    update tb_other_league_game_info
+    set expert_id = #{expertId,jdbcType=VARCHAR},
+      service_code = #{serviceCode,jdbcType=VARCHAR},
+      service_id = #{serviceId,jdbcType=VARCHAR},
+      input_amount = #{inputAmount,jdbcType=DOUBLE},
+      win_amount = #{winAmount,jdbcType=DOUBLE},
+      profit_amount = #{profitAmount,jdbcType=DOUBLE},
+      game_id_one = #{gameIdOne,jdbcType=INTEGER},
+      game_id_two = #{gameIdTwo,jdbcType=INTEGER},
+      two_on_one_macth_id = #{twoOnOneMacthId,jdbcType=INTEGER},
+      game_date_time = #{gameDateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+	<select id="selectOtherLeagueInfolistPage" resultMap="BaseResultMap" parameterType="page" >
+	    select 
+	     a.id, a.expert_id, a.service_code, a.service_id, a.input_amount, a.win_amount, a.profit_amount, 
+   		 a.game_id_one, a.game_id_two, a.game_date_time, a.status,b.experts_name
+	    from tb_other_league_game_info a
+	    inner join tb_experts b on a.expert_id=b.experts_id
+	    <if test="pd.expertId != null and pd.expertId != ''" >
+	       and a.expert_id = #{pd.expertId,jdbcType=VARCHAR}
+	    </if>
+	    <if test="pd.serviceCode != null and pd.serviceCode != ''" >
+	       and a.service_code = #{pd.serviceCode,jdbcType=VARCHAR}
+	    </if>
+	    <if test="pd.status != null and pd.status != ''" >
+	       and a.status = #{pd.status,jdbcType=BIT}
+	    </if>
+	    <if test="pd.startDate != null and pd.startDate!=''" >
+	       and a.game_date_time &gt;= #{pd.startDate} 
+	    </if>
+	    <if test="pd.endDate != null and pd.endDate!=''" >
+	       and a.game_date_time &lt;= #{pd.endDate} 
+	    </if>
+	    order by a.game_date_time desc
+   </select>
+
+</mapper>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>竞猜大厅</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link href="css/timeline.css" rel="stylesheet" type="text/css" />
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+    <link href="css/guessing.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+		<div class="header">今日竞猜盈亏方案</div>
+		<div class="blockCon">
+			<ul class="listLayout" id="guessList">
+				
+			</ul>			
+		</div>
+		<!--
+	    	作者：1632276537@qq.com
+	    	时间：2017-01-04
+	    	描述：无方案显示页
+	    -->
+		<div class="blockCon" style="display: none;">
+			<p class="popTxt">方案待发布，去玩玩一场夺分吧</p>
+			<a class="mybtn">一场夺分</a>
+		</div>
+	    <footer class="footer">
+	        <ul class="clearfix">
+	            <li  onclick="GoToUrl_T('index.html');">
+	            	<a class="icon_home" href="#"></a>
+	                <span>首页</span>
+	            </li>
+	            <li onclick="GoToUrl_T('my.html');">
+	            	<a class="icon_order" href="#"></a>
+	                <span>跟投</span>
+	            </li>
+	            <li class="active" onclick="GoToUrl_T('guessProfit.html');">
+	            	<a class="icon_guess" href="#"></a>
+	                <span>竞猜</span>
+	            </li>
+	            <li onclick="GoToUrl_T('my.html');">
+	            	<a class="icon_my" href="#"></a>
+	                <span>我的</span>
+	            </li>            
+	        </ul>
+    	</footer>
+	</body>
+	<script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		
+		$(function(){
+			 var data = GetData(fl_url.getGuessProfitList, {});
+			 bindData(data);
+             Init();
+		})
+		
+		function bindData(data){
+			 var gameDate = data.gameDate;
+			 data = data.guessProfitList;
+			 var html = ""
+			 console.log(data);
+			 var date = new Date();  
+			 var timeArr = new Array(); 
+			 for (var i=0;i<data.length;i++){
+			 	/* if(data[i].play_type==1)
+			 		continue;  */
+			 	var serviceName = "";
+			 	var colorClass = "";
+			 	var link = "";
+			 	if(data[i].service_code=="DC"){
+			 		serviceName=data[i].service_name+"-单场方案";
+			 		colorClass="danc";
+			 		//type 1让球 2不让球  serviceType 赔率类型 1：竞彩胜平负；2：竞彩让球；3：单场胜平负
+			 		link="expertPlan_detail.html?showType=2&type=2&companyId=1&serviceType=3&serviceId=" + data[i].id + "&gameDate=" + gameDate + "&service_code=" + data[i].service_code + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(data[i].service_name);
+			 	}else if(data[i].service_code=="YP"){
+			 		serviceName=data[i].service_name+"-亚盘方案";
+			 		colorClass="yapan";
+			 		link="expertPlan_detail.html?showType=2&type=2&companyId=1&serviceType=3&serviceId=" + data[i].id + "&gameDate=" + gameDate + "&service_code=" + data[i].service_code + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(data[i].service_name);
+			 	}else if(data[i].service_code=="JCECY"){
+			 		serviceName=data[i].service_name+"-二串一方案";
+			 		colorClass="ecy";
+			 		link="expertPlan_detail.html?showType=2&type=2&companyId=4&serviceType=1&serviceId=" + data[i].id + "&gameDate=" + gameDate + "&service_code=" + data[i].service_code + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(data[i].service_name);
+			 	}		
+			 	html+="<li class='item_block "+colorClass+"'>";
+			 	html+="<div class='item_block_top clearfix'>";
+				html+="<p class='pull-left align_left exper_name'>"+serviceName+"</p>";
+				html+="<p class='pull-left align_right time'>倒计时：</p>";
+				html+="</div>";
+				html+="<div class='item_block_bt clearfix'><div class='pull-left exper_rate'>";
+				html+="<span>近十期盈亏情况</span>";
+				html+="<div class='customChart'>";
+				html+="<span class='customChartCircle'>";
+				for ( var m = data[i].profitHistoryList.length-1; m >= 0; m--) {
+					if(data[i].profitHistoryList[m]){
+						html+="<i><span class='gain'>盈</span></i>";
+					}else{
+						html+="<i><span class='loss'>亏</span></i>";
+					}
+				}
+				html+="</span><div class='customChartLine'></div>";
+				html+="</div></div>";
+				html+="<p class='pull-left'>";
+				html+="<a class='goOrder' href='"+link+"'>竞猜今日盈亏</a>";
+				html+="</p></div></li>";
+				
+            	date.setTime(data[i].firstGameTime);
+            	timeArr[i] = {'year':date.getFullYear(),'month':date.getMonth()+1,'day':date.getDate(),'hour':date.getHours(),'minute':date.getMinutes()};
+			 }
+			 $("#guessList").html(html);
+			 var countDown=new Timer('.time',{timArr:timeArr,intrval:60000},"倒计时");
+		}
+		
+		
+	</script>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>不盈利双倍返</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+    <link href="css/doubleBack.css" rel="stylesheet" type="text/css" />
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+</head>
+<body style="padding: 0;">
+<div class="conBox">
+<script>
+	if(getQueryString("serviceId")!='' && getQueryString("serviceId")!=null){
+  	   $(".conBox").css("background","#303f60");
+  	}
+</script>
+	<dl class="tishi_des">
+		<dt>活动规则</dt>
+		<dd>1. 活动时间：2016-12-13起</dd>
+		<dd>
+			2. 活动当天11:30至24:00用户购买单场、亚盘玩法的方案并通过微信<span class="tishi_des_b">支付2元</span>成功，视为参与成功。
+		</dd>
+		<dd>3. 用户参与成功，若当天推荐方案不盈利，则按微信支付金额<span class="tishi_des_bold">双倍<span class="tishi_des_b">返还</span></span>，即返还4元；若当天推荐方案盈利，则赠送100积分。
+		</dd>
+		<dd>4. 针对活动当日11:30至次日11:30的方案进行盈利统计。</dd>
+		<dd>5. 盈利统计以每场比赛的赛前半小时更新方案为准。</dd>
+	</dl>
+
+	<dl class="tishi_des">
+		<dt>返还形式</dt>
+		<dd>
+			现金返还：用户需添加微信<span class="tishi_des_b">douqiu310</span>，并提供手机号，核对无误后通过微信转账形式返还。
+		</dd>
+	</dl>
+	<hr class="td_hr" />
+	<dl class="tishi_des">
+		<dd>
+			<img src="img/ad_icon.png">活动解释权归北京周天体育科技有限责任公司所有。
+		</dd>
+	</dl>
+</div>
+<div class="slideTxtBox" id="serviceDiv" style="display:none">
+    <div class="hd">
+    	<h1 class="titletxt">
+    		以下玩法及赛事参与返还活动
+    	</h1>
+    </div>
+    <div class="bd">
+	   <ul id="serviceList">
+	        		        
+        </ul> 
+    </div>
+</div>
+<div id="otherDiv" style="display:none">
+	<a class="dbtn dbtn123" style="width: 94%;" href="javascript:pay()" id="pay">立即支付 15元</a>
+	<a class="dbtn dbtn123" style="width: 94%;display:none" href="javascript:GoToUrl()" id="fanan">查看专家方案</a>
+</div>
+	
+    <script>
+    	var sharttitle = "不盈利双倍返";
+   		var shartcontent = "欧冠、欧洲五大联赛、巴甲等赛事盈利方案，不盈利双倍返还，关注“斗球老料”，注册还有流量送！";
+    	var temp_click = 0;
+    	var notStartNum;
+    	$(function(){
+    		addVisitInfo();
+    		if(getQueryString("serviceId")=='' || getQueryString("serviceId")==null){
+    			$("#pay").remove();
+		    	$("#fanan").remove();
+		    	$("#serviceDiv").css("display","block");
+		    	 var data = GetData(fl_url.indexNew, {});
+           		 data = JSON.parse(data);
+		    	 bindData(data);
+    		}else{
+    			$("#otherDiv").css("display","block");
+   				if(fl_user.focus_status()!=1){
+	    			$("#pay").remove();
+			    	$("#fanan").css("display","block");
+			    	$("#fanan").attr("href","javascript:showGuanZhu()");
+	    		}else{
+	    		
+	    		
+	    			notStartNum = GetData(fl_url.getTodayGameInfo, {serviceId:getQueryString("serviceId")}).notStartNum;
+	    		
+					var param = {memberId:fl_user.MemberId(),serviceId:getQueryString("serviceId")};
+		        	var flag = false;
+		        	var dateFlag = false;
+		        
+		        	$.ajax({
+				        type: "post",
+				        url: fl_app.AjaxHome+"/webChat/validateMemberCanDuiDu",
+				        data: param,
+				        async: false,
+				        datatype: "json",
+				        success: function (data) {
+				        	var result = JSON.parse(data)
+				        	flag = result.flag;
+				        	dateFlag = result.dateFlag;
+				        },
+				    });
+				    if(!flag || !dateFlag || notStartNum==0){
+				    	$("#pay").remove();
+				    	$("#fanan").css("display","block");
+				    	$("#fanan").attr("href","javascript:showPlan()");
+				    }
+	    		}
+    		}
+		    Init();
+    	})
+        function pay() {
+        
+        	var param = {memberId:fl_user.MemberId(),serviceId:getQueryString("serviceId")};
+        	var flag = false;
+        
+        	$.ajax({
+		        type: "post",
+		        url: fl_app.AjaxHome+"/webChat/validateMemberCanDuiDu",
+		        data: param,
+		        async: false,
+		        datatype: "json",
+		        success: function (data) {
+		        	var result = JSON.parse(data)
+		        	flag = result.flag;
+		        },
+		    });
+		    if(!flag){
+		    	alert_error("<lable style=\"color:#000000;font-size:16px;\">温馨提示</lable><br><div style=\"text-align:left;color:#000;line-height:24px;margin-left:8px;\">您已参加过返现活动，请勿重复参加</div>", "确定", function () {});
+		    	return;
+		    }
+        
+        	// 如果用户多次点击，则只进行一次调用
+            if (temp_click > 0) {
+                return;
+            }
+            temp_click = 1;
+        
+        
+            var data = GetData(fl_url.payConfig, {
+                serviceId: getQueryString("serviceId"),
+                phoneNum: fl_user.Mobile(),
+                type: 2
+            });
+            console.log(data);
+            // 验证支付
+            if (data == "{msg:'payFail'}") {
+                tishi_error("支付暂不可用，稍后再试。");
+                temp_click = 0;
+                return;
+            }
+            
+            data = JSON.parse(data);
+
+            if (data.appId != undefined) {
+            	 PayWeiXin(data.appId, data.timeStamp, data.nonceStr, data.package, data.signType, data.paySign, data.tid);
+            }
+            temp_click = 0;
+        }
+        
+        function GoToUrl() {
+            location.href = "index.html?experts_code="+getQueryString("experts_code");
+        }
+        
+        
+        function showPlan(){
+        	var memberInfo;
+        	if (fl_user.IsLogin()) {
+                memberInfo = GetData(fl_url.memberInfo, { phoneNum: fl_user.Mobile(), serviceId: getQueryString("serviceId") });
+                memberInfo = JSON.parse(memberInfo);
+            }
+            
+            if (memberInfo != undefined && memberInfo.hasTransaction == 0) {
+	        	if(notStartNum>0){
+	        		location.href = "addCustomizedInfo.html?service_code=" + getQueryString("service_code") + "&serviceId=" + getQueryString("serviceId") + "&experts_code=" + getQueryString("experts_code");
+	        	}else{
+	        		alert_error("<lable style=\"color:#000000;font-size:16px;\">温馨提示</lable><br><div style=\"text-align:left;color:#000;line-height:24px;margin-left:8px;\">上午11:30发布当天比赛推荐，若无发布，则当天无比赛推荐。</div>", "确定", function () {});
+	        	}
+            }else{
+            	location.href = "expertPlan_detail.html?type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + getQueryString("gameDate") + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name"));
+            }
+        }
+        
+        function showGuanZhu(){
+        	confirm_error1("<lable style=\"color:#000000;font-size:16px;\">提示！</lable><br>参加活动请先 +关注"
+                            , function () {
+                                if (getQueryString("experts_code") == "jinghu") {
+                                    location.href = "http://mp.weixin.qq.com/s?__biz=MzAxMjk1NjYwMA==&mid=2247483654&idx=1&sn=66ed8863ea21271f03880c7338e8bad4&scene=0#wechat_redirect";
+                                } else {
+                                    location.href = "http://mp.weixin.qq.com/s?__biz=MzIxODQ5MTY4Mw==&mid=2247483666&idx=1&sn=2c38aac6da365d49afc1f468d99bff1e&scene=0#wechat_redirect";
+                                }
+                            }, function () {
+                            }, "取消", "+关注");
+        }
+        
+        function bindData(data){
+        	var html = "";
+        	var serviceCodeArr = {"DC":"dcul","YP":"ypul"}
+        	for(serviceInfo in serviceCodeArr){
+            	var dataList = data[serviceInfo];
+            	for (var i = 0; i < dataList.length; i++) {
+            		var num = dataList[i].strategyNum;
+                    var notStartNum = dataList[i].notStartNum==undefined?0:dataList[i].notStartNum;
+                    var serviceName = "";
+                    
+            		if(dataList[i].play_type!=1 && getQueryString("experts_code")=="caishen" && (serviceInfo=="DC" || serviceInfo=="YP" ) && num!=undefined && num>0){
+            			ndays = dataList[i].ndays==undefined?0:dataList[i].ndays;
+	               		number3 = dataList[i].number3==undefined?0:dataList[i].number3;
+	               		if(serviceInfo=="DC"){
+	               			serviceName = "(单场)"
+	               		}else if(serviceInfo=="YP"){
+	               			serviceName = "(亚盘)"
+	               		}
+	               		html += "<li onclick=\"GoToNextUrl('expertPlan.html?serviceType=" + dataList[i].service_type + "&type=" + dataList[i].type + "&serviceId=" + dataList[i].id + "&service_code=" + dataList[i].service_code + "&companyId=" + dataList[i].fk_company_id + "&experts_code=" + getQueryString("experts_code")+ "&service_name=" + escape(dataList[i].service_name) + "','" + dataList[i].service_name + "')\">";
+	                    html += "<dl>";   
+	                    html+="<dt class='titBox'>"+getWeek()+"方案"+num+"个<i class='rtpop'>未赛"+notStartNum+"个</i></dt>"
+                  		html += "<dd class='highColor'>"+dataList[i].service_name+serviceName+"</dd>";    
+	                    html += "<dd>"+ ndays +"天盈利<em class='btpop'>"+ parseInt(number3) +"</em></dd>";   
+	                    html += "<div class='popicon'><img width='100%' src='img/hongbao.png'/></div></dl></li>";    
+            		}
+            	}
+            }
+            $("#serviceList").html(html);
+        }
+        
+        function GoToNextUrl(nexurl, name) {
+            sessionStorage.setItem("selectPlanName", name);
+            sessionStorage.setItem("selectPlanUrl", nexurl);
+            window.open(nexurl, "_top");
+        }
+
+    </script>
+</body>
+</html>

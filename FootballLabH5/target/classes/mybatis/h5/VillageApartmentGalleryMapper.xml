@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.visolink.h5.mapper.VillageApartmentGalleryMapper" >
+  <resultMap id="BaseResultMap" type="com.visolink.h5.entity.VillageApartmentGallery" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="Apartment_ID" property="apartmentId" jdbcType="INTEGER" />
+    <result column="Img_Path" property="imgPath" jdbcType="VARCHAR" />
+    <result column="Img_Desc" property="imgDesc" jdbcType="VARCHAR" />
+    <result column="Order_No" property="orderNo" jdbcType="INTEGER" />
+    <result column="Create_Date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="Creator_ID" property="creatorId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, Apartment_ID, Img_Path, Img_Desc, Order_No, Create_Date, Creator_ID
+  </sql>
+  </mapper>

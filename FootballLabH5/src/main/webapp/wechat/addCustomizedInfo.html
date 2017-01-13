@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>定制详情</title>
+
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="js/jquery.Spinner.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+    </style>
+    <style type="text/css">
+        .Spinner {
+            display: block;
+            overflow: hidden;
+            width: 100px;
+            margin: 0 auto 15px auto;
+        }
+
+            .Spinner .Amount {
+                width: 36px;
+                height: 25px;
+                padding: 4px 5px;
+                line-height: 17px;
+                border-width: 1px 0;
+                border-style: solid;
+                border-color: #d9d9d9;
+                float: left;
+                text-align: center;
+                color: #565656;
+                outline: 0;
+                border-radius: 0;
+            }
+
+            .Spinner a {
+                display: inline-block;
+                width: 25px;
+                height: 25px;
+                border: 1px solid #ccc;
+                float: left;
+                cursor: pointer;
+                outline: 0;
+            }
+
+        .Increase, .DisIn {
+            position: relative;
+            left: 60px;
+        }
+
+        .DisDe {
+            position: relative;
+            left: -60px;
+        }
+
+        .Decrease {
+            position: relative;
+            left: -60px;
+        }
+
+        .Spinner a i {
+            font-style: normal;
+            background: url(img/BuynBtn.png) no-repeat;
+            display: block;
+            width: 9px;
+            height: 9px;
+            margin: 8px;
+            text-indent: 999999%;
+            overflow: hidden;
+        }
+
+        .Spinner .Decrease i {
+            background-position: -9px -9px;
+        }
+
+        .Spinner .Increase i {
+            background-position: -9px -0px;
+        }
+
+        .Spinner .DisDe {
+            background: transparent;
+        }
+
+            .Spinner .DisDe i {
+                background-position: -0px -9px;
+                background-color: transparent;
+            }
+
+        .Spinner .DisIn i {
+            background-position: -0px -0px;
+        }
+    </style>
+    <script type="text/javascript">
+       
+    </script>
+</head>
+<body style="padding: 0;">
+    <!--<p class="headerTou"><a href="javascript:history.go(-1);" class="pull-left"></a>定制详情<img src="img/home.png" onclick="GoToUrl_T('index.html')" style="float:right;margin-top:10px;width:24px;height:24px;" /></p>-->
+    <p class="titLie">定制信息</p>
+    <ul class="list_shigong list_shigongLie list_shigongXtiao">
+        <li class="">
+            <span class="pull-left width100">玩法</span><span class="pull-right" id="lblCust">竞彩胜平负</span>
+        </li>
+        <li class="">
+            <span class="pull-left width100">方案推荐天数</span>
+            <span class="pull-right">
+            	<select id="days" style="color: #000; height: 30px;" onChange="selectDays(this.value)">
+            		<option value="1">1天</option>
+            		<!-- <option value="30">30天</option> -->
+            	</select>
+            </span>
+        </li>
+        <li class="">
+            <span class="pull-left width100">方案定价</span><span class="pull-right" ><i id="price"></i>元</span>
+        </li>
+        <li class="" id="liYHJ">
+            <span class="pull-left width100">优惠券</span> <span class="jiao pull-right" style="right: 2%; top: 9px;"></span><span class="pull-right">&nbsp;&nbsp;&nbsp;可用&nbsp;&nbsp;&nbsp;</span> <span class="pull-right" id="lblCouponCount">0张</span>
+        </li>
+        <li class="">
+            <span class="pull-left width100" style="width: 142px;">积分(100积分抵1元)<i style="font-size: 12px;"></i></span><span class="pull-right" style="margin-right: -18px;"><div id="a" class="Spinner"></div>
+            </span>
+            <!--<span class="pull-right"><i style="color:#edc33d">-1<i>元</span>-->
+        </li>
+        <li class="" style="border: 0;">
+            <span class="pull-left width100">支付金额</span><span class="pull-right"><i id="iPrice" style="color: #edc33d;font-size:1.2rem;"></i>元</span>
+        </li>
+    </ul>
+    <a class="dbtn dbtn123" href="javascript:playCustomized()">立即支付</a>
+
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script type="text/javascript" charset="utf-8">
+    
+    	var priceArray;
+
+        function GoToUrl_T(u) {
+            location.href = u + "?experts_code=" + getQueryString("experts_code");
+        }
+
+		var coupon_type = "";
+		 var sp;
+        $(function () {
+            // 获取参数
+            var type = getQueryString("type");
+            var tid = getQueryString("tid");
+            // 展示详情，隐藏定制信息和按钮
+            if (type == "detail") {
+                $(".titLie").hide();
+                $(".dbtn").hide();
+            }
+            
+            switch (getQueryString("service_code")) {
+                case "JCECY"://竞彩二串一
+                    //$("#lblCust").text("竞彩二串一");
+                    coupon_type = "03";
+                    break;
+                case "JCRQECY":// 竞彩让球二串一
+                    //$("#lblCust").text("竞彩让球二串一");
+                    coupon_type = "04";
+                    break;
+                case "JCSPF":// 竞彩胜平负
+                    //$("#lblCust").text("竞彩胜平负");
+                    coupon_type = "01";
+                    break;
+                case "JCRQSPF":// 竞彩让球胜平负
+                    //$("#lblCust").text("竞彩让球胜平负");
+                    coupon_type = "02";
+                    break;
+                case "DC":// 单场
+                    //$("#lblCust").text("单场");
+                    coupon_type = "06";
+                    break;
+                case "YP":// 亚盘
+                    //$("#lblCust").text("亚盘");
+                    coupon_type = "05";
+                    break;
+            }
+            initServiceInfo();
+			initCouponInfo(1);
+			var price = parseInt($("#price").html());
+            // 设置金额，根据优惠券类别
+            var mcid = getQueryString("mcid");
+            if (mcid != undefined && $.trim(mcid).length > 0) {
+                var mData = GetData(fl_url.myCouponDetaile, { mcid: mcid });
+                mData = JSON.parse(mData);
+                mData_temp = mData;
+                if (mData.coupon_type == "01" || mData.coupon_type == "02" || mData.coupon_type == "03" || mData.coupon_type == "04" || mData.coupon_type == "05" || mData.coupon_type == "06" || mData.coupon_type == "1" || mData.coupon_type == "4") {
+                    $("#iPrice").text("0");
+                } else if (mData.coupon_type == "2") {
+                    $("#iPrice").text(returnFloat(price * mData.discount / 10));
+                } else if (mData.coupon_type == "3") {
+                    $("#iPrice").text(returnFloat(price - mData.money));
+                }
+            }
+			
+            sp =$("#a").Spinner({ value: 0, min: 0, len: 4, max: price*100 });
+
+        });
+        
+        
+        function initCouponInfo(days){
+        	var dataUrl = fl_url.myCoupon;
+            var dataParam = {
+                phoneNum: fl_user.Mobile(),
+                type: 0,
+                showCount: 1000,
+                currentPage: 0,
+                days:days
+            };
+            var data = GetData(dataUrl, dataParam);
+            data = JSON.parse(data);
+            var c_num = 0;
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].coupon_type == "01" || data[i].coupon_type == "02" || data[i].coupon_type == "03" || data[i].coupon_type == "04" || data[i].coupon_type == "05" || data[i].coupon_type == "06") {
+                    if (data[i].coupon_type == coupon_type) {
+                        c_num++;
+                    }
+                } else {
+                    c_num++;
+                }
+            }
+
+            $("#lblCouponCount").text(c_num + "张");
+            if (data.length > 0) {
+                $("#liYHJ").click(function(){
+                    location.href = "selectCoupon.html?coupon_type=" + coupon_type + "&serviceId=" + getQueryString("serviceId") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code");
+                });
+            }else{
+            	 $("#liYHJ").unbind("click");
+            }
+        }
+
+        var mData_temp;
+        function changePointNum(n) {
+            var pointsNum = parseInt($(".Amount").val());
+            var price = parseInt($("#price").html());
+
+            var mcid = getQueryString("mcid");
+            if (mcid != undefined && $.trim(mcid).length > 0) {
+                if (mData_temp.coupon_type == "01" || mData_temp.coupon_type == "02" || mData_temp.coupon_type == "03" || mData_temp.coupon_type == "04" || mData_temp.coupon_type == "05" || mData_temp.coupon_type == "06" || mData_temp.coupon_type == "1" || mData_temp.coupon_type == "4") {
+                    $("#iPrice").text("0");
+                    $(".Amount").val("0");
+                    return;
+                } else if (mData_temp.coupon_type == "2") {
+                    if (price * mData.discount / 10 - parseInt(pointsNum / 100) < 0) {
+                        $("#iPrice").text("0");
+                    } else {
+                        $("#iPrice").text(returnFloat(price * mData_temp.discount / 10 - parseInt(pointsNum / 100)));
+                    }
+                    return;
+                } else if (mData_temp.coupon_type == "3") {
+                    if (price - mData_temp.money - parseInt(pointsNum / 100) < 0) {
+                        $("#iPrice").text("0");
+                    } else {
+                        $("#iPrice").text(returnFloat(price - mData_temp.money - parseInt(pointsNum / 100)));
+                    }
+                    return;
+                }
+            }
+
+            if (pointsNum >= 0)
+                $("#iPrice").text(returnFloat(price - parseInt(pointsNum / 100)));
+        }
+
+        function checkNum() {
+            var pointsNum = parseInt($(".Amount").val());
+            if (!isNaN(pointsNum) && pointsNum % 100 != 0) {
+                tishi_error("积分只能输入100的倍数。");
+                $(".Amount").val("0");
+                return;
+            }
+        }
+
+        var temp_click = 0;
+        function playCustomized() {
+            // 验证积分是否足够
+            var pointsNum = $(".Amount").val();
+            if (fl_user.Integral() < parseInt(pointsNum)) {
+                tishi_error("您的积分不足。");
+                return;
+            }
+
+            if (pointsNum % 100 != 0) {
+                tishi_error("积分只能输入100的倍数。");
+                return;
+            }
+
+            // 如果用户多次点击，则只进行一次调用
+            if (temp_click > 0) {
+                return;
+            }
+            temp_click = 1;
+
+            if (pointsNum == "0") {
+                pointsNum = "";
+            }
+
+            var mcid = getQueryString("mcid");
+            if (mcid == undefined || $.trim(mcid).length == 0) {
+                mcid = "";
+            }
+
+            var data = GetData(fl_url.payConfig, {
+                serviceId: getQueryString("serviceId"),
+                phoneNum: fl_user.Mobile(),
+                mcid: mcid,
+                pointsNum: $.trim(pointsNum),
+                days:$("#days").val(),
+                type:1
+            });
+            console.log(data);
+            // 验证支付
+            if (data == "{msg:'payFail'}") {
+                tishi_error("支付暂不可用，稍后再试。");
+                temp_click = 0;
+                return;
+            }
+            
+            data = JSON.parse(data);
+
+            if (data.appId == undefined) {
+                 location.href = "myCustomized_detail.html?tid=" + data.tid + "&experts_code=" + getQueryString("experts_code");
+            }
+            else {
+                PayWeiXin(data.appId, data.timeStamp, data.nonceStr, data.package, data.signType, data.paySign, data.tid);
+            }
+            temp_click = 0;
+        }
+        function selectDays(days){
+        	$("#usePoint").val("0");
+        	if(days == 1){
+        		initCouponInfo(1);
+        		$("#price").html(priceArray[0]);
+        		$("#iPrice").html(priceArray[0]);
+        		$("#a").empty();
+        		var maxPoint = parseInt(priceArray[0])*100;
+        		sp =$("#a").Spinner({ value: 0, min: 0, len: 4, max: maxPoint });
+        	}else if(days == 30){
+        		initCouponInfo(30);
+        		$("#price").html(priceArray[1]);
+        		$("#iPrice").html(priceArray[1]);
+        		$("#a").empty();
+        		var maxPoint = parseInt(priceArray[1])*100;
+        		sp =$("#a").Spinner({ value: 0, min: 0, len: 4, max: maxPoint });
+        	}
+        }
+        
+        function initServiceInfo(){
+        	 var result = GetData(fl_url.serviceInfo, {
+                service_id: getQueryString("serviceId")
+             });
+             result = JSON.parse(result);
+            priceArray = result.prices;
+        	$("#price").html(priceArray[0]);
+        	$("#iPrice").html(priceArray[0]);
+        	$("#lblCust").text(result.serviceName);
+        	$("#lblCust").text(result.serviceName);
+        	if(result.playType==1){
+        		coupon_type = "4";
+        	}
+        }
+    </script>
+</body>
+</html>

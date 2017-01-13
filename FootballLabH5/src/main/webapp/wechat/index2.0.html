@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<meta name="format-detection" content="telephone=no" />
+<title>专家方案</title>
+<script src="js/jquery-1.10.2.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="js/swiper.min.js"></script>
+<script src="js/jquery.SuperSlide.2.1.1.js"></script>
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<link href="css/mui.css" rel="stylesheet" />
+<link href="css/common.css" rel="stylesheet" type="text/css" />
+<link href="css/home.css" rel="stylesheet" type="text/css" />
+<!-- <link href="css/index_header.css" rel="stylesheet" type="text/css" /> -->
+<link href="css/swiper.min.css" rel="stylesheet" type="text/css" />
+<link href="css/index.css" rel="stylesheet" />
+<style type="text/css">
+body,html {
+	margin: 0;
+	padding: 0;
+}
+
+@media screen and (max-width: 980px) {
+}
+
+@media screen and (max-width: 650px) {
+}
+
+@media screen and (max-width: 480px) {
+	html {
+		-webkit-text-size-adjust: none;
+	}
+}
+
+@media screen and (max-width: 560px) {
+}
+</style>
+</head>
+<body style="padding: 0">
+	<p class="headerTou" id="pGuanZhu"
+		style="background: #fff; color: #000; display: none;">
+		<label
+			style="position: relative; left: 12%; font-size: 1.4rem; color: #000;">专家方案</label><label
+			class="pull-right round"><a id="aGuanZhu"
+			href="http://mp.weixin.qq.com/s?__biz=MzIxODQ5MTY4Mw==&mid=2247483666&idx=1&sn=2c38aac6da365d49afc1f468d99bff1e&scene=0#wechat_redirect"
+			style="display: initial; color: #FF8000;">+关注</a></label>
+	</p>
+	<div style="padding: 0 0 60px 0">
+		<header class="banner" style="padding: 0 0 0 0;">
+			<div id="ifocus">
+				<div id="ifocus_pic">
+					<div class='swiper-container'>
+						<div id="piclist" class="swiper-wrapper">
+							<!-- 
+                          <div class="swiper-slide">
+                                <a href="http://www.01588.com/wechat/expertPlan.html?serviceType=3&amp;type=0&amp;serviceId=6&amp;service_code=DC&amp;companyId=1&amp;experts_code=caishen">
+                                    <img height="180" src="http://www.01588.com:80/TP/fee06a517ccf4f63a15e777c9592b83c.jpg" alt="不盈双倍返!">
+                                </a>
+                            </div>
+                            <div class="swiper-slide">
+                                <a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0923d1a17556bedc&amp;redirect_uri=http%3A%2F%2Fwww.01588.com%2Fwechat%2Fmy.html%3Fexperts_code%3Dcaishen&amp;response_type=code&amp;scope=snsapi_base&amp;state=weixin#wechat_redirect">
+                                    <img height="180" src="http://www.01588.com:80/TP/030401e3a1c143f0a100740f37fb58ea.jpg" alt="注册送流量 最高1G！">
+                                </a>
+                            </div>
+                            <div class="swiper-slide">
+                                <a href="http://www.01588.com/wechat/LuckDraw.html?experts_code=caishen">
+                                    <img height="180" src="http://www.01588.com:80/TP/11e178d1a19c4911af24e4e7fe6d72f5.png" alt="幸运转盘等你来，积分活动抽大奖">
+                                </a>
+                            </div>
+                             -->
+						</div>
+						<div class="swiper-pagination"></div>
+					</div>
+				</div>
+			</div>
+		</header>
+		<div class="navItem">
+			<ul class="navList">
+				<li onclick="javascript:GoToUrl_T('guessGame.html');">
+					<div class="circle red">
+						<img src="./img/ico_shejian.png" alt="夺分">
+					</div>
+					<p class="icontext">一场夺分</p>
+				</li>
+				<li>
+					<div class="circle">
+						<img src="./img/ico_zjph.png" alt="夺分">
+					</div>
+					<p class="icontext">专家排行</p>
+				</li>
+				<li onclick="javascript:GoToUrl_T('LuckDraw.html');">
+					<div class="circle orange">
+						<img src="./img/ico_yhhd.png" alt="抽奖">
+					</div>
+					<p class="icontext">活动有礼</p>
+				</li>
+				<li onclick="javascript:GoToUrl_T('pointExchange.html');">
+					<div class="circle purple">
+						<img src="./img/ico_jfdj.png" alt="积分">
+					</div>
+					<p class="icontext">积分兑奖</p>
+				</li>
+			</ul>
+		</div>
+		<!--
+        	作者：1632276537@qq.com
+        	时间：2016-12-29
+        	描述：广告
+        -->
+		<div class="advBox">
+			<div class="lefticon ico-horn"></div>
+			<div class="topscro">
+				<ul id="marquee" class="marquee">
+					<li>方案推荐火热促销中！</li>
+				</ul>
+			</div>
+		</div>
+
+
+		<!--
+        	作者：1632276537@qq.com
+        	时间：2017-01-06
+        	描述：推荐专家滚动
+        -->
+		<div class='swiper-container2'>
+			<div id="expertList" class="swiper-wrapper">
+				<div class="swiper-slide">
+					<div class="item-block btimg grid_table">
+						<div class="item_cell_left">
+							<p class="expert_info bigSize">
+								京城虎哥 <i>单场方案</i>
+							</p>
+							<p class="highColorBig">108%</p>
+							<p>预计盈利率</p>
+						</div>
+						<div class="item_cell_center">
+							<p class="highColor bigSize">10864</p>
+							<p>已跟积分</p>
+						</div>
+						<div class="item_cell_right">
+							<p class="countDown countDown0" id="countDown0"></p>
+							<a href="#" class="btn goOrder"></a>
+						</div>
+					</div>
+				</div>
+				<div class="swiper-slide">
+					<div class="item-block btimg grid_table">
+						<div class="item_cell_left">
+							<p class="expert_info bigSize">
+								京城虎哥 <i>单场方案</i>
+							</p>
+							<p class="highColorBig">108%</p>
+							<p>预计盈利率</p>
+						</div>
+						<div class="item_cell_center">
+							<p class="highColor bigSize">10864</p>
+							<p>已跟积分</p>
+						</div>
+						<div class="item_cell_right">
+							<p class="countDown countDown0" id="countDown1"></p>
+							<a href="#" class="btn goOrder"></a>
+						</div>
+					</div>
+				</div>
+				<div class="swiper-slide">
+					<div class="item-block btimg grid_table">
+						<div class="item_cell_left">
+							<p class="expert_info bigSize">
+								京城虎哥 <i>单场方案</i>
+							</p>
+							<p class="highColorBig">108%</p>
+							<p>预计盈利率</p>
+						</div>
+						<div class="item_cell_center">
+							<p class="highColor bigSize">10864</p>
+							<p>已跟积分</p>
+						</div>
+						<div class="item_cell_right">
+							<p class="countDown countDown0" id="countDown2"></p>
+							<a href="#" class="btn goOrder"></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="leftTabBox" class="slideTxtBox">
+			<div class="hd">
+				<ul>
+					<li class="active"><span>单场料</span></li>
+					<li><span>亚盘料</span></li>
+					<li><span class="noborder">2串1料</span></li>
+				</ul>
+			</div>
+			<div class="bd">
+				<ul id="dcul"></ul>
+
+				<ul id="ypul"></ul>
+
+				<ul id="jcecyul"></ul>
+
+			</div>
+		</div>
+	</div>
+	<footer class="footer">
+		<ul class="clearfix">
+			<li class="active" onclick="GoToUrl_T('index.html');"><a
+				class="icon_home" href="#"></a> <span>首页</span></li>
+			<li onclick="GoToUrl_T('my.html');"><a class="icon_order"
+				href="#"></a> <span>跟投</span></li>
+			<li onclick="GoToUrl_T('my.html');"><a class="icon_guess"
+				href="#"></a> <span>竞猜</span></li>
+			<li onclick="GoToUrl_T('my.html');"><a class="icon_my" href="#"></a>
+				<span>我的</span></li>
+		</ul>
+	</footer>
+	<script src="js/common.js"></script>
+	<script src="js/data.js"></script>
+	<script src="js/weixin_com.js"></script>
+	<script src="js/marquee.js"></script>
+	<script>
+
+   		
+					var url = "";
+					var sharttitle, shartcontent;
+					$(function() {
+
+						if (getQueryString("experts_code") == "jinghu") {
+							$("#aGuanZhu")
+									.attr(
+											"href",
+											"http://mp.weixin.qq.com/s?__biz=MzAxMjk1NjYwMA==&mid=2247483654&idx=1&sn=66ed8863ea21271f03880c7338e8bad4&scene=0#wechat_redirect");
+						}
+
+						if (fl_user.focus_status() != 1) {
+							$("#pGuanZhu").show();
+						}
+
+						// 绑定轮播图
+						var datapic = GetData(fl_url.indexLink, {});
+						datapic = JSON.parse(datapic);
+						var p_c = "";
+						var pichtml = "";
+						for (var i = 0; i < datapic.length; i++) {
+							pichtml = "";
+							if (i == 0) {
+								p_c = "current";
+							} else {
+								p_c = "normal";
+							}
+							/* if(datapic[i].stiename=="不盈双倍返!"){
+								 pichtml = "<div class='swiper-slide'><a href=\"javascript:GoToNextUrl('expertPlan.html?serviceType=3&type=0&serviceId=1103c7f205714ca5bef7b5cba23af3a7&service_code=DC&companyId=1&experts_code=caishen&service_name=%u6CD5%u7532','法甲')\">";
+							}else{
+								pichtml = "<div class='swiper-slide'><a href=\"" + decodeURI(datapic[i].tourl) + "\">";
+							} */
+							pichtml = "<div class='swiper-slide'><a href=\""
+									+ decodeURI(datapic[i].tourl) + "\">";
+
+							pichtml += "<img height='180' src=\"" + datapic[i].stieurl + "\" alt=\"" + datapic[i].stiename + "\" /></a></div>";
+							$("#piclist").append(pichtml);
+						}
+
+						// 绑定方案
+						var data = GetData(fl_url.indexNew, {});
+						data = JSON.parse(data);
+						var html = "";
+						var ndays, number3;
+						var serviceCodeArr = {
+							"DC" : "dcul",
+							"YP" : "ypul",
+							"JCECY" : "jcecyul"
+						};
+
+						for (serviceInfo in serviceCodeArr) {
+							var dataList = data[serviceInfo];
+							for (var i = 0; i < dataList.length; i++) {
+								if (serviceInfo != "JCECY"
+										&& dataList[i].play_type == 1
+										&& getQueryString("experts_code") == "caishen") {
+									continue;
+								}
+								ndays = dataList[i].ndays == undefined ? 0
+										: dataList[i].ndays;
+								number3 = dataList[i].number3 == undefined ? 0
+										: dataList[i].number3;
+								html += "<li onclick=\"GoToNextUrl('expertPlan.html?serviceType="
+										+ dataList[i].service_type
+										+ "&type="
+										+ dataList[i].type
+										+ "&serviceId="
+										+ dataList[i].id
+										+ "&service_code="
+										+ dataList[i].service_code
+										+ "&companyId="
+										+ dataList[i].fk_company_id
+										+ "&experts_code="
+										+ getQueryString("experts_code")
+										+ "&service_name="
+										+ escape(dataList[i].service_name)
+										+ "','"
+										+ dataList[i].service_name
+										+ "')\">";
+								html += "<dl>";
+								var num = dataList[i].strategyNum;
+								var notStartNum = dataList[i].notStartNum == undefined ? 0
+										: dataList[i].notStartNum;
+								if (num != undefined) {
+									html += "<dt class='titBox'>" + getWeek()
+											+ "方案" + num
+											+ "个<i class='rtpop'>未赛"
+											+ notStartNum + "个</i></dt>";
+								} else {
+									html += "<dt class='titBox'>" + getWeek()
+											+ "方案<i class='popno'>暂无</i></dt>";
+								}
+
+								if (dataList[i].play_type == 1) {
+									html += "<dd class='highColor'>焦点赛事</dd>";
+								} else {
+									html += "<dd class='highColor'>"
+											+ dataList[i].service_name
+											+ "</dd>";
+								}
+								html += "<dd>" + ndays + "天盈利<em>"
+										+ parseInt(number3) + "</em></dd>";
+								if ((serviceInfo == "DC" || serviceInfo == "YP")
+										&& getQueryString("experts_code") == "caishen"
+										&& num != undefined && num > 0) {
+									html += "<div class='popicon'><img width='100%' src='img/hongbao.png'/></div></dl></li>";
+								} else {
+									html += "</dl></li>";
+								}
+
+							}
+							$("#" + serviceCodeArr[serviceInfo]).html(html);
+							html = "";
+						}
+
+						//$("#fan").attr("onclick","GoToNextUrl('expertPlan.html?serviceType=3&type=0&serviceId=1103c7f205714ca5bef7b5cba23af3a7&service_code=DC&companyId=1&experts_code=caishen&service_name="+escape("法甲")+"','法甲')")
+
+						sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+						shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+						Init();
+						//ScrollText($('#scrollText'),23,350,'<font size="2" color="#edc33e" >提示：由于11月10日开始为国际比赛日，下次推荐方案预计为11月15日的巴甲比赛，敬请关注。</font>','left',1,30);//滚动字幕
+						addVisitInfo();
+					});
+
+					function GoToNextUrl(nexurl, name) {
+						sessionStorage.setItem("selectPlanName", name);
+						sessionStorage.setItem("selectPlanUrl", nexurl);
+						window.open(nexurl, "_top");
+					}
+
+					function GoToUrl() {
+						if (url.length > 0) {
+							location.href = url;
+						}
+					}
+					function GoToUrl_T(u) {
+						location.href = u + "?experts_code="
+								+ getQueryString("experts_code");
+					}
+
+					$(document).ready(function() {
+						var swiper = new Swiper('.swiper-container', {
+							pagination : '.swiper-pagination',
+							paginationClickable : true,
+							autoplay : 5000,
+							autoplayDisableOnInteraction : false,
+							loop : true
+						});
+					});
+
+					$(document).ready(function() {
+						var swiper = new Swiper('.swiper-container2', {
+							paginationClickable : true,
+							autoplay : false,
+							autoplayDisableOnInteraction : false,
+							loop : true
+						});
+					});
+
+					$(window).scroll(function() {
+						var mytop = $(window).scrollTop();
+						if (mytop > $("#leftTabBox").offset().top) {
+							$("#leftTabBox").addClass("current")
+						} else {
+							$("#leftTabBox").removeClass("current")
+						}
+
+					})
+					jQuery(".slideTxtBox").slide({
+						trigger : "click"
+					});
+
+					var countDown = new Timer('.countDown0', {
+						timArr : [ {
+							'year' : 2017,
+							'month' : 1,
+							'day' : 7,
+							'hour' : 12,
+							'minute' : 10
+						}, {
+							'year' : 2017,
+							'month' : 1,
+							'day' : 8,
+							'hour' : 12,
+							'minute' : 11
+						}, {
+							'year' : 2017,
+							'month' : 1,
+							'day' : 9,
+							'hour' : 12,
+							'minute' : 12
+						}, ],
+						intrval : 60000
+					})
+				</script>
+
+</body>
+</html>

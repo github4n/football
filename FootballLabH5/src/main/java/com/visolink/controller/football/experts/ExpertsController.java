@@ -1,0 +1,637 @@
+package com.visolink.controller.football.experts;
+
+import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.visolink.controller.base.BaseController;
+import com.visolink.controller.football.webchat.WeixinController;
+import com.visolink.entity.Page;
+import com.visolink.entity.system.User;
+import com.visolink.service.football.experts.ExpertsService;
+import com.visolink.service.football.model.ModelService;
+import com.visolink.service.football.service.ServiceService;
+import com.visolink.service.football.serviceModel.ServiceModelService;
+import com.visolink.util.AppUtil;
+import com.visolink.util.Const;
+import com.visolink.util.ObjectExcelView;
+import com.visolink.util.PageData;
+import com.visolink.util.Tools;
+
+/**
+ * 类名称：ExpertsController 创建人：FH 创建时间：2016-06-19
+ */
+@Controller
+@RequestMapping(value = "/experts")
+public class ExpertsController extends BaseController {
+
+	@Resource(name = "expertsService")
+	private ExpertsService expertsService;
+
+	@Resource(name = "serviceService")
+	private ServiceService serviceService;
+
+	@Resource(name = "serviceModelService")
+	private ServiceModelService serviceModelService;
+
+	@Resource(name = "modelService")
+	private ModelService modelService;
+
+	@Resource(name = "weixinController")
+	private WeixinController weixinController;
+	
+	/**
+	 * 新增
+	 */
+	@RequestMapping(value = "/save")
+	public ModelAndView save() throws Exception {
+		logBefore(logger, "新增Experts");
+		// shiro管理的session
+		Subject currentUser = SecurityUtils.getSubject();
+		Session session = currentUser.getSession();
+		User user = (User) session.getAttribute(Const.SESSION_USER);
+
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd.put("experts_id", this.get32UUID()); // 主键
+		pd.put("add_time", Tools.date2Str(new Date())); // 添加时间
+		pd.put("add_user", user.getNAME()); // 添加人
+		pd.put("status", 1); // 状态
+		expertsService.save(pd);
+		mv.addObject("msg", "success");
+		mv.setViewName("save_result");
+		return mv;
+	}
+
+	/**
+	 * 删除
+	 */
+	@RequestMapping(value = "/delete")
+	public void delete(PrintWriter out) {
+		logBefore(logger, "删除Experts");
+		PageData pd = new PageData();
+		try {
+			pd = this.getPageData();
+			expertsService.delete(pd);
+			out.write("success");
+			out.close();
+		} catch (Exception e) {
+			logger.error(e.toString(), e);
+		}
+
+	}
+
+	/**
+	 * 修改
+	 */
+	@RequestMapping(value = "/edit")
+	public ModelAndView edit() throws Exception {
+		logBefore(logger, "修改Experts");
+		Subject currentUser = SecurityUtils.getSubject();
+		Session session = currentUser.getSession();
+		User user = (User) session.getAttribute(Const.SESSION_USER);
+		
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd.put("update_time", Tools.date2Str(new Date())); // 添加时间
+		pd.put("update_user", user.getNAME()); // 添加人
+		expertsService.edit(pd);
+		mv.addObject("msg", "success");
+		mv.setViewName("save_result");
+		return mv;
+	}
+
+	/**
+	 * 列表
+	 */
+	@RequestMapping(value = "/list")
+	public ModelAndView list(Page page) {
+		logBefore(logger, "列表Experts");
+		ModelAndView mv = this.getModelAndView();
+		mv.setViewName("football/experts/experts_list");
+
+		PageData pd = new PageData();
+		try {
+			pd = this.getPageData();
+			page.setPd(pd);
+			List<PageData> varList = expertsService.list(page); // 列出Experts列表
+			for (PageData pageData : varList) {
+				String expertsId = pageData.getString("EXPERTS_ID");
+				pageData.put("serviceList", serviceService.listAll(expertsId));
+				pageData.put("expertsId", expertsId);
+			}
+
+			mv.addObject("varList", varList);
+			mv.addObject("pd", pd);
+			mv.addObject(Const.SESSION_QX, this.getHC()); // 按钮权限
+		} catch (Exception e) {
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+
+	/**
+	 * 详情
+	 */
+	@RequestMapping(value = "/detaileExpertsModel")
+	public ModelAndView detaileExpertsModel() {
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		try {
+			if (StringUtils.hasText(pd.getString("smid"))) {
+				pd = serviceModelService.findById(pd); // 根据ID读取
+			} else {
+				pd = serviceService.findById(pd);
+			}
+			mv.setViewName("football/experts/experts_model_detaile");
+
+			PageData approvePd = serviceModelService.findApproveByServiceId(pd);
+			mv.addObject("approvePd", approvePd);
+
+			mv.addObject("pd", pd);
+		} catch (Exception e) {
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+
+	/**
+	 * 开启或者关闭玩法
+	 */
+	@RequestMapping(value = "/setUse")
+	@ResponseBody
+	public String setUse() {
+		PageData pd = this.getPageData();
+		try {
+			serviceService.setUse(pd);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "success";
+	}
+
+	/**
+	 * 去模型选择页面
+	 */
+	@RequestMapping(value = "/goSelectModel")
+	public ModelAndView goSelectModel() {
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		try {
+			String service_code = pd.getString("service_code");
+			String types = "";
+			String spf = "JCSPF,JCECY,DC,ZCFTC,ZCRN";
+			String rqspf = "JCRQSPF,JCRQECY";
+			String yp = "YP";
+			if (-1 != spf.indexOf(service_code)) {
+				types = "1";
+			} else if (-1 != rqspf.indexOf(service_code)) {
+				types = "2";
+			} else if (-1 != yp.indexOf(service_code)) {
+				types = "3";
+			}
+			PageData servicePd = serviceService.findById(pd);
+			pd.put("service_name", servicePd.get("service_name"));
+			pd.put("arrayData_type", types);
+			List<PageData> modelList = modelService.listAll(pd); // 根据ID读取
+
+			List<PageData> modelGroupList = modelService.modelGroupListAll(pd);
+
+			List<PageData> varList = new ArrayList<PageData>();
+			varList.addAll(modelList);
+			varList.addAll(modelGroupList);
+
+			mv.setViewName("football/experts/experts_model_select");
+			mv.addObject("varList", varList);
+			mv.addObject("pd", pd);
+			mv.addObject("msg", "saveSelectModel");
+		} catch (Exception e) {
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+
+	/**
+	 * 保存选择的模型
+	 */
+	@RequestMapping(value = "/saveSelectModel")
+	public ModelAndView saveSelectModel() throws Exception {
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		
+		serviceModelService.save(pd);
+		mv.addObject("msg", "success");
+		mv.setViewName("save_result");
+		return mv;
+	}
+
+	/**
+	 * 去新增页面
+	 */
+	@RequestMapping(value = "/goAdd")
+	public ModelAndView goAdd() {
+		logBefore(logger, "去新增Experts页面");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		try {
+			mv.setViewName("football/experts/experts_edit");
+			mv.addObject("msg", "save");
+			mv.addObject("pd", pd);
+		} catch (Exception e) {
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+
+	/**
+	 * 去修改页面
+	 */
+	@RequestMapping(value = "/goEdit")
+	public ModelAndView goEdit() {
+		logBefore(logger, "去修改Experts页面");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		try {
+			pd = expertsService.findById(pd); // 根据ID读取
+			mv.setViewName("football/experts/experts_edit");
+			mv.addObject("msg", "edit");
+			mv.addObject("pd", pd);
+		} catch (Exception e) {
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+
+	/**
+	 * 批量删除
+	 */
+	@RequestMapping(value = "/deleteAll")
+	@ResponseBody
+	public Object deleteAll() {
+		logBefore(logger, "批量删除Experts");
+		PageData pd = new PageData();
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			pd = this.getPageData();
+			List<PageData> pdList = new ArrayList<PageData>();
+			String DATA_IDS = pd.getString("DATA_IDS");
+			if (null != DATA_IDS && !"".equals(DATA_IDS)) {
+				String ArrayDATA_IDS[] = DATA_IDS.split(",");
+				expertsService.deleteAll(ArrayDATA_IDS);
+				pd.put("msg", "ok");
+			} else {
+				pd.put("msg", "no");
+			}
+			pdList.add(pd);
+			map.put("list", pdList);
+		} catch (Exception e) {
+			logger.error(e.toString(), e);
+		} finally {
+			logAfter(logger);
+		}
+		return AppUtil.returnObject(pd, map);
+	}
+	
+	/**
+	 * 单联赛玩法页面
+	 * @return
+	 */
+	@RequestMapping(value = "/singleLeagueList")
+	public ModelAndView singleLeagueList() {
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		try {
+			pd.put("serviceList", serviceService.singleLeagueList(pd));
+			
+			mv.setViewName("football/experts/experts_single_league_list");
+
+			mv.addObject("pd", pd);
+		} catch (Exception e) {
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+	
+	/**
+	 * 去新增页面
+	 */
+	@RequestMapping(value = "/goAddBySingleLeague")
+	public ModelAndView goAddBySingleLeague() {
+		logBefore(logger, "去新增单联赛玩法页面");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		try {
+			mv.setViewName("football/experts/experts_single_league_edit");
+			mv.addObject("updateUrl", "singleLeagueSave");
+			mv.addObject("pd", pd);
+		} catch (Exception e) {
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+	
+	/**
+	 * 新增单联赛玩法
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/singleLeagueSave")
+	public ModelAndView singleLeagueSave() throws Exception {
+		logBefore(logger, "新增单联赛玩法");
+		// shiro管理的session
+		Subject currentUser = SecurityUtils.getSubject();
+		Session session = currentUser.getSession();
+		User user = (User) session.getAttribute(Const.SESSION_USER);
+
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd.put("add_time", Tools.date2Str(new Date())); // 添加时间
+		pd.put("add_user", user.getNAME()); // 添加人
+		serviceService.insertServiceBySingleAndOther(pd,2);
+		mv.addObject("msg", "success");
+		mv.setViewName("save_result");
+		return mv;
+	}
+	
+	/**
+	 * 去修改页面
+	 */
+	@RequestMapping(value = "/goEditBySingleLeague")
+	public ModelAndView goEditBySingleLeague() {
+		logBefore(logger, "去修改单联赛玩法页面");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		try {
+			pd = serviceService.findById(pd); // 根据ID读取
+			mv.setViewName("football/experts/experts_single_league_edit");
+			mv.addObject("updateUrl", "singleLeagueEdit");
+			mv.addObject("pd", pd);
+		} catch (Exception e) {
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+	
+	/**
+	 * 修改
+	 */
+	@RequestMapping(value = "/singleLeagueEdit")
+	public ModelAndView singleLeagueEdit() throws Exception {
+		logBefore(logger, "修改单联赛玩法");
+		Subject currentUser = SecurityUtils.getSubject();
+		Session session = currentUser.getSession();
+		User user = (User) session.getAttribute(Const.SESSION_USER);
+		
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd.put("update_time", Tools.date2Str(new Date())); // 修改时间
+		pd.put("update_user", user.getNAME()); // 修改人
+		serviceService.updateServiceBySingleAndOther(pd);
+		mv.addObject("msg", "success");
+		mv.setViewName("save_result");
+		return mv;
+	}
+	
+	/**
+	 * 修改
+	 */
+	@RequestMapping(value = "/delSingleLeagueService")
+	public ModelAndView delSingleLeagueService() throws Exception {
+		logBefore(logger, "修改单联赛玩法");
+		Subject currentUser = SecurityUtils.getSubject();
+		Session session = currentUser.getSession();
+		User user = (User) session.getAttribute(Const.SESSION_USER);
+		
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		serviceService.deleteServiceById(pd.getString("serviceId"));
+		mv.addObject("msg", "success");
+		mv.setViewName("save_result");
+		return mv;
+	}
+	
+	/**
+	 * 其他联赛玩法页面
+	 * @return
+	 */
+	@RequestMapping(value = "/otherLeagueList")
+	public ModelAndView otherLeagueList() {
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		try {
+			String expertsId = pd.getString("expertsId");
+			pd.put("serviceList", serviceService.otherLeagueList(expertsId,null));
+			
+			mv.setViewName("football/experts/experts_other_league_list");
+
+			mv.addObject("pd", pd);
+		} catch (Exception e) {
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+	
+	/**
+	 * 去新增页面
+	 */
+	@RequestMapping(value = "/goAddByOtherLeague")
+	public ModelAndView goAddByOtherLeague() {
+		logBefore(logger, "去新增单联赛玩法页面");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		try {
+			mv.setViewName("football/experts/experts_other_league_edit");
+			mv.addObject("updateUrl", "otherLeagueSave");
+			mv.addObject("pd", pd);
+		} catch (Exception e) {
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+	
+	/**
+	 * 新增其他联赛玩法
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/otherLeagueSave")
+	public ModelAndView otherLeagueSave() throws Exception {
+		logBefore(logger, "新增其他联赛玩法");
+		// shiro管理的session
+		Subject currentUser = SecurityUtils.getSubject();
+		Session session = currentUser.getSession();
+		User user = (User) session.getAttribute(Const.SESSION_USER);
+
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd.put("add_time", Tools.date2Str(new Date())); // 添加时间
+		pd.put("add_user", user.getNAME()); // 添加人
+		serviceService.insertServiceBySingleAndOther(pd, 3);
+		mv.addObject("msg", "success");
+		mv.setViewName("save_result");
+		return mv;
+	}
+	
+	/**
+	 * 去修改页面
+	 */
+	@RequestMapping(value = "/goEditByOtherLeague")
+	public ModelAndView goEditByOtherLeague() {
+		logBefore(logger, "去修改其他联赛玩法页面");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		try {
+			pd = serviceService.findById(pd); // 根据ID读取
+			mv.setViewName("football/experts/experts_other_league_edit");
+			mv.addObject("updateUrl", "otherLeagueEdit");
+			mv.addObject("pd", pd);
+		} catch (Exception e) {
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+	
+	/**
+	 * 修改
+	 */
+	@RequestMapping(value = "/otherLeagueEdit")
+	public ModelAndView otherLeagueEdit() throws Exception {
+		logBefore(logger, "修改其他联赛玩法");
+		Subject currentUser = SecurityUtils.getSubject();
+		Session session = currentUser.getSession();
+		User user = (User) session.getAttribute(Const.SESSION_USER);
+		
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd.put("update_time", Tools.date2Str(new Date())); // 修改时间
+		pd.put("update_user", user.getNAME()); // 修改人
+		serviceService.updateServiceBySingleAndOther(pd);
+		mv.addObject("msg", "success");
+		mv.setViewName("save_result");
+		return mv;
+	}
+	
+
+	@RequestMapping(value = "/createMenu")
+	@ResponseBody
+	public String createMenu() throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd = expertsService.findById(pd);
+		
+		String result = weixinController.createMenu(pd.getString("app_id"), pd.getString("app_secret"), pd.getString("experts_code"));
+		return result;
+	}
+	
+	@RequestMapping(value = "/delMenu")
+	@ResponseBody
+	public String delMenu() throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd = expertsService.findById(pd);
+		
+		String result = weixinController.delMenu(pd.getString("app_id"), pd.getString("app_secret"), pd.getString("experts_code"));
+		return result;
+	}
+	
+	/*
+	 * 导出到excel
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/excel")
+	public ModelAndView exportExcel() {
+		logBefore(logger, "导出Experts到excel");
+		ModelAndView mv = new ModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		try {
+			Map<String, Object> dataMap = new HashMap<String, Object>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("编号"); // 1
+			titles.add("专家名称"); // 2
+			titles.add("专家头像"); // 3
+			titles.add("专家介绍"); // 4
+			titles.add("添加时间"); // 5
+			titles.add("添加人"); // 6
+			titles.add("修改时间"); // 7
+			titles.add("修改人"); // 8
+			titles.add("状态"); // 9
+			dataMap.put("titles", titles);
+			List<PageData> varOList = expertsService.listAll(pd);
+			List<PageData> varList = new ArrayList<PageData>();
+			for (int i = 0; i < varOList.size(); i++) {
+				PageData vpd = new PageData();
+				vpd.put("var1", varOList.get(i).getString("EXPERTS_CODE")); // 1
+				vpd.put("var2", varOList.get(i).getString("EXPERTS_NAME")); // 2
+				vpd.put("var3", varOList.get(i).getString("EXPERTS_ICON")); // 3
+				vpd.put("var4", varOList.get(i).getString("EXPERTS_INFO")); // 4
+				vpd.put("var5", varOList.get(i).getString("ADD_TIME")); // 5
+				vpd.put("var6", varOList.get(i).getString("ADD_USER")); // 6
+				vpd.put("var7", varOList.get(i).getString("UPDATE_TIME")); // 7
+				vpd.put("var8", varOList.get(i).getString("UPDATE_USER")); // 8
+				vpd.put("var9", varOList.get(i).get("STATUS").toString()); // 9
+				varList.add(vpd);
+			}
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView();
+			mv = new ModelAndView(erv, dataMap);
+		} catch (Exception e) {
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+
+	/* ===============================权限================================== */
+	public Map<String, String> getHC() {
+		Subject currentUser = SecurityUtils.getSubject(); // shiro管理的session
+		Session session = currentUser.getSession();
+		return (Map<String, String>) session.getAttribute(Const.SESSION_QX);
+	}
+	/* ===============================权限================================== */
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(format, true));
+	}
+}

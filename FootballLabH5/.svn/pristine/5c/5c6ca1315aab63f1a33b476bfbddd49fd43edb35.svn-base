@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CouponMapper">
+	
+	
+	<!-- 新增-->
+	<insert id="saveCD" parameterType="pd">
+		insert into tb_coupon_detail(
+			coupon_name,coupon_type,discount,money,no,id)
+		values(#{coupon_name},#{coupon_type} ,#{discount},#{money},#{no},#{coupon_id})
+	</insert>
+	<insert id="saveC" parameterType="pd">
+		insert into tb_coupon(
+			create_time,num,approval_state,validity_time,validity_days,invalid_days,remark,expert_id,coupon_id
+		) values (
+			#{create_time},#{num},#{approval_state},#{validity_time},	#{validity_days},	
+			#{invalid_days},#{remark},#{expert_id},#{coupon_id}
+		)
+	</insert>
+	<insert id="saveMemberCoupon" parameterType="pd">
+		insert into tb_member_coupon(
+			id,use_time,obtain_time,invalid_time,if_has_used,type,fk_member_id,fk_coupon_detail_id
+		) values (
+			#{id},#{use_time},#{obtain_time},#{invalid_time},	#{if_has_used},	
+			#{type},#{fk_member_id},#{fk_coupon_detail_id}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="deleteCD" parameterType="pd">
+		delete from tb_coupon_detail
+		where 
+			id = #{coupon_id} 
+	</delete>
+	<delete id="deleteC" parameterType="pd">
+		delete from tb_coupon
+		where 
+			coupon_id = #{coupon_id};	
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="editCD" parameterType="pd">
+	update tb_coupon_detail set
+			coupon_name = #{coupon_name},coupon_type = #{coupon_type},discount = #{discount},money = #{money},no = #{no}
+	where 	id = #{coupon_id}
+	</update>
+	<update id="editC" parameterType="pd">
+	update tb_coupon set num = #{num},approval_state = #{approval_state},validity_time = #{validity_time},validity_days = #{validity_days}
+			,remark = #{remark},expert_id=#{expert_id}
+	where 	coupon_id = #{coupon_id}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+	select 
+		a.*,b.*,c.experts_name 
+	from 
+		tb_coupon as a 
+	left join
+		tb_coupon_detail as b 
+	on 
+		a.coupon_id = b.id 
+	left join 
+		tb_experts as c
+	on 
+		a.expert_id = c.experts_id
+	where 
+		a.coupon_id = #{coupon_id}
+	</select>
+	
+	<!-- 通过mcid获取我的优惠券详情 -->
+	<select id="findByMcId" parameterType="pd" resultType="pd">
+	select 
+		a.*,b.*,c.* 
+	from 
+		tb_member_coupon as a 
+	left join
+		tb_coupon_detail as b 
+	on 
+		b.id = a.fk_coupon_detail_id
+	left join 
+		tb_coupon as c
+	on 
+		c.coupon_id = b.id
+	where 
+		a.id = #{mcid}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+	select 
+		a.*,
+		b.*,
+		c.experts_name,
+		(select count(*) from  `tb_member_coupon` as d where d.`fk_coupon_detail_id` = b.id) as coupon_count 
+	from tb_coupon as a left join
+	tb_coupon_detail as b on a.coupon_id = b.id left join tb_experts as c
+	on a.expert_id = c.experts_id where 1=1
+	
+	<if test="pd.expert_id != null and pd.expert_id != ''"><!-- 专家检索 -->
+			and a.expert_id=#{pd.expert_id} 
+	</if>
+	<if test="pd.coupon_name != null and pd.coupon_name != ''"> <!-- 礼券名称 -->
+			and b.coupon_name  like '%' #{pd.coupon_name} '%'
+	</if>
+	<if test="pd.approval_state != null and pd.approval_state != ''"> <!-- 审核状态 -->
+			and a.approval_state=#{pd.approval_state} 
+	</if>
+	<if test="pd.no != null and pd.no != ''">  <!-- 编号 -->
+			and b.no like '%' #{pd.no} '%'
+	</if>
+	<if test="pd.lastLoginStart != null and pd.lastLoginStart != ''">  <!-- 开始时间-->
+			and a.validity_time &gt;=#{pd.lastLoginStart} 
+	</if>	
+	
+	<if test="pd.lastLoginEnd != null and pd.lastLoginEnd != ''">  <!-- 结束时间 -->
+			and a.validity_time &lt;=#{pd.lastLoginEnd} 
+	</if>
+	<if test="pd.coupon_type != null and pd.coupon_type != ''"><!-- 用途 -->
+			and b.coupon_type=#{pd.coupon_type} 
+	</if>	
+	
+	order by a.create_time desc
+	
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.CREATE_TIME,	
+				a.NUM,	
+				a.APPROVAL_STATE,	
+				a.VALIDITY_TIME,	
+				a.VALIDITY_DAYS,	
+				a.INVALID_DAYS,	
+				a.REMARK,	
+				a.COUPON_ID
+		from 
+				TB_COUPON a
+	</select>
+	
+	<!-- 领取情况列表 -->
+	<select id="situationDatalistPage" parameterType="page" resultType="pd">
+	select a.*,
+		   b.`member_name`,
+		   c.no 
+     from `tb_member_coupon` as a 
+     left join `tb_member` as b on a.`fk_member_id` = b.`member_id` 
+     left join `tb_coupon_detail` as c on a.`fk_coupon_detail_id` = c.id
+     where a.fk_coupon_detail_id=#{pd.coupon_detail_id}
+	
+	<if test="pd.if_has_used != null and pd.if_has_used != ''"><!-- 使用 -->
+			and a.if_has_used=#{pd.if_has_used} 
+	</if>
+	<if test="pd.type != null and pd.type != ''"><!--领取方式 -->
+			and a.type=#{pd.type} 
+	</if>
+	<if test="pd.member_name != null and pd.member_name != ''"> <!-- 用户名 -->
+			and b.member_name  like '%' #{pd.member_name} '%'
+	</if>
+	<if test="pd.lastLoginStart != null and pd.lastLoginStart != ''">  <!-- 开始时间-->
+			and a.obtain_time &gt;=#{pd.lastLoginStart} 
+	</if>	
+	
+	<if test="pd.lastLoginEnd != null and pd.lastLoginEnd != ''">  <!-- 结束时间 -->
+			and a.obtain_time &lt;=#{pd.lastLoginEnd} 
+	</if>
+	<if test="pd.no != null and pd.no != ''"><!-- 序列号：不清楚序列号字段，暂用礼券创建时的编号 -->
+			and c.no like '%' #{pd.no} '%' 
+	</if>	
+	
+	order by a.obtain_time desc
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteCAll" parameterType="String">
+		delete from tb_coupon
+		where 
+			coupon_id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<delete id="deleteCDAll" parameterType="String">
+		delete from tb_coupon_detail
+		where 
+			id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 我的优惠券-->
+	<select id="myCoupon" parameterType="pd" resultType="pd">
+	 select a.id as mcid, a.invalid_time,a.if_has_used,a.type, c.id as cdid,c.coupon_name,c.coupon_type,e.validity_days
+     from `tb_member_coupon` as a 
+     left join `tb_member` as b on a.`fk_member_id` = b.`member_id` 
+     left join `tb_coupon_detail` as c on a.`fk_coupon_detail_id` = c.id
+     left join  tb_experts as d on d.experts_id = b.fk_experts_id  
+     left join `tb_coupon` as e on e.coupon_id = c.id
+     where 
+     	b.`phone_number` = #{pd.phoneNum} and d.experts_code = #{pd.experts_code} 
+     	<if test="pd.type == 0">  <!-- 有效 -->
+     		and a.invalid_time &gt;=#{pd.nowDate} and a.if_has_used = 0
+     	</if>
+     	
+     	<if test="pd.type == 1"> <!-- 失效 -->
+     		and (a.invalid_time &lt;=#{pd.nowDate} || a.if_has_used = 1)
+     	</if>
+     	
+     	<if test="pd.days != null and pd.days != ''"> <!-- 失效 -->
+     		and (e.validity_days = #{pd.days})
+     	</if>
+     	
+     	order by a.obtain_time desc
+     	
+     	limit #{currentResult} ,#{showCount}
+     </select>
+    <!-- 我的优惠券详情-->
+	<select id="myCouponDetaile" parameterType="pd" resultType="pd">
+	 select 
+	 	a.id as mcid, a.invalid_time,a.if_has_used,a.type, 
+	 	b.id as cdid, b.coupon_name,b.coupon_type,b.discount,b.money,b.no,
+	 	c.validity_days
+     from 
+     	`tb_member_coupon` as a 
+     left join 
+     	`tb_coupon_detail` as b 
+     on 
+     	 a.`fk_coupon_detail_id` = b.id
+     left join 
+     	tb_coupon as c
+     on
+     	 c.coupon_id = b.id	
+     	 	 
+     where 
+     	a.id = #{mcid}
+     </select>
+	
+	<!-- 根据专家id，获取改专家的所有优惠券 -->
+	<select id="getCouponByExpert" parameterType="pd" resultType="pd">
+		 select 
+		 	b.id as id ,a.num as num,b.coupon_name  as name
+		 from `tb_coupon` as a 
+		 left join
+		 	 `tb_coupon_detail` as b 
+		 on 
+		 		a.coupon_id = b.id
+		 where   a.approval_state = '3' and a.expert_id = #{expert_id}	;
+	</select>
+	
+	<select id="getActivityByDetaileId" parameterType="pd" resultType="pd">
+		    select 
+		    	* 
+		    from 
+		    	`tb_coupon_detail` as a 
+		    left join 
+		    	`tb_coupon` as b 
+		    on 
+		    	a.id = b.coupon_id
+		    where a.id = #{id}	
+	</select>
+	
+	<update id="updateMemberCoupon" parameterType="pd">
+		update 
+			tb_member_coupon 
+		set 
+			use_time = #{nowDate} ,if_has_used = 1 
+		where 
+			id = #{mcid}
+	</update>
+	
+		<update id="updateCouponCount" parameterType="pd">
+		update 
+			tb_coupon 
+		set 
+			num = #{num} 
+		where 
+			coupon_id = #{coupon_id}
+	</update>
+	
+	<update id="approve" parameterType="pd">
+	update tb_coupon set
+			approval_state = #{approval_state}
+	where 	coupon_id = #{coupon_id}
+	</update>
+	
+	<!-- 通过优惠券type和experts_id 将其他审核状态为3的更新为9-->
+	<select id="approveByCouponType" parameterType="pd" resultType="pd">
+	update tb_coupon as a set
+			a.approval_state = #{approval_state}
+	where 
+		a.expert_id = #{expert_id} and a.approval_state = '3' and 
+		a.coupon_id in (select id from tb_coupon_detail where  coupon_type = #{coupon_type} and id = a.coupon_id ) 
+	</select>
+	
+</mapper>
