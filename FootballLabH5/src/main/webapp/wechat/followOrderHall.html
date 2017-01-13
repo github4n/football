@@ -17,54 +17,54 @@
 	<div class="header">今日积分跟投方案</div>
 	<div class="blockCon1" >
 		<ul class="listLayout" id="followList">
-			<li class="item_block yapan" id="YP">
-				<div class="item_block_top clearfix">
-					<p class="pull-left align_left exper_name">京城虎哥-亚盘方案</p>
-					<p class="pull-left align_right time countDown0">倒计时：8小时6分钟</p>
-				</div>
-				<div class="item_block_bt clearfix">
-					<p class="pull-left exper_rate" id="ypul">
-						105%<i>预计盈利率</i>
-					</p>
-					<p class="pull-left" >
-						<a class="goOrder" href="javascript:GoToUrl_l('followOrder.html?serviceCode=YP')">
-							立即跟投
-						</a>
-					</p>
-				</div>				
-			</li>
-			<li class="item_block danc" id="DC">
-				<div class="item_block_top clearfix">
-					<p class="pull-left align_left exper_name">京城虎哥-单场方案</p>
-					<p class="pull-left align_right time countDown0">倒计时：8小时6分钟</p>
-				</div>
-				<div class="item_block_bt clearfix">
-					<p class="pull-left exper_rate" id="dcul">
-						105%<i>预计盈利率</i>
-					</p>
-					<p class="pull-left" >
-						<a class="goOrder" href="javascript:GoToUrl_l('followOrder.html?serviceCode=DC')">
-							立即跟投
-						</a>
-					</p>
-				</div>				
-			</li>
-			<li class="item_block ecy" id = "JCECY">
-				<div class="item_block_top clearfix">
-					<p class="pull-left align_left exper_name">京城虎哥-二串一方案</p>
-					<p class="pull-left align_right time countDown0" ></p>
-				</div>
-				<div class="item_block_bt clearfix" >
-					<p class="pull-left exper_rate" id="jcecyul">
-						105%<i>预计盈利率</i>
-					</p>
-					<p class="pull-left" >
-						<a class="goOrder" href="javascript:GoToUrl_l('followOrder.html?serviceCode=JCECY')">
-							立即跟投
-						</a>
-					</p>
-				</div>				
-			</li>			
+<!-- 			<li class="item_block yapan" id="YP"> -->
+<!-- 				<div class="item_block_top clearfix"> -->
+<!-- 					<p class="pull-left align_left exper_name">京城虎哥-亚盘方案</p> -->
+<!-- 					<p class="pull-left align_right time countDown0">倒计时：8小时6分钟</p> -->
+<!-- 				</div> -->
+<!-- 				<div class="item_block_bt clearfix"> -->
+<!-- 					<p class="pull-left exper_rate" id="ypul"> -->
+<!-- 						105%<i>预计盈利率</i> -->
+<!-- 					</p> -->
+<!-- 					<p class="pull-left" > -->
+<!-- 						<a class="goOrder" href="javascript:GoToUrl_l('followOrder.html?serviceCode=YP')"> -->
+<!-- 							立即跟投 -->
+<!-- 						</a> -->
+<!-- 					</p> -->
+<!-- 				</div>				 -->
+<!-- 			</li> -->
+<!-- 			<li class="item_block danc" id="DC"> -->
+<!-- 				<div class="item_block_top clearfix"> -->
+<!-- 					<p class="pull-left align_left exper_name">京城虎哥-单场方案</p> -->
+<!-- 					<p class="pull-left align_right time countDown0">倒计时：8小时6分钟</p> -->
+<!-- 				</div> -->
+<!-- 				<div class="item_block_bt clearfix"> -->
+<!-- 					<p class="pull-left exper_rate" id="dcul"> -->
+<!-- 						105%<i>预计盈利率</i> -->
+<!-- 					</p> -->
+<!-- 					<p class="pull-left" > -->
+<!-- 						<a class="goOrder" href="javascript:GoToUrl_l('followOrder.html?serviceCode=DC')"> -->
+<!-- 							立即跟投 -->
+<!-- 						</a> -->
+<!-- 					</p> -->
+<!-- 				</div>				 -->
+<!-- 			</li> -->
+<!-- 			<li class="item_block ecy" id = "JCECY"> -->
+<!-- 				<div class="item_block_top clearfix"> -->
+<!-- 					<p class="pull-left align_left exper_name">京城虎哥-二串一方案</p> -->
+<!-- 					<p class="pull-left align_right time countDown0" ></p> -->
+<!-- 				</div> -->
+<!-- 				<div class="item_block_bt clearfix" > -->
+<!-- 					<p class="pull-left exper_rate" id="jcecyul"> -->
+<!-- 						105%<i>预计盈利率</i> -->
+<!-- 					</p> -->
+<!-- 					<p class="pull-left" > -->
+<!-- 						<a class="goOrder" href="javascript:GoToUrl_l('followOrder.html?serviceCode=JCECY')"> -->
+<!-- 							立即跟投 -->
+<!-- 						</a> -->
+<!-- 					</p> -->
+<!-- 				</div>				 -->
+<!-- 			</li>			 -->
 		</ul>			
 	</div>
 	<!--
@@ -111,7 +111,7 @@
     var ypDate = "";
     var jcecyDate = "";
     
-    var dcr = 0;var ypr = 0;var jcecyr = 0;
+    var dateArr = new Array();
     $(function () {
     	var d_t_ydm = GetDateStr(0);
         // 绑定方案
@@ -121,6 +121,7 @@
         var ndays, earningRate;
         var serviceCodeArr = {"DC":"dcul","YP":"ypul","JCECY":"jcecyul"};
         
+       	var j = 0;
         for(serviceInfo in serviceCodeArr){
         	var dataList = data[serviceInfo];
         	for (var i = 0; i < dataList.length; i++) {
@@ -136,10 +137,10 @@
               	  	if(notStartNum!=undefined && notStartNum>0){
                			rate = (earningRate*100).toFixed(0);
                			l = 1;
-               			
-               			if(serviceInfo == "DC"){
+               			if(serviceInfo == "DC" && dataList[i].service_name != "单场"){
 		           			dcDate = dataList[i].startDate;
-                   			dcr =  (earningRate*100).toFixed(0);
+		           			dateArr[j] = dataList[i].startDate;j++;
+                   			html += "<li class=\"item_block danc\" id = \"DC\""+i+">";
                    			html += "<div class=\"item_block_top clearfix\">";
                    			html += "<p class=\"pull-left align_left exper_name\">单场方案 - "+ dataList[i].service_name +"</p>";
                    			html += "<p class=\"pull-left align_right time countDown0\" ></p>";
@@ -147,12 +148,15 @@
                    			html += "<div class=\"item_block_bt clearfix\" >";
                    			html += "<p class=\"pull-left exper_rate\" id=\"dcul\""+i+">"+rate+"<i>预计盈利率</i></p>";
                    			html += "<p class=\"pull-left\" ><a class=\"goOrder\"  onclick=\"GoToNextUrl('expertPlan_detail.html?serviceType=" + dataList[i].service_type +"&showType=3"+ "&earningRate="+rate+"&gameDate="+ d_t_ydm +"&endDate="+dataList[i].startDate+"&type=" + dataList[i].type + "&serviceId=" + dataList[i].id + "&service_code=" + dataList[i].service_code + "&companyId=" + dataList[i].fk_company_id + "&experts_code=" + getQueryString("experts_code")+ "&service_name=" + escape(dataList[i].service_name) + "','" + dataList[i].service_name + "')\">";
-                    		html +="立即跟投</a></p></div>";
-        					$("#"+serviceInfo).html(html);
+                    		html +="立即跟投</a></p></div></li>";
+                    		var a = document.getElementById("followList");
+       					 	$(a).html(html);
+        					$("#"+serviceInfo+i).html(html);
                    		}else
-                   		if(serviceInfo == "YP"){
+                   		if(serviceInfo == "YP" && dataList[i].service_name != "亚盘"){
 		           			ypDate = dataList[i].startDate;
-                   			ypr =  (earningRate*100).toFixed(0);
+		           			dateArr[j] = dataList[i].startDate;j++;
+                   			html1 += "<li class=\"item_block yapan\" id = \"YP\""+i+">";
                    			html1 += "<div class=\"item_block_top clearfix\">";
                    			html1 += "<p class=\"pull-left align_left exper_name\">亚盘方案 - "+ dataList[i].service_name +"</p>";
                    			html1 += "<p class=\"pull-left align_right time countDown0\" ></p>";
@@ -160,13 +164,14 @@
                    			html1 += "<div class=\"item_block_bt clearfix\" >";
                    			html1 += "<p class=\"pull-left exper_rate\" id=\"ypul\""+i+">"+rate+"<i>预计盈利率</i></p>";
                    			html1 += "<p class=\"pull-left\" ><a class=\"goOrder\"  onclick=\"GoToNextUrl('expertPlan_detail.html?serviceType=" + dataList[i].service_type +"&showType=3"+ "&earningRate="+rate+"&gameDate="+ d_t_ydm +"&endDate="+dataList[i].startDate+"&type=" + dataList[i].type + "&serviceId=" + dataList[i].id + "&service_code=" + dataList[i].service_code + "&companyId=" + dataList[i].fk_company_id + "&experts_code=" + getQueryString("experts_code")+ "&service_name=" + escape(dataList[i].service_name) + "','" + dataList[i].service_name + "')\">";
-                    		html1 +="立即跟投</a></p></div>";
-       					 	$("#"+serviceInfo).html(html1);
+                    		html1 +="立即跟投</a></p></div></li>";
+                    		var a = document.getElementById("followList");
+       					 	$(a).append(html1);
+       					 	$("#"+serviceInfo+i).html(html1);
                    		}else
                    		if(serviceInfo == "JCECY"){
 		           			jcecyDate = dataList[i].startDate;
-                   			jcecyr =  (earningRate*100).toFixed(0);
-                   			
+		           			dateArr[j] = dataList[i].startDate;j++;
                    			html2 += "<li class=\"item_block ecy\" id = \"JCECY\""+i+">";
                    			html2 += "<div class=\"item_block_top clearfix\">";
                    			html2 += "<p class=\"pull-left align_left exper_name\">二串一 - "+ dataList[i].service_name +"</p>";
@@ -176,7 +181,8 @@
                    			html2 += "<p class=\"pull-left exper_rate\" id=\"jcecyul\""+i+">"+rate+"<i>预计盈利率</i></p>";
                    			html2 += "<p class=\"pull-left\" ><a class=\"goOrder\"  onclick=\"GoToNextUrl('expertPlan_detail.html?serviceType=" + dataList[i].service_type +"&showType=3"+ "&earningRate="+rate+"&gameDate="+ d_t_ydm +"&endDate="+dataList[i].startDate+"&type=" + dataList[i].type + "&serviceId=" + dataList[i].id + "&service_code=" + dataList[i].service_code + "&companyId=" + dataList[i].fk_company_id + "&experts_code=" + getQueryString("experts_code")+ "&service_name=" + escape(dataList[i].service_name) + "','" + dataList[i].service_name + "')\">";
                     		html2 +="立即跟投</a></p></div></li>";
-       					 	document.getElementById("followList").append(html2);
+       					 	var a = document.getElementById("followList");
+       					 	$(a).append(html2);
        					 	$("#"+serviceInfo+i).html(html2);
                    		}
                			
@@ -184,6 +190,8 @@
                 }
                 
         	$("#"+serviceCodeArr[serviceInfo]+i).text(rate+"%");
+  
+        	
         	}
         }
 //         if(l != 1){
@@ -193,16 +201,17 @@
         Init();
     	addVisitInfo();
 //     	sDate = GetDateYMDHMS2(sDate);
+		var timArr = new Array();
+		for(var i = 0;i<dateArr.length;i++){
+			
+    	var date = new Date(dateArr[i]);
+    	timArr[i]={'year':date.getFullYear(),'month':date.getMonth() + 1,'day':date.getDate(),'hour':date.getHours(),'minute':date.getMinutes()}
+    			
+		}
     	var dcdate = new Date(dcDate);
     	var ypdate = new Date(ypDate);
     	var jcecydate = new Date(jcecyDate);
-    	var countDown=new Timer('.countDown0',{
-    	timArr:[
-    			{'year':ypdate.getFullYear(),'month':ypdate.getMonth() + 1,'day':ypdate.getDate(),'hour':ypdate.getHours(),'minute':ypdate.getMinutes()},
-    			{'year':dcdate.getFullYear(),'month':dcdate.getMonth() + 1,'day':dcdate.getDate(),'hour':dcdate.getHours(),'minute':dcdate.getMinutes()},
-    			{'year':jcecydate.getFullYear(),'month':jcecydate.getMonth() + 1,'day':jcecydate.getDate(),'hour':jcecydate.getHours(),'minute':jcecydate.getMinutes()}
-    		],
-    		intrval:60000},"剩余时间")
+    	var countDown=new Timer('.countDown0',{timArr,intrval:60000},"剩余时间")
     });
 
     function GoToNextUrl(nexurl, name) {

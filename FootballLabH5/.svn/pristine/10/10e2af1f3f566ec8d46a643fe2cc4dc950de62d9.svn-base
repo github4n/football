@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>专家排行</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/swiper.min.js"></script>
+    <script src="js/jquery.SuperSlide.2.1.1.js"></script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/swiper.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="css/expertRank.css"/>
+    <style type="text/css">
+       body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+    </style>
+</head>
+<body style="padding: 0">
+	<div id="leftTabBox" class="slideTxtBox">
+         <div class="hd">
+             <ul>
+                 <li><span>单场</span></li>
+                 <li><span>亚盘</span></li>
+                 <li><span class="noborder">2串1</span></li>
+             </ul>
+         </div>
+         <div class="bd">
+             <ul class="list_layout" id="dcul">
+                   
+             </ul>  
+
+            <ul class="list_layout" id="ypul">
+                   
+             </ul>  
+
+            <ul class="list_layout" id="jcecyul">
+                   
+             </ul>  
+         </div>
+     </div> 	
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script src="js/marquee.js"></script>
+    <script>
+
+        var sharttitle, shartcontent;
+        $(function () {
+
+            sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+            shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+            Init();
+            
+            var data = JSON.parse(GetData(fl_url.getExpertRanking, {}));
+            var serviceCodeArr = {"DC":"dcul","YP":"ypul","JCECY":"jcecyul"};
+        	for(serviceInfo in serviceCodeArr){
+        		var html = "";
+            	var dataList = data[serviceInfo];
+            	for (var i = 0; i < dataList.length; i++) {
+            		var earningRate = dataList[i].earningRate==undefined?0:dataList[i].earningRate;
+            		html+="<li class='item_block' onclick=\"GoToNextUrl('expertPlan.html?serviceType=" + dataList[i].service_type + "&type=" + dataList[i].type + "&serviceId=" + dataList[i].id + "&service_code=" + dataList[i].service_code + "&companyId=" + dataList[i].fk_company_id + "&experts_code=" + getQueryString("experts_code")+ "&service_name=" + escape(dataList[i].service_name) + "','" + dataList[i].service_name + "')\">";
+					html+="<div>"+(i+1)+"</div>";
+					html+="<div>"+dataList[i].service_name+"</div>";
+					html+="<div>30天盈利率<i class='hignColorSize'>"+(earningRate*100).toFixed(0)+"%</i>";
+					html+="</div></li>";
+            	}
+            	$("#"+serviceCodeArr[serviceInfo]).html(html);
+            }
+            
+            jQuery(".slideTxtBox").slide({trigger:"click"});
+        });
+        
+        function GoToNextUrl(nexurl, name) {
+            sessionStorage.setItem("selectPlanName", name);
+            sessionStorage.setItem("selectPlanUrl", nexurl);
+            window.open(nexurl, "_top");
+        }
+
+    </script>
+</body>
+</html>

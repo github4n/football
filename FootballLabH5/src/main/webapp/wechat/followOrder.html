@@ -73,7 +73,7 @@
        		 + "&companyId=" +getQueryString("companyId") + "&service_name=" +getQueryString("service_name");
         }
 
-//支付
+		//积分支付
         var temp_click = 0;
         function playCustomized() {
             // 验证积分是否足够
@@ -99,7 +99,8 @@
             if (mcid == undefined || $.trim(mcid).length == 0) {
                 mcid = "";
             }
-
+			var t = getQueryString("endTime");
+           var stragegyTime = GetDateYMDHMS2(t);
             var data = GetData(fl_url.followPayConfig, {
                 serviceId: getQueryString("serviceId"),
                 phoneNum: fl_user.Mobile(),
@@ -107,26 +108,18 @@
                 pointsNum: intergal,
                 type:1,
                 followOrder:1,
-                stragegy_time:getQueryString("endTime"),
+                stragegy_time:stragegyTime,
                 win_amount:intergalNum
                 
             });
             console.log(data);
             // 验证支付
-            if (data == "{msg:'payFail'}") {
-                tishi_error("支付暂不可用，稍后再试。");
+            if (data != "{msg:'success'}") {
+                tishi_error("跟单失败，稍后再试。");
                 temp_click = 0;
                 return;
             }
             
-            data = JSON.parse(data);
-
-//             if (data.appId == undefined) {
-//                  location.href = "myCustomized_detail.html?tid=" + data.tid + "&experts_code=" + getQueryString("experts_code");
-//             }
-//             else {
-//                 PayWeiXin(data.appId, data.timeStamp, data.nonceStr, data.package, data.signType, data.paySign, data.tid);
-//             }
             temp_click = 0;
         }
   //数据初始化      
@@ -136,7 +129,7 @@
         	var serviceCode = getQueryString("service_code");
         	var followTime = getQueryString("endTime");
         	var earningRate = getQueryString("earningRate");
-        	var service_name = getQueryString("service_name");
+        	var service_name = getQueryString("service_name"));
         	
         	time = GetDateYMDHMS2(followTime);
        
@@ -156,7 +149,7 @@
 
             dataParam = {
                 beginDate: d_t_ydm,
-                days: 30,
+                days: 90,
                 type: getQueryString("type"),
                 serviceId: getQueryString("serviceId"),
                 serviceType: getQueryString("serviceType"),
@@ -248,7 +241,7 @@
                 for (var i = 0; i < data.length; i++) {
 
                    tz = MyNum;//本金
-                   zj += parseInt(data[i].number3);//盈利
+                   zj += Math.round(data[i].number3);//盈利
                    
             	} 
       	  	}

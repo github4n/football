@@ -65,7 +65,7 @@
                     </div>
                     <p class="icontext">一场夺分</p>
                 </li>
-                <li onclick="javascript:GoToUrl_T('duidu_index.html');" id="fan">
+                <li onclick="javascript:GoToUrl_T('expertRanking.html');">
                     <div class="circle">
                         <img src="./img/ico_zjph.png" alt="夺分">
                     </div>
@@ -252,7 +252,7 @@
             var html = "";
             var ndays, earningRate;
             var serviceCodeArr = {"DC":"dcul","YP":"ypul","JCECY":"jcecyul"};
-            var showType = 0;
+            var showType = "0";
             
             for(serviceInfo in serviceCodeArr){
             	var dataList = data[serviceInfo];
@@ -261,14 +261,17 @@
             			continue;
             		}
                		earningRate = dataList[i].earningRate==undefined?0:dataList[i].earningRate;
-               		html += "<li onclick=\"GoToNextUrl('expertPlan.html?serviceType=" + dataList[i].service_type + "&type=" + dataList[i].type +"&showType="+showType+ "&serviceId=" + dataList[i].id + "&service_code=" + dataList[i].service_code + "&companyId=" + dataList[i].fk_company_id + "&experts_code=" + getQueryString("experts_code")+ "&service_name=" + escape(dataList[i].service_name) + "','" + dataList[i].service_name + "')\">";
-                    html += "<dl><dt class='bigSize'>"+dataList[i].service_name;   
-                    
                     var num = dataList[i].strategyNum;
                     var notStartNum = dataList[i].notStartNum==undefined?0:dataList[i].notStartNum;
-                    if(num!=undefined){
+               		if(num != undefined && notStartNum!=undefined && notStartNum>0){
+                   		showType = "3"; 
+               		}
+               		var rate = parseInt((earningRate * 100).toFixed(0));
+               		html += "<li onclick=\"GoToNextUrl('expertPlan.html?serviceType=" + dataList[i].service_type + "&earningRate="+rate+"&endTime="+dataList[i].startDate+"&type=" + dataList[i].type +"&showType="+showType+ "&serviceId=" + dataList[i].id + "&service_code=" + dataList[i].service_code + "&companyId=" + dataList[i].fk_company_id + "&experts_code=" + getQueryString("experts_code")+ "&service_name=" + escape(dataList[i].service_name) + "','" + dataList[i].service_name + "')\">";
+                    html += "<dl><dt class='bigSize'>"+dataList[i].service_name;   
+                    
+                    if(notStartNum>0){
                    		html+="<i class='rightTopIco'>有料</i>";
-                   		showType = 3;
                     }
                     html +="</dt>";
                     html +="<dd><p class='highColorBig'>"+(earningRate*100).toFixed(0)+"%</p>";

@@ -155,10 +155,9 @@
 	</delete>
 	
 	<select id="selectAllIsUseService" resultType="pd">
-		select id,service_code,service_type 
+		select id,service_code,service_type,service_name,fk_experts_id as experts_id
 		from tb_service
 		where is_used=1
-		and fk_experts_id='b3d9fb05f9b74aeb9e1544922fbcf079'
 	</select>
 	
 	<select id="selectTodayStrategyNum" resultType="pd" parameterType="map">

@@ -249,7 +249,7 @@ public class FollowOrderService {
 						pointsObtainPd.put("obtain_time",  Tools.date2Str(new java.util.Date()));
 						pointsObtainPd.put("type",  "10");
 						pointsObtainPd.put("remarks",  "跟单投注");
-						pointsObtainPd.put("remain", serviceResult.getNumber3()+(Integer)member.get("membe_point"));
+						pointsObtainPd.put("remain", serviceResult.getNumber3()+(Integer)member.get("membe_point"));//剩余积分
 						dao.save("PointsMapper.savePointsObtain", pointsObtainPd);
 					
 				}

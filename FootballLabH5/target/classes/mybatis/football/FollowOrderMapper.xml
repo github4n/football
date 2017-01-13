@@ -86,4 +86,30 @@
 			`tb_strategy_follow`
 		ORDER BY id
 	</select>
+	
+	<select id="getServiceFollowStatus" parameterType="pd" resultType="integer">
+		SELECT COUNT(1)
+		FROM 
+			`tb_strategy_follow`
+		WHERE service_id = #{pd.serviceId}
+	</select>
+	
+	<select id="getMemberList" parameterType="pd" resultType="pd">
+		SELECT DISTINCT b.member_id,b.`membe_point`
+		FROM 
+			`tb_strategy_follow` a,`tb_member` b
+		WHERE a.`member_id` = b.`member_id` AND service_id = #{pd.serviceId}
+	</select>
+	
+	<update id="updateWinAmount" parameterType="pd">
+		UPDATE `tb_strategy_follow` 
+		SET win_amount = #{pd.win_amount}
+		WHERE service_id = #{pd.serviceId}
+	</update>
+	
+	<update id="updateProfit" parameterType="pd">
+		UPDATE `tb_strategy_follow`
+		SET profit_amount = (win_amount - input_amount)
+		WHERE service_id = #{pd.serviceId}
+	</update>
 </mapper>

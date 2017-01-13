@@ -99,4 +99,13 @@
   	order by record_date desc
   	limit 10
   </select>
+  
+  <select id="getServiceRecordByRecordDate" parameterType="map" resultType="java.lang.Integer">
+  	select id
+  	from tb_service_profit_history
+  	where service_id=#{serviceId}
+  	and record_date=#{recordDate}
+  </select>
+  
+  
 </mapper>

@@ -152,57 +152,9 @@
                 return;
             }
             
-             var today = GetDateStr(0);
-             var showdd = false;
-             /* if(getQueryString("experts_code")=="caishen" && (memberInfo.member_id=="b962bad7d2894826a7801cefb5ffdc01" || memberInfo.member_id=="5b50d89a93cf40978596cb010ac26c9e" || memberInfo.member_id=="8fef341dbe904aa998ad476de285e736" || memberInfo.member_id=="4d986b867d7042bbab0645ada64bbc05" || memberInfo.member_id=="673ef650bc574c2fb5e4bda382e676e1" || memberInfo.member_id=="1d2519a502544a4e8ae2d4faf474097b")){
-             	showdd = true;
-             }else  */
-             if(getQueryString("experts_code")=="caishen" && (today=="2016-11-18" || today=="2016-11-19" || today=="2016-11-20")){
-            	showdd = true;
-             }
-             
-             
-
-            /* if (is_pk_b && GetDateDiffDay(getQueryString("gameDate"), d_t_ydm).day == 0 && new Date().getHours() < 17 && memberInfo != undefined && memberInfo.hasPK == 0) {
-                switch (getQueryString("service_code")) {
-                    case "JCSPF":// 竞彩胜平负
-                        $("#apkJB").show();
-                    case "JCRQSPF":// 竞彩让球胜平负
-                         if(showdd){//dd
-		                	$("#aPKbtn").css("width","49%");
-		                	$("#aDDbtn").css("width","49%");
-		                	$("#aPKbtn").show();
-		                	$("#aDDbtn").show();
-		                }else{
-		                	$("#aPKbtn").show();
-		                }
-                        break;
-                }
-            }else if(getQueryString("service_code")=="JCSPF" && showdd){
-            	$("#aDDbtn").show();
-            }
-            
-          if (getQueryString("service_code")=="DC" && GetDateDiffDay(getQueryString("gameDate"), d_t_ydm).day == 0 && memberInfo.hasPK == 0) {
-               if(showdd){//dd
-                	$("#aPKbtn").css("width","49%");
-                	$("#aDDbtn").css("width","49%");
-                	$("#aPKbtn").show();
-                	$("#aDDbtn").show();
-                }else{
-                	$("#aPKbtn").show();
-                }
-          }else if(getQueryString("service_code")=="DC" && GetDateDiffDay(getQueryString("gameDate"), d_t_ydm).day == 0 && showdd){
-          		$("#aDDbtn").show();
-          }else if (memberInfo != undefined && memberInfo.hasTransaction == 0) {
-                $("#aDZbtn").show();
-          }
-          
-          if(getQueryString("service_code")=="YP" && showdd){
-          		$("#aDDbtn").show();
-          } */
           
             var fenxiang_d = GetDateDiffDay(getQueryString("gameDate"), GetDateYMDHMS());
-            if (fenxiang_d.day == 0 && sessionStorage.selectPlanName == undefined || fenxiang_d.day == 1 && fenxiang_d.hours < 11 && sessionStorage.selectPlanName == undefined || fenxiang_d.day == 1 && fenxiang_d.hours == 11 && fenxiang_d.minutes < 30 && sessionStorage.selectPlanName == undefined) {
+            if ((getQueryString("showType")==null) && (fenxiang_d.day == 0 && sessionStorage.selectPlanName == undefined || fenxiang_d.day == 1 && fenxiang_d.hours < 11 && sessionStorage.selectPlanName == undefined || fenxiang_d.day == 1 && fenxiang_d.hours == 11 && fenxiang_d.minutes < 30 && sessionStorage.selectPlanName == undefined)) {
                 location.href = "expertPlan.html?serviceType=" + dataParam.serviceType + "&type=" + dataParam.type + "&serviceId=" + dataParam.serviceId + "&service_code=" + dataParam.service_code + "&companyId=" + dataParam.companyId + "&experts_code=" + getQueryString("experts_code");
                 return;
             }
@@ -218,23 +170,6 @@
             // 绑定列表数据
             BindData(data);
             loaded();
-            //js中先通过比赛时间判断
-            /* if(getQueryString("service_code")=='DC'){
-	             if(memberInfo.hasPK != 0){
-	                $("#aPKbtn").hide();
-	                if(showdd){//dd
-	                	$("#aDDbtn").css("width","100%");//dd
-	                }
-	                
-	             }else if (typeof (datas) != undefined && datas != null && datas.length > 0) {
-           	 	   if(d_temp_n>new Date(datas[datas.length-1].time.replace(/-/g, "/").substring(0, 18))){//如果当前时间大于最后一场比赛的开始时间 隐藏pk赛
-            	 	 $("#aPKbtn").hide();
-            	 	 if(showdd){//dd
-	                	$("#aDDbtn").css("width","100%");//dd
-	                 }
-            	   }
-           	     }
-            } */
             var title = "";
             switch (getQueryString("service_code")) {
                 case "JCECY"://竞彩二串一
@@ -275,21 +210,6 @@
             
             $("#pTitle1").html("<a href=\"expertPlan.html?serviceType=" + dataParam.serviceType + "&type=" + dataParam.type + "&serviceId=" + dataParam.serviceId + "&service_code=" + dataParam.service_code + "&companyId=" + dataParam.companyId + "&experts_code=" + getQueryString("experts_code") + "\" class=\"pull-left\"></a>" + title + '<img src="img/home.png" onclick="location.href=\'index.html?experts_code=' + getQueryString("experts_code") + '\';" style="float:right;margin-top:10px;width:24px;height:24px;" />');
             document.title = title;
-           /*  if (GetDateDiffDay(getQueryString("gameDate"), d_t_ydm).day == 0) {
-           		 if (getQueryString("service_code") == "JCSPF" && fl_user.focus_status() == 1 || getQueryString("service_code") == "JCRQSPF" && fl_user.focus_status() == 1) {
-                   	if(d_temp_n.getHours() >= 17){
-                   		alert_error("<lable style=\"color:#000000;font-size:16px;\">温馨提示</lable><br><div style=\"text-align:left;padding-left:10px;color:#000;line-height:24px;\">竞彩胜平负方案仅供参考，若竞彩未对推荐的比赛开售单关投注，则投注时需再全包一场做2串1投注。</div>", "确认", function () { });
-              	    }
-            	 }
-            	if (getQueryString("service_code") == "DC" && fl_user.focus_status() == 1 || getQueryString("service_code") == "YP" && fl_user.focus_status() == 1) {
-	            	
-            	    if (typeof (datas) != undefined && datas != null && datas.length > 0) {
-            	 	   if(new Date(datas[datas.length-1].time.replace(/-/g, "/").substring(0, 18))>d_temp_n){
-	            	 	alert_error("<lable style=\"color:#000000;font-size:16px;\">温馨提示</lable><br><div style=\"text-align:left;padding-left:10px;color:#000;line-height:24px;\">1.由于赔率变化，方案数据可能变化<br/>2.赛前半小时为最终方案数据<br/>3.盈利统计以赛前半小时的方案数据为准</div>", "确认", function () { });
-	            	   }
-            	    }
-                }
-            } */
             $("#pTitle2").text(title);
 
             var ispkdata = GetData(fl_url.hasPkBettingGame, { serviceId: getQueryString("serviceId"), serviceType: getQueryString("serviceType"), companyId: getQueryString("companyId") });
@@ -305,13 +225,13 @@
             
             //2017-01-09 改版
             var showType = getQueryString("showType");
-            if(showType!=undefined && showType==2){
+            if(showType!=null && showType==2){
             	$("#guessProfit").show();
-            	$("#guess").attr("href","guessProfitPay.html?experts_code="+getQueryString("experts_code")+"&serviceId="+getQueryString("serviceId"));
+            	$("#guess").attr("href","javascript:GoToGuessProfit()");
             }
-            if(showType != undefined && showType == 3){
+            if(showType != undefined && showType == "3"){
             	$("#follow").show();
-            	$("#followOrder").attr("href","followOrder.html?experts_code="+getQueryString("experts_code")+"&serviceType=" + getQueryString("serviceType") + "&earningRate="+getQueryString("earningRate")+"&endTime="+getQueryString("endDate")  +"&type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&service_code=" + getQueryString("service_code") + "&companyId=" + getQueryString("companyId") + "&service_name=" + getQueryString("service_name"));
+            	$("#followOrder").attr("href","followOrder.html?experts_code="+getQueryString("experts_code")+"&serviceType=" + getQueryString("serviceType") + "&earningRate="+getQueryString("earningRate")+"&endTime="+getQueryString("endDate")  +"&type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&service_code=" + getQueryString("service_code") + "&service_name=" + getQueryString("service_name")+ "&companyId=" + getQueryString("companyId") );
             	
             }
         });
@@ -354,14 +274,9 @@
                 html += "";
             }
 
-            //if (sessionStorage.zj_temp != undefined) {
-            //    zj = zj - sessionStorage.zj_temp;
-            //    zt = zt - sessionStorage.yy_temp;
-            //}
-
             $("#lblZt").text(zt);
             $("#lblZj").text(parseInt(zj));
-            $("#profitId").text((parseInt(((parseInt(zj) - zt) / zt ) * 100)));
+            $("#profitId").text((Math.round(((parseInt(zj) - zt) / zt ) * 100)));
 
             $("#list").append(html);
             if($("#isYuYing").val()=="false"){
@@ -370,28 +285,18 @@
         }
         
         function GoToFanXian(){
-        
         	location.href = "duidu_index.html?experts_code=" + getQueryString("experts_code") +"&serviceId=" + getQueryString("serviceId");
+        }
         
-        	/* var param = {memberId:fl_user.MemberId(),serviceId:getQueryString("serviceId")};
-        	var flag = false;
-        
-        	$.ajax({
-		        type: "post",
-		        url: fl_app.AjaxHome+"/webChat/validateMemberCanDuiDu",
-		        data: param,
-		        async: false,
-		        datatype: "json",
-		        success: function (data) {
-		        	var result = JSON.parse(data)
-		        	flag = result.flag;
-		        },
-		    });
-		    if(flag){
-		    	location.href = "duidu_index.html?experts_code=" + getQueryString("experts_code") +"&serviceId=" + getQueryString("serviceId");
-		    }else{
-		    	alert_error("<lable style=\"color:#000000;font-size:16px;\">温馨提示</lable><br><div style=\"text-align:left;color:#000;line-height:24px;margin-left:8px;\">此玩法您已参与，每个玩法当天仅能参与一次，感谢您的参与，请选择其他玩法继续参与！</div>", "确定", function () {});
-		    } */
+        function GoToGuessProfit(){
+        	var data = GetData(fl_url.getGuessProfitInfoById, {service_id:getQueryString("serviceId")});
+        	var firstGameTime = data.service.firstGameTime;
+        	if(firstGameTime<new Date().getTime()){
+        		alert_error("<lable style=\"color:#000000;font-size:16px;\">温馨提示</lable><br><div style=\"text-align:center;color:#000;line-height:24px;margin-left:8px;\">竞猜已截止！</div>", "确定", function () {});
+				return;        	
+        	}else{
+	        	location.href = "guessProfitPay.html?experts_code="+getQueryString("experts_code")+"&serviceId="+getQueryString("serviceId")
+        	}
         }
 
     </script>

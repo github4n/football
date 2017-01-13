@@ -250,7 +250,6 @@ function PayWeiXinByPoint(appId, timestamp, nonceStr, p, signType, paySign,tid,t
                                  }, function () {//跳转到一场夺分页面
                                 	 location.href="guessGame.html?experts_code="+getQueryString("experts_code");
                                  }, "一场夺分", "专家方案");
-     			  
             	 }else if(type == 3){
             		 confirm_error1("跟单成功"
             				 ,function(){//查看详情

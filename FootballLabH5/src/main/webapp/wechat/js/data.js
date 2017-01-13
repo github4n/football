@@ -41,6 +41,7 @@ var fl_url = {
     exchange:"/webChat/exchange?experts_code=" + getQueryString("experts_code"),//积分兑换页面数据
     validateCanRegister:"/webChat/validateCanRegister?experts_code=" + getQueryString("experts_code"),//验证用户是否可注册
     getTodayGameInfo:"/webChat/getTodayGameInfo?experts_code=" + getQueryString("experts_code"),//获取当日比赛信息
+    getExpertRanking:"/webChat/getExpertRanking?experts_code=" + getQueryString("experts_code"),//获取专家排行信息
     
     getGuessProfitList:"/webChat/getGuessProfitList?experts_code=" + getQueryString("experts_code"),//获取竞猜积分盈亏列表
     getGuessProfitInfoById:"/webChat/getGuessProfitInfoById?experts_code=" + getQueryString("experts_code"),//获取竞猜积分盈亏详情信息

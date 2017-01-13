@@ -161,8 +161,10 @@
             <section class="padding8" style="background: #303f60; position: relative; z-index: 3; height: 40px;">
                 <!--<h3 class="timeZtit"></h3>-->
                 <div id="fangan1">
-                	<a class="dbtn dbtn123 ctan" id="btnFanan" style="width: 98%;height:40px;line-height:40px;margin-top:10px;margin-left:1%;margin-bottom:0px; border-radius: 5px; display: none;text-decoration:none;font-weight:bold;" href="#">
-                	</a>
+                	<a class="dbtn dbtn123 ctan showFangAn" id="guessProfit" style="width: 49%;height:40px;line-height:40px;margin-top:10px;margin-left:1%;margin-bottom:0px; border-radius: 5px; display: none;text-decoration:none;font-weight:bold;float:left;" href="#">
+                	竞猜盈亏</a>
+                	<a class="dbtn dbtn123 ctan showFangAn" id="followOrder" style="width: 49%;height:40px;line-height:40px;margin-top:10px;margin-left:1%;margin-bottom:0px; border-radius: 5px; display: none;text-decoration:none;font-weight:bold;float:left;" href="#">
+                	立即跟投</a>
                 </div>
                 
                 <div id="fangan2">
@@ -649,33 +651,23 @@
                 return;
             }
 
-            $("#btnFanan").hide();
+            $(".showFangAn").hide();
             $("#register").show();
             $(".padding8").hide();
             $("#list").hide();
             myScroll.refresh();
         }
 
-        function showPlan(date) {
+        function showPlan(date,showType) {
         	
 
             // 如果没有定制，直接跳转到定制页面
             if (memberInfo != undefined && memberInfo.hasTransaction == 0) {
-               /*  var text = "每17:00";
-                switch (getQueryString("service_code")) {
-                    case "YP":// 压盘
-                    case "DC":// 单场
-                        text = "将在赛前半小时";
-                        break;
-                }
-
-
-                confirm_error1("<lable style=\"color:#000000;font-size:16px;\">定制说明</lable><br><div style=\"text-align:left;color:#000;line-height:24px;\">1、定制后，方案策略" + text + "发布；<br>2、每日上午11:30进行赛事更新；<br>3、推荐方案仅供参考，请到正规渠道购彩。</div>", function () {
-                    location.href = "addCustomizedInfo.html?service_code=" + getQueryString("service_code") + "&serviceId=" + getQueryString("serviceId") + "&experts_code=" + getQueryString("experts_code");
-                }, function () { },"取消","确认");
-                return; */
                 if(notStartNum>0){
-                	 sessionStorage.setItem("expertTodayPlanUrl", "expertPlan_detail.html?type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name")));
+                	 sessionStorage.setItem("expertTodayPlanUrl", "expertPlan_detail.html?type=" + getQueryString("type") +"&showType="+getQueryString("showType")+ "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name")));
+
+                	sessionStorage.setItem("expertTodayPlanUrl", "expertPlan_detail.html?showType="+showType+"&type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name")));
+
                 	location.href = "addCustomizedInfo.html?service_code=" + getQueryString("service_code") + "&serviceId=" + getQueryString("serviceId") + "&experts_code=" + getQueryString("experts_code");
                 }else{
                 	showZanWuAlert();
@@ -683,7 +675,9 @@
             	return;
             }
 
-            sessionStorage.setItem("selectPlanUrl", "expertPlan_detail.html?type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name")));
+            sessionStorage.setItem("selectPlanUrl", "expertPlan_detail.html?type=" + getQueryString("type") +"&showType="+getQueryString("showType")+ "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name")));
+
+          //  sessionStorage.setItem("selectPlanUrl", "expertPlan_detail.html?showType="+showType+"&type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name")));
 
             // 如果定制过，按流程走
             if (getQueryString("service_code") == "JCSPF" || getQueryString("service_code") == "JCRQSPF") {
@@ -691,7 +685,11 @@
                 if (new Date().getHours() >= 17 && memberInfo != undefined && memberInfo.hasLook == 0 || t_date.day == 1 && t_date.hours < 11 && memberInfo != undefined && memberInfo.hasLook == 0 || t_date.day == 1 && t_date.hours == 11 && t_date.minutes < 30 && memberInfo != undefined && memberInfo.hasLook == 0) {
 
                     if (memberInfo.hasPK != "0") {
-                        location.href = "expertPlan_detail.html?type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name"));
+
+                        location.href = "expertPlan_detail.html?type=" + getQueryString("type") +"&showType="+getQueryString("showType")+ "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name"));
+
+              //          location.href = "expertPlan_detail.html?showType="+showType+"&type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name"));
+
                         return;
                     }
 
@@ -699,7 +697,11 @@
                     var ispkdata = GetData(fl_url.hasPkBettingGame, { serviceId: getQueryString("serviceId"), serviceType: getQueryString("serviceType"), companyId: getQueryString("companyId") });
                     ispkdata = JSON.parse(ispkdata);
                     if (ispkdata.hasPkBettingGame == false) {
+
                         location.href = "expertPlan_detail.html?type=" + getQueryString("type") +"&showType="+getQueryString("showType")+ "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name"));
+
+                   //     location.href = "expertPlan_detail.html?showType="+showType+"&type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name"));
+
                         return;
                     }
 
@@ -726,12 +728,20 @@
                                         phoneNum: fl_user.Mobile(),
                                         serviceId: getQueryString("serviceId")
                                     });
-                                    location.href = "expertPlan_detail.html?type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name"));
+
+                                    location.href = "expertPlan_detail.html?type=" + getQueryString("type") +"&showType="+getQueryString("showType")+ "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name"));
+
+                            //        location.href = "expertPlan_detail.html?showType="+showType+"&type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name"));
+
                                 }, "查看方案", "与专家PK");
                     return;
                 }
             }
-            location.href = "expertPlan_detail.html?type=" + getQueryString("type") +"&showType="+getQueryString("showType")+ "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name"));
+
+            location.href = "expertPlan_detail.html?type=" + getQueryString("type")+ "&earningRate="+getQueryString("earningRate")+"&endTime="+getQueryString("endTime") +"&showType="+getQueryString("showType")+ "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name"));
+
+           // location.href = "expertPlan_detail.html?showType="+showType+"&type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name"));
+
             
         }
 
@@ -787,34 +797,19 @@
                 for (var i = 0; i < data.length; i++) {
 
                     if (GetDateDiffDay(data[i].date, d_t_ydm).day == 0 || userinfo.phone_number == undefined) {
-                        $("#btnFanan").show();
-                        $("#btnFanan").html("查看" + d_t_ydm + " 方案推荐" + jb_h +"<div class='popicon'><img width='100%' src='img/hongbao.png'/></div>");
+                        $(".showFangAn").show();
                         if (userinfo.phone_number == undefined || userinfo.focus_status != 1) {
-                            $("#btnFanan").attr("href", "javascript:showRegister();");
-                            $("#duidu").attr("href", "javascript:showRegister();");
+                            $(".showFangAn").attr("href", "javascript:showRegister();");
                         } else {
-                            $("#btnFanan").attr("href", "javascript:showPlan('" + data[i].date + "');");
-                            fanxianUrl = "duidu_index.html?type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + data[i].date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name"));
+                            $("#followOrder").attr("href", "javascript:showPlan('" + data[i].date + "',1);");
+                            $("#guessProfit").attr("href", "javascript:showPlan('" + data[i].date + "',2);");
                         }
                         $("#wrapper").css("bottom", "0px");
-                        if(showdd){
-                         	$("#btnFanan").html("查看方案推荐");
-                        }
                         if (GetDateDiffDay(data[i].date, d_t_ydm).day == 0)
                             continue;
                     } else if (i == 0) {
-                        $("#btnFanan").show();
-                        //var t_date = GetDateDiffDay(data[i].date, d_t_ydm);
-                        var t_date = new Date();
-                        if (t_date.getHours() < 11 || t_date.getHours() == 11 && t_date.getMinutes() < 30) {
-                            $("#btnFanan").html("查看" + GetDateStr(-1) + " 方案推荐" + jb_h);
-                        } else {
-                            $("#btnFanan").html("查看" + GetDateStr(0) + " 方案推荐" + jb_h);
-                        }
-                        if(showdd){
-                         	$("#btnFanan").html("查看方案推荐");
-                        }
-                        $("#btnFanan").attr("href", "javascript:showZanWuAlert();");
+                        $(".showFangAn").show();
+                        $(".showFangAn").attr("href", "javascript:showZanWuAlert();");
                         
                     }
                     //if (i== 0 || i == 1) {

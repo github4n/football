@@ -41,6 +41,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.opensymphony.oscache.util.StringUtil;
 import com.visolink.controller.base.BaseController;
+import com.visolink.dao.DaoSupport;
 import com.visolink.entity.MemberVisitInfo;
 import com.visolink.entity.PkData;
 import com.visolink.entity.PkVO;
@@ -83,6 +84,9 @@ import com.visolink.util.football.XMLUtil;
 @Controller
 @RequestMapping(value = "/webChat")
 public class WebChatController extends BaseController {
+	
+	@Resource(name = "daoSupport")
+	private DaoSupport dao;
 
 	@Resource(name = "couponService")
 	private CouponService couponService;
@@ -443,13 +447,11 @@ public class WebChatController extends BaseController {
 				pointsObtainPd.put("id",  UuidUtil.get32UUID());
 				pointsObtainPd.put("member_id",  tranPd.getString("fk_memeber_id"));
 				pointsObtainPd.put("points_number",  addPoint);
-				pointsObtainPd.put("obtain_time",  Tools.date2Str(new java.util.Date()));				
+				pointsObtainPd.put("obtain_time",  Tools.date2Str(new java.util.Date()));
 				pointsObtainPd.put("type",  type==1?2:6);
 				pointsObtainPd.put("remarks",  type==1?"购买方案":"积分充值");
 				pointsObtainPd.put("remain",Integer.valueOf(membe_point) + addPoint);
 				pointsService.savePointsObtain(pointsObtainPd);
-				
-				//保存跟单信息
 			}
 			PageData detailePd = new PageData();
 			detailePd.put("statement", "2");
@@ -911,7 +913,6 @@ public class WebChatController extends BaseController {
 			Map<String,Double> earningRateMap = serviceService.getEarningAmountMap(pd);
 			Map<String, Integer> strategyNumMap = serviceService.getTodayStrategyNum(pd.getString("experts_code"));
 			Map<String, Integer> notStartstrategyNumMap = serviceService.getNotStartStrategyNum(pd.getString("experts_code"));
-			
 			result = serviceService.findMapByExpert(pd);
 			for (String key : result.keySet()) {
 				List<PageData> list = result.get(key);
@@ -1497,9 +1498,9 @@ public class WebChatController extends BaseController {
 		result.put("notStartNum", notStartNum==null?0:notStartNum);
 		return result;
 	}
-	
 	@RequestMapping("/followPayConfig")
-	public void saveFollowOrder() throws Exception{
+	@ResponseBody
+	public void saveFollowOrder(HttpServletResponse response) throws Exception{
 		try {
 			PageData pd = this.getPageData();
 			PageData memberPd = memberService.findByPhoneNum(pd);
@@ -1507,16 +1508,64 @@ public class WebChatController extends BaseController {
 			PageData followOrderPd = new PageData();
 			followOrderPd.put("member_id", memberPd.getString("member_id"));
 			followOrderPd.put("service_id", pd.getString("id"));
-			followOrderPd.put("stragegy_time",pd.getString("stragegy_time"));
-			followOrderPd.put("input_amount", pd.getString("pointsNum"));
-			followOrderPd.put("win_amount", pd.getString("win_amount"));
-			followOrderPd.put("profit_amount", Long.parseLong(pd.getString("win_amount")) - Long.parseLong(pd.getString("pointsNum")));
-			followOrderPd.put("follow_time", Tools.date2Str(new Date()));
+			followOrderPd.put("stragegy_time",pd.getString("stragegy_time"));//方案时间
+			followOrderPd.put("input_amount", pd.getString("pointsNum"));//投注积分
+			followOrderPd.put("win_amount", pd.getString("win_amount"));//中奖积分
+			followOrderPd.put("profit_amount", Long.parseLong(pd.getString("win_amount")) - Long.parseLong(pd.getString("pointsNum")));//盈利积分
+			followOrderPd.put("follow_time", Tools.date2Str(new Date()));//跟单时间
 			
 			followOrderService.save(followOrderPd);
+			
+			PageData consumptionPd = new PageData();
+			consumptionPd.put("id", UuidUtil.get32UUID());
+			consumptionPd.put("member_id", memberPd.getString("member_id"));
+			consumptionPd.put("points_number", pd.getString("pointsNum"));//消费积分
+			consumptionPd.put("consume_time", Tools.date2Str(new Date()));//消费时间
+			consumptionPd.put("type", "4");
+			consumptionPd.put("remarks","跟单投注" );
+			consumptionPd.put("remain",Long.parseLong(memberPd.getString("membe_point")) -Long.parseLong( pd.getString("pointsNum")));//剩余积分
+			dao.save("PointsMapper.savePointsConsumption", consumptionPd);
+			
 		} catch (Exception e) {
 			logger.error(e.toString(), e);
 		}
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setCharacterEncoding("utf-8");
+		response.setHeader("Content-type", "text/html;charset=UTF-8");
+		response.getWriter().print("{'msg':'success'}");
+	}
+	/**
+	 * 获取专家排行信息
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/getExpertRanking")
+	@ResponseBody
+	public void getExpertRanking(HttpServletResponse response) throws Exception {
+		
+		PageData pd = this.getPageData();
+		Map<String,List<PageData>> result = serviceService.findMapByExpert(pd);
+		Map<String,Double> earningRateMap = serviceService.getEarningAmountMap(pd);
+		for (String key : result.keySet()) {
+			List<PageData> list = result.get(key);
+			for (PageData pageData : list) {
+				pageData.put("earningRate", earningRateMap.get(pageData.getString("id")));
+			}
+			Collections.sort(list,new Comparator<PageData>(){
+	            @Override
+				public int compare(PageData o1, PageData o2) {
+            		Double d1 = (Double) (o1.get("earningRate")==null?0d:o1.get("earningRate"));
+            		Double d2 = (Double) (o2.get("earningRate")==null?0d:o2.get("earningRate"));
+					return d2.compareTo(d1);
+				}
+	        });
+		}
+		
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setCharacterEncoding("utf-8");
+		response.setHeader("Content-type", "text/html;charset=UTF-8");
+		Gson gson = new GsonBuilder().create();
+		response.getWriter().print(gson.toJson(result));
 	}
 	
 }

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="MemberGuessProfitInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.visolink.entity.MemberGuessProfitInfo" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="VARCHAR" />
+    <result column="service_id" property="serviceId" jdbcType="VARCHAR" />
+    <result column="is_profit" property="isProfit" jdbcType="BIT" />
+    <result column="input_amount" property="inputAmount" jdbcType="INTEGER" />
+    <result column="win_amount" property="winAmount" jdbcType="INTEGER" />
+    <result column="profit_amount" property="profitAmount" jdbcType="INTEGER" />
+    <result column="strategy_date" property="strategyDate" jdbcType="DATE" />
+    <result column="guess_time" property="guessTime" jdbcType="TIMESTAMP" />
+    <result column="service_name" property="serviceName" jdbcType="VARCHAR" />
+    <result column="service_code" property="serviceCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, member_id, service_id, is_profit, input_amount, win_amount, profit_amount, strategy_date, 
+    guess_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_member_guess_profit
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from tb_member_guess_profit
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.visolink.entity.MemberGuessProfitInfo" >
+    insert into tb_member_guess_profit (id, member_id, service_id, 
+      is_profit, input_amount, win_amount, 
+      profit_amount, strategy_date, guess_time
+      )
+    values (#{id,jdbcType=VARCHAR}, #{memberId,jdbcType=VARCHAR}, #{serviceId,jdbcType=VARCHAR}, 
+      #{isProfit,jdbcType=BIT}, #{inputAmount,jdbcType=INTEGER}, #{winAmount,jdbcType=INTEGER}, 
+      #{profitAmount,jdbcType=INTEGER}, #{strategyDate,jdbcType=DATE}, #{guessTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.visolink.entity.MemberGuessProfitInfo" useGeneratedKeys="true" keyProperty="id" >
+    <selectKey resultType="java.lang.String" keyProperty="id" order="BEFORE" >
+	      select UUID_SHORT()
+    </selectKey>
+    insert into tb_member_guess_profit
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="serviceId != null" >
+        service_id,
+      </if>
+      <if test="isProfit != null" >
+        is_profit,
+      </if>
+      <if test="inputAmount != null" >
+        input_amount,
+      </if>
+      <if test="winAmount != null" >
+        win_amount,
+      </if>
+      <if test="profitAmount != null" >
+        profit_amount,
+      </if>
+      <if test="strategyDate != null" >
+        strategy_date,
+      </if>
+      <if test="guessTime != null" >
+        guess_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id},
+      <if test="memberId != null" >
+        #{memberId,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceId != null" >
+        #{serviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="isProfit != null" >
+        #{isProfit,jdbcType=BIT},
+      </if>
+      <if test="inputAmount != null" >
+        #{inputAmount,jdbcType=INTEGER},
+      </if>
+      <if test="winAmount != null" >
+        #{winAmount,jdbcType=INTEGER},
+      </if>
+      <if test="profitAmount != null" >
+        #{profitAmount,jdbcType=INTEGER},
+      </if>
+      <if test="strategyDate != null" >
+        #{strategyDate,jdbcType=DATE},
+      </if>
+      <if test="guessTime != null" >
+        #{guessTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.visolink.entity.MemberGuessProfitInfo" >
+    update tb_member_guess_profit
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceId != null" >
+        service_id = #{serviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="isProfit != null" >
+        is_profit = #{isProfit,jdbcType=BIT},
+      </if>
+      <if test="inputAmount != null" >
+        input_amount = #{inputAmount,jdbcType=INTEGER},
+      </if>
+      <if test="winAmount != null" >
+        win_amount = #{winAmount,jdbcType=INTEGER},
+      </if>
+      <if test="profitAmount != null" >
+        profit_amount = #{profitAmount,jdbcType=INTEGER},
+      </if>
+      <if test="strategyDate != null" >
+        strategy_date = #{strategyDate,jdbcType=DATE},
+      </if>
+      <if test="guessTime != null" >
+        guess_time = #{guessTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.visolink.entity.MemberGuessProfitInfo" >
+    update tb_member_guess_profit
+    set member_id = #{memberId,jdbcType=VARCHAR},
+      service_id = #{serviceId,jdbcType=VARCHAR},
+      is_profit = #{isProfit,jdbcType=BIT},
+      input_amount = #{inputAmount,jdbcType=INTEGER},
+      win_amount = #{winAmount,jdbcType=INTEGER},
+      profit_amount = #{profitAmount,jdbcType=INTEGER},
+      strategy_date = #{strategyDate,jdbcType=DATE},
+      guess_time = #{guessTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  
+  <select id="getGuessListByMemberId" parameterType="pd" resultMap="BaseResultMap">
+  	select a.id,a.service_id,a.is_profit,a.input_amount,a.win_amount,a.profit_amount,a.strategy_date,a.guess_time,b.service_name,b.service_code 
+  	from tb_member_guess_profit a,tb_service b,tb_experts c
+  	where a.service_id = b.id
+  	and b.fk_experts_id = c.experts_id
+	and c.experts_code = #{pd.experts_code}
+  	and a.member_id = #{pd.memberId}
+  	order by a.guess_time desc
+  	limit #{currentResult} ,#{showCount}
+  </select>
+  
+  <select id="getGuessProfitInfoById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select a.id,a.service_id,a.is_profit,a.input_amount,a.win_amount,a.profit_amount,a.strategy_date,a.guess_time,b.service_name,b.service_code 
+    from tb_member_guess_profit a,tb_service b
+  	where a.service_id = b.id
+  	and a.id=#{id}
+  </select>
+  
+  <select id="getGuessProfitlistPage" parameterType="page" resultType="com.visolink.entity.dto.GuessProfitResultDTO">
+  	SELECT  b.`member_name` AS memberName,
+		b.`phone_number` AS phoneNumber,
+		a.`guess_time` AS guessTime,
+		c.`service_name` AS serviceName,
+		c.`service_code` AS serviceCode,
+		a.`is_profit` AS isProfit,
+		a.`input_amount` AS inputAmount,
+		a.`win_amount` AS winAmount,
+		a.`profit_amount` AS profitAmount,
+		d.`experts_name` AS expertName
+	FROM tb_member_guess_profit a
+	INNER JOIN tb_member b ON a.`member_id`=b.`member_id`
+	INNER JOIN tb_service c ON a.`service_id`=c.`id`
+	INNER JOIN tb_experts d ON c.`fk_experts_id`=d.`experts_id`
+	where 1=1
+	<if test="pd.expertsId != null and pd.expertsId != ''">
+		and d.experts_id = #{pd.expertsId}
+	</if>
+	<if test="pd.serviceCode != null and pd.serviceCode != ''">
+		and c.service_code = #{pd.serviceCode}
+	</if>
+	<if test="pd.phoneNumber != null and pd.phoneNumber != ''">
+		and b.phone_number = #{pd.phoneNumber}
+	</if>
+	<if test="pd.serviceName != null and pd.serviceName != ''">
+		and c.service_name = #{pd.serviceName}
+	</if>
+	<if test="pd.startDate != null and pd.startDate!=''" >
+        and a.guess_time &gt;= #{pd.startDate} 
+    </if>
+    <if test="pd.endDate != null and pd.endDate!=''" >
+        and a.guess_time &lt;= #{pd.endDate} 
+    </if>
+	ORDER BY a.`guess_time`
+  </select>
+  
+  <select id="getGuessProfitList" parameterType="map" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List" />
+  	from tb_member_guess_profit
+  	where service_id = #{serviceId}
+  	and strategy_date=#{recordDate}
+  </select>
+  
+  <select id="getGuessProfitTotalInfo" parameterType="pd" resultType="pd">
+  	SELECT count(a.id) totalCount,sum(a.input_amount) totalInput,sum(a.win_amount) totalWin,sum(a.profit_amount) totalProfit
+  	FROM tb_member_guess_profit a
+	INNER JOIN tb_member b ON a.`member_id`=b.`member_id`
+	INNER JOIN tb_service c ON a.`service_id`=c.`id`
+	INNER JOIN tb_experts d ON c.`fk_experts_id`=d.`experts_id`
+	where 1=1
+	<if test="expertsId != null and expertsId != ''">
+		and d.experts_id = #{expertsId}
+	</if>
+	<if test="serviceCode != null and serviceCode != ''">
+		and c.service_code = #{serviceCode}
+	</if>
+	<if test="phoneNumber != null and phoneNumber != ''">
+		and b.phone_number = #{phoneNumber}
+	</if>
+	<if test="serviceName != null and serviceName != ''">
+		and c.service_name = #{serviceName}
+	</if>
+	<if test="startDate != null and startDate!=''" >
+        and a.guess_time &gt;= #{startDate} 
+    </if>
+    <if test="endDate != null and endDate!=''" >
+        and a.guess_time &lt;= #{endDate} 
+    </if>
+  </select> 
+  
+</mapper>

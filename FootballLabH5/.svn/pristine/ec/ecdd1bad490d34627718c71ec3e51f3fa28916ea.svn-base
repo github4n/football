@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>盈利走势分析</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/iscroll.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link href="css/timeline.css" rel="stylesheet" type="text/css" />
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+    <link href="owl-carousel/owl.carousel.css" rel="stylesheet">
+   	<link href="owl-carousel/owl.theme.css" rel="stylesheet">
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+        
+        #owl-demo .item div{display: block;height: 150px; width: 100%;}
+		.subMenu-t {height:36px;}
+		.subNav-t{color:#fff;line-height:34px;text-align:center;float:left;width:50%;box-sizing:border-box;}	
+		.subNav-t span{display: inline-block;line-height: 32px;}		
+		.subNav-t span.se{border-bottom: 1px solid #d7b746;}	
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+
+        .a1-0 {
+            position: absolute;
+            display: block;
+            width: 7.3%;
+            height: 4.6%;
+            background: #f33;
+            left: 58%;
+            margin-top: -16.65%;
+            top: 36%;
+            z-index: 999999;
+            opacity: 0;
+        }
+
+        .round {
+            margin-top: 5px;
+            padding: 5px;
+            width: 100px;
+            height: 30px;
+            border: 1px solid #FF8000;
+            -moz-border-radius: 3px; /* Gecko browsers */
+            -webkit-border-radius: 3px; /* Webkit browsers */
+            border-radius: 3px; /* W3C syntax */
+        }
+
+        .jiaobiao {
+            position:absolute;
+            top:0px;
+            right:0px;
+            width:40px;
+            height:40px;
+        }
+        
+        .jiaobiao2 {
+            position:absolute;
+            top:-5px;
+            right:30px;
+            width:30px;
+            height:30px;
+        }
+        .popicon img{
+			display: block;
+		}
+		.popicon{
+			width: 30px;
+		    position: absolute;
+		    top: 6px;
+		    right: 30px	
+		}
+        
+    </style>
+</head>
+<body style="padding: 0;">
+    <!--<p class="headerTou" id="txttitle" style="z-index: 2; position: relative;"></p>-->
+    <p class="headerTou" id="pGuanZhu" style="background: #fff; color: #000; display: none;">
+        <label style="position: relative; left: 12%; font-size: 1.4rem; color: #000;">专家推荐方案</label><label class="pull-right round"><a id="aGuanZhu" href="http://mp.weixin.qq.com/s?__biz=MzIxODQ5MTY4Mw==&mid=2247483666&idx=1&sn=2c38aac6da365d49afc1f468d99bff1e&scene=0#wechat_redirect" style="display: initial; color: #FF8000;">+关注</a></label></p>
+<!-- 
+    <table class="table tiaoM" style="z-index: 2; position: relative;">
+        <tr style="background: #d6b947;">
+            <td class="leftT" width="20.33%" style="padding: 5px 8px;">
+                <div style="position: relative; width: 45px;">
+                    <span class="jiao pull-right" style="background-image: url(img/fanhui2.png); transform: rotate(90deg); background-color: #d6b947; right: -7%; top: -3px;"></span>
+                    <select id="selDays" style="color: #333; font-size: 1.2rem" onchange="Init_b()">
+                        <option value="30">30天</option>
+                        <option value="60">60天</option>
+                        <option value="90" selected="selected">90天</option>
+                    </select>
+                </div>
+            </td>
+            <td width="43.33%" style="padding: 5px 8px;">
+                <span style="color: #333; font-size: 1.2rem">本金&nbsp;<i class="colorH" id="iTZ" style="color: #333;">0</i></span>
+            </td>
+            <td class="rightT" width="33.33%" style="text-align: -webkit-right; text-align: right; padding: 5px 8px;">
+                <span style="color: #333; font-size: 1.2rem">盈利&nbsp;<i class="colorH" id="iZJ" style="color: #333;">0</i></span>
+            </td>
+        </tr>
+    </table>
+-->
+     
+     	<table class="table tiaoM" >
+			<tr style="background: #d6b947;;">
+				<td class="leftT" width="33.33%" style="padding: 5px 8px;">	
+					 <select id="selDays" style="display:none">
+					 	<option value="30" selected="selected"></option>
+					 </select> 
+					 
+					<span style="color: #333;font-size:1.2rem">本金&nbsp;<i class="colorH" id="iTZ" style="color: #333;">0</i>元</span>
+				</td>
+				<td  width="33.33%"  style="padding: 5px 8px;">
+					<span style="color: #333;font-size:1.2rem">盈利&nbsp;<i class="colorH" id="iZJ" style="color: #333;">0</i></span>
+				</td>
+				<td class="rightT"  width="33.33%"  style="    text-align: -webkit-right;text-align: right;padding: 5px 8px;">
+					<span style="color: #333;font-size:1.2rem">余额&nbsp;<i class="colorH" id="iBL" style="color: #333;">0</i>元</span>
+				</td>
+			</tr>
+		</table>
+     
+    <div id="wrapper" style="top: 40px; bottom: 10px;">
+        <div id="scroller">
+			<div class="subMenu-t" id="header1" style="display:none">
+				<div class="subNav-t" id="btn-prev"><span class="se">盈利累计走势图</span></div>
+				<div class="subNav-t" id="btn-next"><span>各联赛盈利情况</span></div>
+			</div>
+			<div style="display:block" id="header2"><h3 style="text-align: left; padding: 5px 10px; z-index: 2; position: relative;float:left;">方案盈利累计走势图</h3>
+                <h3 style="text-align: right; padding: 5px 10px; z-index: 2; position: relative;float:right;">每日11:30更新</h3>
+            </div>
+            <header class="header" id="header" style="height: auto; z-index: 2; position: relative; overflow-x: auto;">
+	            <div id="owl-demo" class="owl-carousel owl-theme" style="display:none">
+					<div class="item" id="container1parent"><div id="container1"></div></div>
+					<div class="item" id="container2parent"><div id="container2"></div></div>
+				</div>
+				<div id="owl-demo2" style="display:none">
+                    <div id="container" style="height: 150px; width: 100%;"></div>
+                </div>
+            </header>
+            <section class="padding8" style="background: #303f60; position: relative; z-index: 3; height: 40px;">
+                <!--<h3 class="timeZtit"></h3>-->
+                <div id="fangan1">
+                	<a class="dbtn dbtn123 ctan showFangAn" id="guessProfit" style="width: 49%;height:40px;line-height:40px;margin-top:10px;margin-left:1%;margin-bottom:0px; border-radius: 5px; display: none;text-decoration:none;font-weight:bold;float:left;" href="#">
+                	竞猜盈亏</a>
+                	<a class="dbtn dbtn123 ctan showFangAn" id="followOrder" style="width: 49%;height:40px;line-height:40px;margin-top:10px;margin-left:1%;margin-bottom:0px; border-radius: 5px; display: none;text-decoration:none;font-weight:bold;float:left;" href="#">
+                	立即跟投</a>
+                </div>
+                
+                <div id="fangan2">
+                	<a class="dbtn dbtn123 ctan" id="btnFanan" style="width: 49%;height:40px;line-height:40px;margin-top:10px;margin-left:1%;margin-bottom:0px; border-radius: 5px; display: none;text-decoration:none;float:left;font-weight:bold;" href="#">
+	                </a>
+	                <a class="dbtn dbtn123 ctan" id="duidu" style="width: 49%;height:40px;line-height:40px;margin-top:10px;margin-left:1%;margin-bottom:0px; border-radius: 5px; display: none;text-decoration:none;float:left;font-weight:bold;" href="javascript:GoToFanXian()">
+	                                                返还活动<div class="popicon"><img width="100%" src="img/hongbao.png"/></div></a>
+                </div>
+                <div style="clear:both"></div>
+                <hr style="width:98%;color:#999;" />
+                <!--<a class="dbtn dbtn123 ctan" id="btnFanan" style="width: 100%; z-index: 2; position: fixed; left: 0%; bottom: 0; margin: 0; border-radius: 0; display: none;text-decoration:none;" href="#"></a>-->
+            </section>
+            <div class="content contentqwe" style="clear:both">
+                <article id="list">
+                </article>
+            </div>
+            <div id="register" style="display: none;">
+                <ul class="list_shigong">
+                    <li class="mTop10" onclick="window.open('#','_self')">
+                        <div class="content_shigong flexBox clearBoth">
+                            <input class="back0" id="txtMobile" type="number" placeholder="请输入手机号" />
+                        </div>
+
+                        <div style="clear: both;"></div>
+                    </li>
+                    <li class="mTop10" onclick="window.open('#','_self')">
+                        <div class="content_shigong flexBox clearBoth">
+                            <button class="pull-right yzmB">获取验证码</button><input class="back0" id="txtCode" type="number" placeholder="请输入验证码" />
+                        </div>
+
+                        <div style="clear: both;"></div>
+                    </li>
+                </ul>
+                <div>
+                    <a class="dbtn dbtn123" id="btnRegister" href="#">注册</a>
+                </div>
+                <section class="dabox">
+                    <h3>温馨提示：</h3>
+                    <ul class="tuwenList">
+                        <li>1.为保障您的利益，请先进行注册。
+                        </li>
+                        <li>2.注册成功，专家为您提供30天的盈利方案。
+                        </li>
+                        <li class="border0">3.注册成功，可获得1000积分，积分可用于抽奖、现金抵扣等。
+                        </li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </div>
+    
+
+
+    <script src="js/Highstock-4.2.5/highstock.js"></script>
+    <script src="js/Highstock-4.2.5/modules/exporting.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script src="owl-carousel/owl.carousel.min.js"></script>
+    <script src="js/touch.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+        var memberInfo;
+        var notStartNum;
+        var fanxianUrl;
+		
+		var MyNum;
+		
+        var sharttitle, shartcontent;
+        $(function () {
+
+            if (getQueryString("experts_code") == "jinghu") {
+                $("#aGuanZhu").attr("href", "http://mp.weixin.qq.com/s?__biz=MzAxMjk1NjYwMA==&mid=2247483654&idx=1&sn=66ed8863ea21271f03880c7338e8bad4&scene=0#wechat_redirect");
+            }
+
+            if (fl_user.focus_status() != 1) {
+                $("#pGuanZhu").show();
+            }
+
+            loaded();
+            Init_b();
+            var title = "";
+            
+
+            sessionStorage.setItem("successPlanUrl",location.href);
+
+            
+            if (fl_user.IsLogin()) {
+                memberInfo = GetData(fl_url.memberInfo, { phoneNum: fl_user.Mobile(), serviceId: getQueryString("serviceId") });
+                memberInfo = JSON.parse(memberInfo);
+            }
+
+            switch (getQueryString("service_code"))
+            {
+                case "JCECY"://竞彩二串一
+                	  sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+                	  shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+                        title = "竞彩2串1";
+                    break;
+                case "JCRQECY":// 竞彩让球二串一
+                	  sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+                	  shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+                        title = "竞彩让球2串1";
+                    break;
+                case "JCSPF":// 竞彩胜平负
+                     sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+                     shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+                        title = "竞彩胜平负";
+                    break;
+                case "JCRQSPF":// 竞彩让球胜平负
+                	  sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+                	  shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+                        title = "竞彩让球胜平负";
+                    break;
+                case "DC":// 单场
+                	  sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+                	  shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+                        title = "单场";
+                    break;
+                case "YP":// 亚盘
+                	  sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+                	  shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+                        title = "亚盘";
+                    break;
+            } 
+            if(getQueryString("service_name")!=null && getQueryString("service_name")!="" && getQueryString("service_name")!=undefined &&  getQueryString("service_name")!=title){
+            	 title=getQueryString("service_name");
+            }
+            
+            if (sessionStorage.selectPlanName == undefined) {
+                sessionStorage.setItem("selectPlanName", title);
+            } else {
+                sessionStorage.setItem("selectPlanName",title);
+            }
+
+
+            $("#txttitle").html("<a href=\"index.html?experts_code=" + getQueryString("experts_code") + "\" class=\"pull-left\"></a>" + title + '<img src="img/home.png" onclick="location.href=\'index.html?experts_code=' + getQueryString("experts_code")+'\';" style="float:right;margin-top:10px;width:24px;height:24px;" />');
+            document.title = title;
+            
+            Init();
+            addVisitInfo();
+            if(getQueryString("service_code")=="JCECY" || getQueryString("service_code")=="JCRQECY"){
+            
+            }else{
+            	touchSlider();
+            }
+            
+        });
+
+        // 初始化绑定
+        function Init_b() {
+            dataUrl = fl_url.singleDayList;
+
+            var d_t_ydm = GetDateStr(0);
+            var d_temp_n = new Date();
+            if (d_temp_n.getHours() == 11 && d_temp_n.getMinutes() < 30 || d_temp_n.getHours() < 11) {
+                d_t_ydm = GetDateStr(-1);
+            }
+
+            dataParam = {
+                beginDate: d_t_ydm,
+                days: $("#selDays").val(),
+                type: getQueryString("type"),
+                serviceId: getQueryString("serviceId"),
+                serviceType: getQueryString("serviceType"),
+                service_code: getQueryString("service_code")
+            };
+            //$(".timeZtit").text(GetDataYear());
+
+            var data = GetData(dataUrl, dataParam);
+
+            // 处理图表数据
+           
+            if(JSON.parse(data).length==2){
+            	$("#header1").css("display","block");
+            	$("#header2").css("display","none");
+            	BindChat(JSON.parse(data)[0],'container1');
+            	BindChat2(JSON.parse(data)[1]);
+            }else{
+            	$("#owl-demo").css("display","none");
+            	$("#owl-demo2").css("display","block");
+             	BindChat(JSON.parse(data)[0],'container');
+            } 
+
+			todayGameInfo = GetData(fl_url.getTodayGameInfo, {serviceId:getQueryString("serviceId")});
+			notStartNum = todayGameInfo.notStartNum;
+
+            // 绑定列表数据
+            BindData(JSON.parse(data)[0]);
+
+            myScroll.refresh();
+        }
+
+        function BindChat(data,divId) {
+            var xAxis = new Array(), series = new Array();
+            //data = JSON.parse(data);
+            var minNum = 0;
+            var maxNum = 0;
+            var isMin = true;
+            var isMax = true;
+            var yisMin = true;
+            var yisMax = true;
+            var s_n_3 = 0;
+            
+            var i_l = 0;
+            for (var i = data.length; i > 0 ; i--) {
+
+                if (GetDateDiffDay(data[i - 1].date, GetDataYMD()).day == 0) {
+                    i_l++;
+                    continue;
+                }
+                var t_date = GetDateDiffDay(data[i-1].date, GetDateYMDHMS());
+                if (t_date.day == 1 && t_date.hours < 11 || t_date.day == 1 && t_date.hours == 11 && t_date.minutes < 30) {
+                    i_l++;
+                    continue;
+                }
+
+                s_n_3 += parseInt(data[i - 1].number3);
+                if (s_n_3 > maxNum) {
+                    maxNum = s_n_3;
+                }
+                if (s_n_3 < minNum) {
+                    minNum = s_n_3;
+                }
+                xAxis.push(data[i - 1].date);
+
+                series.push(s_n_3);
+            }
+
+            var dataLength = data.length - 1 - i_l;
+
+            //$("#container").width(data.length*30);
+            var x_t_num = 0;
+            var mind = minNum;
+            var maxd = maxNum;
+            if (maxNum == 0) {
+                maxd = "";
+            }
+            if (minNum == 0) {
+                mind = "";
+            }
+            $('#'+divId).highcharts({
+                chart: {
+                    type: 'line',
+                    backgroundColor: '#344d87',
+                    plotBorderWidth: 0.5,
+                    plotBorderColor: "#ddd",
+                    marginTop: 10,
+                    marginLeft: 5,
+                    marginRight: 5,
+                    marginBottom: 20
+                },
+                margin: 0,
+                colors: ["#d7b947"],
+                title: {
+                    text: ''
+                },
+                subtitle: {
+                    text: ''
+                },
+                credits: {
+                    enabled: false     //去掉highcharts网站url  
+                },
+                xAxis: {
+                    categories: xAxis,
+                    tickInterval: dataLength,
+                    labels: {
+
+                        style: {
+                            color: '#ccc'
+                        },
+                        rotation: 0,
+                    },
+                    lineWidth: 0,
+                    tickLength: 3,
+                    tickPosition: "inside"
+                },
+                yAxis: {
+                    tickInterval: 1000,
+                    max: maxNum + 1100,
+                    min: minNum - 1000,
+                    gridLineWidth: 0,
+                    plotLines: [{
+                        label: { text: maxd, align: 'left', style: { color: "#ddd" }, x: 10 },
+                        value: maxNum,
+                        dashStyle: 'LongDashDot',
+                        width: 0.5,
+                        color: '#ccc',
+                    }, {
+                        label: { text: mind, align: 'left', y: 10, style: { color: "#ddd" }, x: 10 },
+                        value: minNum,
+                        dashStyle: 'LongDashDot',
+                        width: 0.5,
+                        color: '#ccc',
+                    }, {
+                        label: { text: 0, align: 'left', y: 5, style: { color: "#ddd" }, x: 10 },
+                        value: 0,
+                        width: 0.5,
+                        color: '#ccc'
+                    }],
+                    labels: {
+                        align: "left",
+                        enabled: false,
+                    }
+                },
+                tooltip: {
+                    valueSuffix: ''
+                },
+                legend: {
+                    enabled: false
+                },
+                exporting: {
+                    enabled: false
+                },
+                plotOptions: {
+                    line: {
+                        dataLabels: {
+                            enabled: false,
+                            color: "#000",
+                            backgroundColor: "#d7b947",
+                            formatter: function () {
+                                if (isMax && this.y == maxNum) {
+                                    isMax = false;
+                                    return this.y;
+                                }
+                                if (isMin && this.y == minNum) {
+                                    isMin = false;
+                                    return this.y;
+                                }
+                            }
+                        },
+                        enableMouseTracking: false
+                    }
+                },
+                series: [{ name: "盈利", data: series }]
+            });
+            
+            if(minNum < 0){
+            	MyNum = 10000 - minNum;
+            }else{
+            	MyNum = 10000;
+            }
+        }
+        
+        function BindChat2(data) {
+            var xAxis = new Array(), series = new Array();
+            //data = JSON.parse(data);
+            var minNum = 0;
+            var maxNum = 0;
+            var isMin = true;
+            var isMax = true;
+            var yisMin = true;
+            var yisMax = true;
+            var s_n_3 = 0;
+            
+            var i_l = 0;
+            
+            for(var i in data){
+            	s_n_3 += parseInt(data[i].value);
+                if (s_n_3 > maxNum) {
+                    maxNum = s_n_3;
+                }
+                if (s_n_3 < minNum) {
+                    minNum = s_n_3;
+                }
+            	xAxis.push(data[i].key);
+            	var obj = {};
+            	if(parseInt(data[i].value)>0){
+            		obj.color='#d7b947';
+            	}else{
+            		obj.color='#ccc';
+            	}
+            	
+            	obj.y=Math.round(data[i].value);
+                series.push(obj);
+                i_l++;
+            }
+
+            var dataLength = i_l;
+
+            //$("#container").width(data.length*30);
+            var x_t_num = 0;
+            var mind = minNum;
+            var maxd = maxNum;
+            if (maxNum == 0) {
+                maxd = "";
+            }
+            if (minNum == 0) {
+                mind = "";
+            }
+            $('#container2').highcharts({
+                chart: {
+                    type: 'column',
+                    backgroundColor: '#344d87',
+                    //plotBorderWidth: 1,
+                    plotBorderColor: "#ddd",
+                    marginTop: 10,
+                    marginLeft: 30,
+                    marginRight: 0,
+                    marginBottom: 23
+                },
+                margin: 0,
+                colors: ["#d7b947","#ccc"],
+                title: {
+                    text: ''
+                },
+                subtitle: {
+                    text: ''
+                },
+                credits: {
+                    enabled: false     //去掉highcharts网站url  
+                },
+                xAxis: {
+                    categories: xAxis,
+                     labels: {
+                        style: {
+                            color: '#ccc',
+                            fontSize: '12px',
+                        },
+                        rotation: 0,
+                    },
+                    lineWidth: 0,
+                    tickLength: 0,
+                    tickPosition: "inside", 
+                },
+                yAxis: {
+                	 minPadding: 0.2,   
+                    maxPadding: 0.2,   
+                    title:'',
+                	labels: {
+                        align: "center",
+                        enabled: true,
+                        style: {
+							color: '#ccc',
+							fontWeight: 'bold'
+						}
+                    },
+                },
+                legend: {
+                    enabled: false
+                },
+                exporting: {
+                    enabled: false
+                },
+                plotOptions: {
+                      series: {
+                      borderWidth: 0,
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.y:.0f}',
+                            style:{
+                                color:'#ccc',
+                                fontWeight: 'normal'
+                            },
+                            padding:0
+                        }
+                    }  
+                },
+                 tooltip: {
+		            pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: <b>{point.y:.0f}</b><br/>',
+		        }, 
+                series: [{ name: "盈利", data: series}]
+            });
+        }
+
+        function loaded() {
+            myScroll = new IScroll('#wrapper', { bounceEasing: 'elastic', bounceTime: 1200, click: true });
+            document.addEventListener('touchmove', function (e) {
+                e.preventDefault();
+            }, false);
+        }
+
+        function showRegister() {
+            if (fl_user.focus_status() != 1) {
+                confirm_error1("<lable style=\"color:#000000;font-size:16px;\">提示！</lable><br>查看方案请先 +关注"
+                            , function () {
+                                if (getQueryString("experts_code") == "jinghu") {
+                                    location.href = "http://mp.weixin.qq.com/s?__biz=MzAxMjk1NjYwMA==&mid=2247483654&idx=1&sn=66ed8863ea21271f03880c7338e8bad4&scene=0#wechat_redirect";
+                                } else {
+                                    location.href = "http://mp.weixin.qq.com/s?__biz=MzIxODQ5MTY4Mw==&mid=2247483666&idx=1&sn=2c38aac6da365d49afc1f468d99bff1e&scene=0#wechat_redirect";
+                                }
+                            }, function () {
+                            }, "取消", "+关注");
+                return;
+            }
+
+            $(".showFangAn").hide();
+            $("#register").show();
+            $(".padding8").hide();
+            $("#list").hide();
+            myScroll.refresh();
+        }
+
+        function showPlan(date,showType) {
+        	
+
+            // 如果没有定制，直接跳转到定制页面
+            if (memberInfo != undefined && memberInfo.hasTransaction == 0) {
+                if(notStartNum>0){
+                	sessionStorage.setItem("expertTodayPlanUrl", "expertPlan_detail.html?showType="+showType+"&type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name")));
+                	location.href = "addCustomizedInfo.html?service_code=" + getQueryString("service_code") + "&serviceId=" + getQueryString("serviceId") + "&experts_code=" + getQueryString("experts_code");
+                }else{
+                	showZanWuAlert();
+                }
+            	return;
+            }
+
+            sessionStorage.setItem("selectPlanUrl", "expertPlan_detail.html?showType="+showType+"&type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name")));
+
+            // 如果定制过，按流程走
+            if (getQueryString("service_code") == "JCSPF" || getQueryString("service_code") == "JCRQSPF") {
+                var t_date = GetDateDiffDay(date, GetDateYMDHMS());
+                if (new Date().getHours() >= 17 && memberInfo != undefined && memberInfo.hasLook == 0 || t_date.day == 1 && t_date.hours < 11 && memberInfo != undefined && memberInfo.hasLook == 0 || t_date.day == 1 && t_date.hours == 11 && t_date.minutes < 30 && memberInfo != undefined && memberInfo.hasLook == 0) {
+
+                    if (memberInfo.hasPK != "0") {
+                        location.href = "expertPlan_detail.html?showType="+showType+"&type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name"));
+                        return;
+                    }
+
+
+                    var ispkdata = GetData(fl_url.hasPkBettingGame, { serviceId: getQueryString("serviceId"), serviceType: getQueryString("serviceType"), companyId: getQueryString("companyId") });
+                    ispkdata = JSON.parse(ispkdata);
+                    if (ispkdata.hasPkBettingGame == false) {
+                        location.href = "expertPlan_detail.html?showType="+showType+"&type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name"));
+                        return;
+                    }
+
+                    //confirm_error1("<lable style=\"color:#000000;font-size:16px;\">PK赛提示</lable><br><div style=\"text-align:left;color:#000;line-height:24px;\">专家方案已出，您可选择与专家进行PK；若不PK，请直接选择查看方案。</div>"
+                    confirm_error1("<lable style=\"color:#000000;font-size:16px;\">温馨提示</lable><br><div style=\"text-align:left;color:#000;line-height:24px;\">“赢老料，拿奖品”PK赛活动进行中，您若直接查看方案，则今日无法进行PK！</div>"
+                                , function () {
+                                    if (memberInfo.hasPK != "0") {
+                                        tishi_error("您今日已经PK过了，不可以再次进行PK。");
+                                        return;
+                                    }
+                                    dataParam_pk = {
+                                        gameDate: date,
+                                        companyId: getQueryString("companyId"),
+                                        type: getQueryString("type"),
+                                        serviceId: getQueryString("serviceId"),
+                                        serviceType: getQueryString("serviceType"),
+                                        service_code: getQueryString("service_code")
+                                    };
+                                    // 本地存储
+                                    sessionStorage.setItem("dataParamPKsel", JSON.stringify(dataParam_pk));
+                                    location.href = "pk_index.html?experts_code=" + getQueryString("experts_code");
+                                }, function () {
+                                    GetData(fl_url.saveViewRecord, {
+                                        phoneNum: fl_user.Mobile(),
+                                        serviceId: getQueryString("serviceId")
+                                    });
+                                    location.href = "expertPlan_detail.html?showType="+showType+"&type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name"));
+                                }, "查看方案", "与专家PK");
+                    return;
+                }
+            }
+            location.href = "expertPlan_detail.html?showType="+showType+"&type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name"));
+            
+        }
+
+        // 绑定数据html
+        function BindData(data) {
+
+            // 验证用户
+            var userinfo = sessionStorage.UserInfo;
+            try {
+                userinfo = JSON.parse(userinfo);
+            } catch (e) {
+                console.log(e);
+            }
+            var html = "";
+            //data = JSON.parse(data);
+            console.log(data);
+            var tz = 0;
+            var zj = 0;
+            var yy = 0;
+            var BAL = 0;
+
+            var d_t_ydm = GetDateStr(0);
+            var d_temp_n = new Date();
+            if (d_temp_n.getHours() == 11 && d_temp_n.getMinutes() < 30 || d_temp_n.getHours() < 11) {
+                d_t_ydm = GetDateStr(-1);
+            }
+
+            if (typeof (data) != undefined && data != null && data.length > 0) {
+                html += "<section style='height:10px;'>";
+                html += "<span class=\"\"></span>";
+                html += "</section>";
+
+                var jb_h = "";
+                /* if (getQueryString("service_code") == "JCSPF") {
+                    jb_h = "<span style=\"position:relative;float:right;\"><img src=\"img/PKing@3x.png\" class=\"jiaobiao\"></span>";
+                } */
+                
+                var today = GetDateStr(0);
+                var showdd = true;
+                //if(userinfo.member_id=="b962bad7d2894826a7801cefb5ffdc01" || userinfo.member_id=="5b50d89a93cf40978596cb010ac26c9e" || userinfo.member_id=="8fef341dbe904aa998ad476de285e736" || userinfo.member_id=="4d986b867d7042bbab0645ada64bbc05" || userinfo.member_id=="673ef650bc574c2fb5e4bda382e676e1" || userinfo.member_id=="1d2519a502544a4e8ae2d4faf474097b"){
+                if(today=="2016-12-06" || today=="2016-12-07" || today=="2016-12-08" || today=="2016-12-09" || today=="2016-12-10" || today=="2016-12-11"){
+                	if((getQueryString("service_code") == "DC" || getQueryString("service_code") == "YP") && GetDateDiffDay(data[0].date, d_t_ydm).day == 0){
+	                	$("#fangan1").remove();
+	                	$("#duidu").css("display","block");
+                	}else{
+                		$("#fangan2").remove();
+                		showdd = false;
+                	}
+                }else{
+                	$("#fangan2").remove();
+                	showdd = false;
+                }
+                for (var i = 0; i < data.length; i++) {
+
+                    if (GetDateDiffDay(data[i].date, d_t_ydm).day == 0 || userinfo.phone_number == undefined) {
+                        $(".showFangAn").show();
+                        if (userinfo.phone_number == undefined || userinfo.focus_status != 1) {
+                            $(".showFangAn").attr("href", "javascript:showRegister();");
+                        } else {
+                            $("#followOrder").attr("href", "javascript:showPlan('" + data[i].date + "',1);");
+                            $("#guessProfit").attr("href", "javascript:showPlan('" + data[i].date + "',2);");
+                        }
+                        $("#wrapper").css("bottom", "0px");
+                        if (GetDateDiffDay(data[i].date, d_t_ydm).day == 0)
+                            continue;
+                    } else if (i == 0) {
+                        $(".showFangAn").show();
+                        $(".showFangAn").attr("href", "javascript:showZanWuAlert();");
+                        
+                    }
+                    //if (i== 0 || i == 1) {
+                    //    var t_date = GetDateDiffDay(data[i].date, GetDateYMDHMS());
+                    //    if (t_date.day == 1 && t_date.hours < 11 || t_date.day == 1 && t_date.hours == 11 && t_date.minutes < 30) {
+                    //        $("#btnFanan").show();
+                    //        //$("#btnFanan").text("今日方案  预盈" + parseInt(data[i].number3 + data[i].number4 - data[i].number4) + "");
+                    //        $("#btnFanan").text(GetDateStr(-1)+ " 方案推荐");
+                    //        if (userinfo.phone_number == undefined) {
+                    //            $("#btnFanan").attr("href", "javascript:showRegister();");
+                    //        } else {
+                    //            $("#btnFanan").attr("href", "javascript:showPlan('" + data[i].date + "');");
+                    //        }
+                    //        continue;
+                    //    }
+                    //}
+                   // tz += data[i].number4;
+                   tz = MyNum;
+                   // zj += parseInt(data[i].number3) + parseInt(data[i].number4);
+                    zj += parseInt(data[i].number3);
+                    BAL = tz + zj;
+                    html += "<section>";
+                    html += "<span class=\"point-time\"></span>";
+                    html += "<time datetime=\"" + GetDataYear() + "-" + GetDataMonth() + "\">";
+                    html += "<span style='font-size:1.2rem;'>" + data[i].date.substring(5) + "</span>";
+                    html += "</time>";
+                    html += "<aside>";
+                    html += "<div class=\"paddC\" onclick=\"window.open('expertPlan_detail.html?type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + data[i].date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name")) + "','_self')\">";
+                    html += "<div class=\"timgLeft pull-left\">";
+                    html += "<p style='font-size:1.2rem;'>投入:&nbsp;&nbsp;&nbsp;" + SetNbsp4(parseInt(data[i].number4)) + "</p>";
+                    html += "<p style='font-size:1.2rem;'>中奖:&nbsp;&nbsp;&nbsp;" + SetNbsp4(parseInt(data[i].number4) + parseInt(data[i].number3)) + "</p>";
+                    html += "</div>";
+                    var n3color = "";
+                    if (data[i].number3 < 0) {
+                        n3color = "color:#ccc;";
+                    }
+                    html += "<div class=\"timgRight pull-left\" style='font-size:1.2rem;" + n3color + "'>";
+
+                    html += "盈利:&nbsp;" + SetNbsp4(parseInt(data[i].number3),1) + "<span class=\"jiao pull-right\" ></span>";
+                    html += "</div>";
+                    html += "</div>";
+                    html += "</aside>";
+                    html += "</section>";
+                }
+                html += "<section>";
+                html += "<span class=\"\"></span>";
+                html += "<img src=\"img/jiantou.png\" width=\"10\" class=\"jiantou\" />";
+                html += "</section>";
+                html += "<section style='height:40px;'>";
+                html += "<span class=\"\"></span>";
+                html += "</section>";
+
+                
+            } else {
+                html += "";
+            }
+            $("#iTZ").text(tz);
+            $("#iZJ").text(parseInt(zj));
+            $("#iBL").text(parseInt(BAL));
+            $("#list").empty();
+            $("#list").append(html);
+        }
+
+        function showZanWuAlert() {
+            // 如果没有定制，直接跳转到定制页面
+             /* if (memberInfo != undefined && memberInfo.hasTransaction == 0) {
+                var text = "每17:00";
+                switch (getQueryString("service_code")) {
+                    case "YP":// 压盘
+                    case "DC":// 单场
+                        text = "将在赛前半小时";
+                        break;
+                }
+
+
+                confirm_error1("<lable style=\"color:#000000;font-size:16px;\">定制说明</lable><br><div style=\"text-align:left;color:#000;line-height:24px;\">1、定制后，方案策略" + text + "发布；<br>2、每日上午11:30进行赛事更新；<br>3、推荐方案仅供参考，请到正规渠道购彩。</div>", function () {
+                    location.href = "addCustomizedInfo.html?service_code=" + getQueryString("service_code") + "&serviceId=" + getQueryString("serviceId") + "&experts_code=" + getQueryString("experts_code");
+                }, function () { }, "取消", "确认");
+                return;
+            }  */
+
+            alert_error("<lable style=\"color:#000000;font-size:16px;\">温馨提示</lable><br><div style=\"text-align:left;color:#000;line-height:24px;margin-left:8px;\">上午11:30发布当天比赛推荐，若无发布，则当天无比赛推荐。</div>", "确定", function () {
+            });
+        }
+
+        function SetNbsp4(n3, type) {
+            n3 += "";
+            
+            if (n3.length == 1) {
+                n3 = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + n3;
+            } else if (n3.length == 2) {
+                n3 = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + n3;
+            } else if (n3.length == 3) {
+                n3 = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + n3;
+            } else if (n3.length == 4) {
+                n3 = "&nbsp;&nbsp;&nbsp;&nbsp;" + n3;
+            } else if (n3.length == 5) {
+                n3 = "&nbsp;&nbsp;" + n3;
+            }
+            if (n3.indexOf("-") >=0 && type == 1) {
+                n3 = "&nbsp;" + n3;
+            }
+
+            return n3;
+        }
+        
+        function GoToFanXian(){
+        
+        	if(fanxianUrl!=undefined){
+        		location.href = fanxianUrl;
+        	}else{
+        		location.href = "duidu_index.html?type=" + getQueryString("type") + "&serviceId=" + getQueryString("serviceId") + "&gameDate=" + date + "&companyId=" + getQueryString("companyId") + "&serviceType=" + getQueryString("serviceType") + "&service_code=" + getQueryString("service_code") + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(getQueryString("service_name"));
+        	}
+        }
+    </script>
+    <script src="js/register.js"></script>
+</body>
+</html>
