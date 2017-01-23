@@ -21,6 +21,8 @@
 			b.game_date_time &gt; #{beginTime}
 		and 
 			b.game_date_time &lt;= #{endTime}
+		and 
+			b.is_delay = 0
 		and
 			a.service_id = #{serviceId}
 	</select>
@@ -30,6 +32,8 @@
 			b.game_date_time &gt; #{beginTime}
 		and 
 			b.game_date_time &lt;= #{endTime}
+		and 
+			b.is_delay = 0
 		and
 			a.service_id = #{serviceId}
 		order by b.game_date_time desc
@@ -45,6 +49,8 @@
 					b.game_date_time &gt; #{beginTime}
 				and 
 					b.game_date_time &lt;= #{endTime}
+				and 
+					b.is_delay = 0
 				and
 					a.service_id = #{serviceId}
 			) as aa
@@ -69,6 +75,8 @@
 				   		<include refid="asianBaseSql" />	
 				   		where 
 				   			b.game_date_time = #{gameDate}
+				   		and 
+							b.is_delay = 0
 						and
 							a.service_id = #{serviceId}
 					 ) as aa
@@ -96,11 +104,6 @@
 			s.fk_betting_game_id= #{betting_game_id}
 		and 
 			s.service_id= #{serviceId}
-	</select>
-	<select id="getTotalCount" resultType="integer">
-		select count(1)
-		from 
-			tb_asian_handicap_betting_strategy
 	</select>
 	
 </mapper>

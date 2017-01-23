@@ -1,6 +1,8 @@
 package com.visolink.service.football.followOrder;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +61,7 @@ public class FollowOrderService {
 	 * @throws Exception
 	 */
 	public List<PageData> list(Page page) throws Exception{
-		return (List<PageData>) dao.findForList("FollowOrderMapper.dataPageList", page);
+		return (List<PageData>) dao.findForList("FollowOrderMapper.datalistPage", page);
 	}
 
 	/**
@@ -134,7 +136,7 @@ public class FollowOrderService {
 	/*
 	 * 定时更新比赛结果
 	 */
-	@Scheduled(cron="0 0/5 * * * ? ")
+	//@Scheduled(cron="0 0/5 * * * ? ")
 	public void updateFollowOrder() throws Exception{
 		
 		String beginTime = DateUtil.getGameDate() + Const.GAME_TIME;
@@ -143,32 +145,14 @@ public class FollowOrderService {
 		pdQuery.put("beginTime", beginTime);
 		pdQuery.put("endTime", endTime);
 		
-		Map<String,Object> queryMap = new HashMap<String,Object>();
-		queryMap.put("recordDate", DateUtil.getGameDate());
-		
 		//查询所有在用service
 		List<PageData> serviceList = (List<PageData>) dao.findForList("ServiceMapper.selectAllIsUseService", null);
 		serviceEach:for (PageData service : serviceList) {
-			if(!"76f2c58f839441beac3c34bdc2cfdfc8".equals(service.getString("id"))){
-				continue;
-			}
 			//查询是否有跟单记录
-			queryMap.put("serviceId", service.get("id"));
-			Integer recordId = (Integer) dao.findForObject("FollowOrderMapper.getServiceFollowStatus", queryMap);
-			if(recordId!=null){
+			List<PageData> orderList = getOrderListByServiceId(service);
+			if(orderList == null || orderList.size() == 0){
 				continue;
 			}
-			
-			//查询用户跟单列表
-			
-			List<PageData> followMeberList = (List<PageData>) dao.findForList("FollowOrderMapper.getMemberList", queryMap);
-			
-			
-//			Boolean isHasMemberGuess = false;
-//			List<MemberGuessProfitInfo> memberGuessList = (List<MemberGuessProfitInfo>) dao.findForList("MemberGuessProfitInfoMapper.getGuessProfitList", queryMap);
-//			if(memberGuessList!=null && memberGuessList.size()>0){
-//				isHasMemberGuess = true;
-//			}
 			
 			pdQuery.put("serviceId", service.get("id"));
 			pdQuery.put("serviceType", service.get("service_type"));
@@ -219,42 +203,81 @@ public class FollowOrderService {
 				continue;
 			}
 			
-			//根据盈利情况，更新用户跟单盈利积分
-			PageData followPd = new PageData();
-			followPd.put("win_amount", serviceResult.getNumber3());
-			dao.update("FollowOrderMapper.updateWinAmount", followPd);
-			dao.update("FollowOrderMapper.updateProfit", pdQuery);
+				
+				//如果盈利
+				//根据盈利情况，更新用户跟单盈利积分
 			
-			Boolean isProfit  = serviceResult.getNumber3()>=0?true:false;
-			
-			if(isProfit){
-				for (PageData memberList : followMeberList) {
-
-						
-						String memberId = memberList.getString("member_id");
-						PageData memberQuery = new PageData();
-						memberQuery.put("member_id", memberId);
-						PageData member = memberService.findByMemberId(memberQuery);
-						
-						
-						Map<String,Object> giveMemberPoint = new HashMap<String, Object>();
-						giveMemberPoint.put("giveAmount", serviceResult.getNumber3());
-						giveMemberPoint.put("memberId", memberId);
-						dao.update("MemberMapper.giveMemberPoint", giveMemberPoint);
-						
-						PageData pointsObtainPd = new PageData();
-						pointsObtainPd.put("id",  UuidUtil.get32UUID());
-						pointsObtainPd.put("member_id",  memberId);
-						pointsObtainPd.put("points_number",  serviceResult.getNumber3());
-						pointsObtainPd.put("obtain_time",  Tools.date2Str(new java.util.Date()));
-						pointsObtainPd.put("type",  "10");
-						pointsObtainPd.put("remarks",  "跟单投注");
-						pointsObtainPd.put("remain", serviceResult.getNumber3()+(Integer)member.get("membe_point"));//剩余积分
-						dao.save("PointsMapper.savePointsObtain", pointsObtainPd);
+				for (PageData pageData : orderList) {
+					Object win_amount = pageData.get("win_amount");
+					if(win_amount == null){
 					
-				}
-			}
+							Double number3 = serviceResult.getNumber3();//盈利
+							Double number4 = serviceResult.getNumber4();//投入
+							//如果盈利为负
+							if(number3 < 0){
+								pdQuery.put("win_amount", 0);
+								dao.update("FollowOrderMapper.updateWinAmount", pdQuery);
+								dao.update("FollowOrderMapper.updateProfit", pdQuery);
+							}else{
+								Long numbers =Math.round( ((Integer)pageData.get("input_amount")) * (number3 / number4 )) ;
+								pdQuery.put("win_amount", numbers.intValue() + (Integer)pageData.get("input_amount"));
+								dao.update("FollowOrderMapper.updateWinAmount", pdQuery);
+								dao.update("FollowOrderMapper.updateProfit", pdQuery);
+								
+				
+								String memberId = pageData.getString("member_id");
+								PageData memberQuery = new PageData();
+								memberQuery.put("member_id", memberId);
+								PageData member = memberService.findByMemberId(memberQuery);
+								
+								
+								Map<String,Object> giveMemberPoint = new HashMap<String, Object>();
+								giveMemberPoint.put("giveAmount",  numbers.intValue());
+								giveMemberPoint.put("memberId", memberId);
+								dao.update("MemberMapper.giveMemberPoint", giveMemberPoint);
+								
+								PageData pointsObtainPd = new PageData();
+								pointsObtainPd.put("id",  UuidUtil.get32UUID());
+								pointsObtainPd.put("member_id",  memberId);
+								pointsObtainPd.put("points_number",   numbers.intValue());
+								pointsObtainPd.put("obtain_time",  Tools.date2Str(new java.util.Date()));
+								pointsObtainPd.put("type",  "10");
+								pointsObtainPd.put("remarks",  "跟单投注");
+								pointsObtainPd.put("remain",  numbers.intValue()+(Integer)member.get("membe_point"));//剩余积分
+								dao.save("PointsMapper.savePointsObtain", pointsObtainPd);
+									
+							}
+						}
+					}
 		}
 		
 	}
+
+	public List<PageData> getMyFollowRoder(PageData pd) throws Exception {
+		
+		return (List<PageData>) dao.findForList("FollowOrderMapper.getMyFollowOrderById",pd);
+	}
+	//近30天盈利
+	public PageData getEarningAmount(PageData pd) throws Exception{
+		
+		return (PageData) dao.findForObject("EarningAmountMapper.findById", pd);
+		
+	}
+	
+	public Integer getFollowAmountByServiceId(PageData pd) throws Exception{
+		
+		
+		return  (Integer) dao.findForObject("FollowOrderMapper.getTotalCountByServiceId", pd) ;
+	}
+	
+	//查询是否已经跟单
+	public Integer getFollowOrderAlearly(PageData pd) throws Exception{
+		return (Integer) dao.findForObject("FollowOrderMapper.getFollowOrderAlearly", pd);
+	}
+	
+	//查询跟单记录（跟新盈利、重复跟单）
+	public List<PageData> getOrderListByServiceId(PageData pd) throws Exception{
+		return (List<PageData>) dao.findForList("FollowOrderMapper.getOrderByServiceId", pd);
+	}
+	
 }

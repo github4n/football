@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>PK赛选定场次</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/iscroll.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+    </style>
+</head>
+<body style="background-color: transparent; background-image: url(img/back3.png); background-size: 100%; padding: 0">
+    <!--<p class="headerTou"><a href="javascript:history.go(-1);" class="pull-left"></a>PK赛选定场次<img src="img/home.png" onclick="GoToUrl_T('index.html')" style="float:right;margin-top:10px;width:24px;height:24px;" /></p>-->
+    <div style="height: 180px;"></div>
+    <div id="wrapper" style="top: 220px; bottom: 40px;">
+        <div id="scroller">
+            <table class="table row tableTib1 rowTable yingzaiTit yingzaiTit23" id="list">
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <th class="col-md-6">
+                        <label id="lblTitle"></label>
+                    </th>
+                    <th class="col-md-2">胜</th>
+                    <th class="col-md-2">平</th>
+                    <th class="col-md-2">负</th>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+    <div style="background: #414141; opacity: 1; height: 40px; position: fixed; bottom: 0; left: 0; width: 100%; z-index: 550;"></div>
+    <footer class="footer footer12" style="background: transparent; border: 0;">
+        <ul class="clearfix">
+            <li style="width: 70%">
+                <button onclick="clearSele()">清空</button>
+                <span>已选<i id="lblCount">0</i>场</span>
+                <span>单关</span>
+            </li>
+            <li class="footer_show" style="width: 30%; background: #ddb63e;">
+                <a href="javascript:GoToURl();" style="color: #333;">确定</a>
+            </li>
+        </ul>
+    </footer>
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        var dataParamPKsel;
+        $(function () {
+            dataParamPKsel = JSON.parse(sessionStorage.dataParamPKsel);
+            var data = GetData(fl_url.getPkBettingGame, dataParamPKsel);
+            BindData(data);
+            loaded();
+        });
+
+        function loaded() {
+            myScroll = new IScroll('#wrapper', {  bounceTime: 1200, click: true });
+            document.addEventListener('touchmove', function (e) {
+                e.preventDefault();
+            }, false);
+        }
+
+        function BindData(data) {
+            var html = "";
+
+            var title = "";
+            title = dataParamPKsel.gameDate.substring(5) + "&nbsp;";
+            title += sessionStorage.selectPlanName;
+            data = JSON.parse(data);
+            var sum = 0;
+            console.log(data);
+            for (var i = 0; i < data.length; i++) {
+                var newdata = GetDateYMDHMS();
+                var newdiffdate = GetDateDiffDay(data[i].bettingGame.game_date_time,newdata);
+                if (newdiffdate.hours < 0 || newdiffdate.hours == 0 && newdiffdate.minutes < 0) {
+                    var time = GetDateFByTime("hh", data[i].bettingGame.game_date_time) + ":" + GetDateFByTime("mm", data[i].bettingGame.game_date_time)
+                    html += "<tr>";
+                    html += "<td>";
+                    html += "<p><span>" + data[i].bettingGame.league_name + "</span>&nbsp;&nbsp;<br />";
+                    html += "<time>" + time + "</time></p>";
+                    html += "<p><span>" + data[i].bettingGame.home_name + "</span>&nbsp;&nbsp;<br />";
+                    html += "<span>" + data[i].bettingGame.away_name + "</span></p>";
+                    html += "</td>";
+                    html += "<td class=\"backhu\" onclick=\"SelectPK(this,'" + data[i].bettingGame.home_name + "','" + data[i].bettingGame.away_name + "','胜'," +returnFloat(data[i].companyOdds.win_odds) + "," + i + "," + data[i].bettingGame.id + ",3," + data[i].companyOdds.id + ")\">" + returnFloat(data[i].companyOdds.win_odds) + "</td>";
+                    html += "<td class=\"backhu\" onclick=\"SelectPK(this,'" + data[i].bettingGame.home_name + "','" + data[i].bettingGame.away_name + "','平'," + returnFloat(data[i].companyOdds.draw_odds) + "," + i + "," + data[i].bettingGame.id + ",1," + data[i].companyOdds.id + ")\">" + returnFloat(data[i].companyOdds.draw_odds) + "</td>";
+                    html += "<td class=\"backhu\" onclick=\"SelectPK(this,'" + data[i].bettingGame.home_name + "','" + data[i].bettingGame.away_name + "','负'," + returnFloat(data[i].companyOdds.lose_odds) + "," + i + "," + data[i].bettingGame.id + ",0," + data[i].companyOdds.id + ")\">" + returnFloat(data[i].companyOdds.lose_odds) + "</td>";
+                    html += "</tr>";
+                    sum++;
+                }
+            }
+            title += "(" + sum + ")";
+            $("#lblTitle").html(title);
+            $("#list").append(html);
+            //$("#lblCount").text(sum);
+        }
+
+        var selectList = new Array();
+        function SelectPK(obj, h, a, s, o, i, bid, sn, cid) {
+            var className = obj.className;
+            if (className == "backlv") {// 取消
+                obj.className = "backhu";
+                for (var n = 0; n < selectList.length; n++) {
+                    if (selectList[n].i == i && selectList[n].sn == sn) {
+                        selectList.splice(n, 1);
+                        break;
+                    }
+                }
+            } else if (className == "backhu") {// 选择
+                obj.className = "backlv";
+                selectList.push({ h: h, a: a, s: s, o: o, i: i, bid: bid, sn: sn, cid: cid });
+            }
+            SumCount();
+        }
+
+        function clearSele() {
+            $(".backlv").addClass("backhu").removeClass("backlv");
+            selectList.splice(0, selectList.length);
+            SumCount();
+        }
+        function GoToUrl_T(u) {
+            location.href = u + "?experts_code=" + getQueryString("experts_code");
+        }
+        function GoToURl() {
+            if (selectList.length > 0) {
+                sessionStorage.setItem("selectPK", JSON.stringify(selectList));
+                location.href = "pk_setPrice.html?experts_code=" + getQueryString("experts_code");
+            } else {
+                tishi_error("请选择PK场次");
+            }
+        }
+
+        function SumCount() {
+            var arr = new Array();
+            for (var n = 0; n < selectList.length; n++) {
+                if (jQuery.inArray(selectList[n].i, arr) == -1)
+                    arr.push(selectList[n].i);
+            }
+            $("#lblCount").text(arr.length);
+        }
+    </script>
+</body>
+</html>

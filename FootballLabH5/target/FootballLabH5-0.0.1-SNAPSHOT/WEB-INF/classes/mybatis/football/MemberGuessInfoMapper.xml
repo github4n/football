@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="MemberGuessInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.visolink.entity.MemberGuessInfo" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="member_name" property="memberName" jdbcType="VARCHAR" />
+    <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="VARCHAR" />
+    <result column="guess_game_id" property="guessGameId" jdbcType="INTEGER" />
+    <result column="guess_strategy_info" property="guessStrategyInfo" jdbcType="VARCHAR" />
+    <result column="guess_time" property="guessTime" jdbcType="TIMESTAMP" />
+    <result column="input_amount" property="inputAmount" jdbcType="INTEGER" />
+    <result column="win_amount" property="winAmount" jdbcType="INTEGER" />
+    <result column="profit_amount" property="profitAmount" jdbcType="INTEGER" />
+    <result column="membe_point" property="memberPoint" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, member_id, guess_game_id, guess_strategy_info, guess_time, input_amount, win_amount, 
+    profit_amount
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_member_guess
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from tb_member_guess
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.visolink.entity.MemberGuessInfo" >
+    insert into tb_member_guess (id, member_id, guess_game_id, 
+      guess_strategy_info, guess_time, input_amount, 
+      win_amount, profit_amount)
+    values (#{id,jdbcType=VARCHAR}, #{memberId,jdbcType=VARCHAR}, #{guessGameId,jdbcType=INTEGER}, 
+      #{guessStrategyInfo,jdbcType=VARCHAR}, #{guessTime,jdbcType=TIMESTAMP}, #{inputAmount,jdbcType=INTEGER}, 
+      #{winAmount,jdbcType=INTEGER}, #{profitAmount,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.visolink.entity.MemberGuessInfo" useGeneratedKeys="true" keyProperty="id" >
+    <selectKey resultType="java.lang.String" keyProperty="id" order="BEFORE" >
+	      select UUID_SHORT()
+    </selectKey>
+    insert into tb_member_guess
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        id,
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="guessGameId != null" >
+        guess_game_id,
+      </if>
+      <if test="guessStrategyInfo != null" >
+        guess_strategy_info,
+      </if>
+      <if test="guessTime != null" >
+        guess_time,
+      </if>
+      <if test="inputAmount != null" >
+        input_amount,
+      </if>
+      <if test="winAmount != null" >
+        win_amount,
+      </if>
+      <if test="profitAmount != null" >
+        profit_amount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id},
+      <if test="memberId != null" >
+        #{memberId,jdbcType=VARCHAR},
+      </if>
+      <if test="guessGameId != null" >
+        #{guessGameId,jdbcType=INTEGER},
+      </if>
+      <if test="guessStrategyInfo != null" >
+        #{guessStrategyInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="guessTime != null" >
+        #{guessTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inputAmount != null" >
+        #{inputAmount,jdbcType=INTEGER},
+      </if>
+      <if test="winAmount != null" >
+        #{winAmount,jdbcType=INTEGER},
+      </if>
+      <if test="profitAmount != null" >
+        #{profitAmount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.visolink.entity.MemberGuessInfo" >
+    update tb_member_guess
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=VARCHAR},
+      </if>
+      <if test="guessGameId != null" >
+        guess_game_id = #{guessGameId,jdbcType=INTEGER},
+      </if>
+      <if test="guessStrategyInfo != null" >
+        guess_strategy_info = #{guessStrategyInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="guessTime != null" >
+        guess_time = #{guessTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inputAmount != null" >
+        input_amount = #{inputAmount,jdbcType=INTEGER},
+      </if>
+      <if test="winAmount != null" >
+        win_amount = #{winAmount,jdbcType=INTEGER},
+      </if>
+      <if test="profitAmount != null" >
+        profit_amount = #{profitAmount,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.visolink.entity.MemberGuessInfo" >
+    update tb_member_guess
+    set member_id = #{memberId,jdbcType=VARCHAR},
+      guess_game_id = #{guessGameId,jdbcType=INTEGER},
+      guess_strategy_info = #{guessStrategyInfo,jdbcType=VARCHAR},
+      guess_time = #{guessTime,jdbcType=TIMESTAMP},
+      input_amount = #{inputAmount,jdbcType=INTEGER},
+      win_amount = #{winAmount,jdbcType=INTEGER},
+      profit_amount = #{profitAmount,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+   <select id="selectMemberGuesslistPage" resultMap="BaseResultMap" parameterType="page">
+  	SELECT a.`member_name`,a.`phone_number`,b.`guess_time`,b.`guess_strategy_info`,b.`input_amount`,b.`win_amount`,b.`profit_amount`
+	FROM tb_member a,tb_member_guess b
+	WHERE a.`member_id`=b.`member_id`
+	<if test="pd.guessGameId != null and pd.guessGameId != ''" >
+        and b.guess_game_id= #{pd.guessGameId,jdbcType=INTEGER}
+    </if>
+    <if test="pd.memberName != null and pd.memberName != ''" >
+        and a.member_name= #{pd.memberName,jdbcType=VARCHAR}
+    </if>
+    <if test="pd.phoneNumber != null and pd.phoneNumber != ''" >
+        and a.phone_number= #{pd.phoneNumber,jdbcType=VARCHAR}
+    </if>
+    <if test="pd.strategy != null and pd.strategy != ''" >
+        and b.guess_strategy_info like CONCAT(CONCAT('%', #{pd.strategy}),'%') 
+    </if>
+    order by b.guess_time desc
+  </select>
+  
+  <select id="selectSumInfoByGameId" resultType="map" parameterType="java.lang.Integer">
+  	SELECT 
+	  SUM(input_amount) as totalInput,
+	  SUM(win_amount) as totalWin,
+	  SUM(profit_amount) as totalProfit,
+	  COUNT(id)  as totalCount
+	FROM
+	  tb_member_guess 
+	WHERE guess_game_id = #{guessGameId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectWinMemberIdList" parameterType="map" resultMap="BaseResultMap">
+  	select a.id,a.member_id,a.guess_strategy_info,a.input_amount,b.membe_point
+  	from tb_member_guess as a
+  	left join tb_member b on a.member_id=b.member_id
+  	where guess_game_id = #{guessGameId}
+  	limit #{begin},#{queryNum}
+  </select>
+  
+  <select id="getInfoByMemberIdAndGameId" parameterType="com.visolink.entity.MemberGuessInfo" resultType="string">
+  	select id
+  	from tb_member_guess
+  	where guess_game_id = #{guessGameId}
+  	and member_id = #{memberId}
+  </select>
+  
+  <select id="getGuessListByMemberId" parameterType="pd" resultMap="BaseResultMap">
+  	select a.id, a.member_id, a.guess_game_id, a.guess_strategy_info, a.guess_time, a.input_amount, a.win_amount, 
+    a.profit_amount
+  	from tb_member_guess as a,tb_guess_game as b,tb_experts as c
+  	where b.id= a.guess_game_id
+  	and b.experts_id = c.experts_id
+  	and c.experts_code=#{pd.experts_code}
+  	and a.member_id = #{pd.memberId}
+  	order by a.guess_time desc
+  	limit #{currentResult} ,#{showCount}
+  </select>
+  
+  <select id="getMemberGuessDetail" resultType="com.visolink.entity.dto.MemberGuessDetailDTO" parameterType="string">
+  	SELECT 
+	  a.`guess_strategy_info` as guessStrategy,
+	  a.`input_amount` as inputAmount,
+	  a.`win_amount` as winAmount,
+	  a.`profit_amount` as profitAmount,
+	  b.`league_name` as leagueName,
+	  b.`home_name` as homeName,
+	  b.`away_name` as awayName,
+	  b.`home_score` as homeScore,
+	  b.`away_score` as awayScore,
+	  b.`let_the_count` as letTheCount,
+	  b.`status` as status,
+	  b.`game_date_time` as gameDateTime,
+	  b.`win_odds` as winOdds,
+	  b.`draw_odds` as drawOdds,
+	  b.`lose_odds` as loseOdds,
+	  b.`rq_win_odds` as rqWinOdds,
+	  b.`rq_draw_odds` as rqDrawOdds,
+	  b.`rq_lose_odds`  as rqLoseOdds
+	FROM
+	  tb_member_guess a 
+	  INNER JOIN tb_guess_game b 
+	    ON a.`guess_game_id` = b.`id` 
+	WHERE a.`id` = #{memberGuessId} 
+  </select>
+  
+  
+  <select id="getGuessListByWX" resultType="com.visolink.entity.MemberGuessInfo" parameterType="map">
+  	SELECT a.member_id as memberId,
+		   CONCAT(LEFT(b.phone_number,3),"****",RIGHT(b.phone_number,4)) as phoneNumber,
+		   SUM(a.input_amount) as inputAmount,
+		   SUM(a.win_amount) as winAmount,
+		   SUM(a.profit_amount) as profitAmount
+	FROM tb_member_guess a,tb_member b
+	WHERE a.member_id = b.member_id
+	  AND a.guess_game_id=#{pd.guessGameId}
+	GROUP BY a.member_id
+	<if test="pd.isEnd == true">
+		ORDER BY SUM(a.profit_amount) DESC
+	</if>
+	<if test="pd.isEnd == false">
+		ORDER BY SUM(a.input_amount) DESC
+	</if>
+	limit #{currentResult} ,#{showCount}
+  </select>
+  
+  <select id="getGuessMemberNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	SELECT COUNT(DISTINCT member_id)
+	FROM tb_member_guess
+	WHERE guess_game_id=#{guessGameId}
+  </select>
+  
+  <select id="getGuessListByWXMarquee" resultType="pd" parameterType="java.lang.Integer">
+  	SELECT CONCAT(LEFT(b.phone_number,3),"****",RIGHT(b.phone_number,4)) as phoneNumber,a.`guess_strategy_info` as guessInfo
+	FROM tb_member_guess a
+	INNER JOIN tb_member b ON a.`member_id`=b.`member_id`
+	ORDER BY guess_time DESC
+	LIMIT 50
+  </select>
+  
+  <select id="getGuessRanking" parameterType="java.lang.Integer" resultType="com.visolink.entity.MemberGuessInfo">
+  	SELECT a.member_id as memberId,
+		   SUM(a.input_amount) as inputAmount,
+		   SUM(a.win_amount) as winAmount,
+		   SUM(a.profit_amount) as profitAmount,
+		   b.membe_point as memberPoint
+	FROM tb_member_guess a,tb_member b
+	WHERE a.member_id = b.member_id
+	  AND a.guess_game_id=#{pd.guessGameId}
+	GROUP BY a.member_id
+	ORDER BY SUM(a.profit_amount) DESC
+  </select>
+  
+</mapper>

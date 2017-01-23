@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PointsMapper">
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+      select 
+      	1 as points_type, a.*, b.member_name,b.membe_point,b.phone_number,c.experts_name 
+      from 
+      	`tb_points_consumption` as a 
+      left join  
+      	`tb_member` as b on a.member_id = b.member_id 
+      left join 
+      	tb_experts as c on b.`fk_experts_id` = c.experts_id
+      
+      where 1=1 
+      
+     <if test="pd.expert_id != null and pd.expert_id != ''"><!-- 专家检索 -->
+			and c.experts_id=#{pd.expert_id} 
+	 </if>
+	 
+	 <if test="pd.deal_type != null and pd.deal_type != '' and 1 == pd.points_co"><!-- 交易类型 -->
+			and a.type = #{pd.type}
+	 </if>
+	 <if test="pd.deal_type != null and pd.deal_type != '' and 0 == pd.points_co">
+	 		and a.id = null
+	 </if>
+	 
+	  <if test="pd.member_name != null and pd.member_name != ''"><!-- 用户名 -->
+			and b.member_name like '%' #{pd.member_name} '%'
+	 </if>
+	  <if test="pd.phone_number != null and pd.phone_number != ''"><!-- 手机号 -->
+			and b.phone_number like '%' #{pd.phone_number} '%'
+	 </if>
+	 <if test="pd.lastLoginStart != null and pd.lastLoginStart != ''">  <!-- 开始时间-->
+			and a.consume_time &gt;=#{pd.lastLoginStart} 
+	</if>	
+	
+	<if test="pd.lastLoginEnd != null and pd.lastLoginEnd != ''">  <!-- 结束时间 -->
+			and a.consume_time &lt;=#{pd.lastLoginEnd} 
+	</if>
+	 <if test="pd.points_type != null and pd.points_type != '' and pd.points_type != 1"><!-- 支出类型 -->
+			and a.id = null
+	 </if>
+      
+      union all  
+      
+      select 
+      	0 as points_type, d.*, e.member_name,e.membe_point,e.phone_number,f.experts_name 
+      from 
+      	`tb_points_obtain` as d 
+      left join 
+      	`tb_member` as e on d.member_id = e.member_id 
+      left join 
+      	 tb_experts as f on e.`fk_experts_id` = f.experts_id
+ 	
+ 	where 1=1 
+ 	
+     <if test="pd.expert_id != null and pd.expert_id != ''"><!-- 专家检索 -->
+			and f.experts_id=#{pd.expert_id} 
+	 </if>
+	 <if test="pd.deal_type != null and pd.deal_type != '' and 0 == pd.points_co"><!-- 交易类型 -->
+			and d.type = #{pd.type}
+	 </if>
+	 <if test="pd.deal_type != null and pd.deal_type != '' and 1 == pd.points_co">
+	 		and d.id = null
+	 </if>
+	 
+	 <if test="pd.member_name != null and pd.member_name != ''"><!-- 用户名 -->
+			and e.member_name like '%' #{pd.member_name} '%'
+	 </if>
+	 
+	  <if test="pd.phone_number != null and pd.phone_number != ''"><!-- 手机号 -->
+			and e.phone_number like '%' #{pd.phone_number} '%'
+	 </if>
+	 
+	 <if test="pd.lastLoginStart != null and pd.lastLoginStart != ''">  <!-- 开始时间-->
+			and d.obtain_time &gt;=#{pd.lastLoginStart} 
+	 </if>	
+	
+	 <if test="pd.lastLoginEnd != null and pd.lastLoginEnd != ''">  <!-- 结束时间 -->
+			and d.obtain_time &lt;=#{pd.lastLoginEnd} 
+	 </if>
+	 <if test="pd.points_type != null and pd.points_type != '' and pd.points_type != 0"><!-- 支出类型 -->
+			and d.id = null
+	 </if>
+ 		 
+ 	  order by consume_time desc
+	</select>
+	
+	<!-- 根据用户手机号，获取用户积分记录 -->
+	<select id="listByMember" parameterType="pd" resultType="pd">
+  	  select 
+      	1 as points_type, 
+      	a.id as points_id,
+      	a.points_number as number,
+      	a.consume_time as time,
+      	a.type as type,
+      	a.remain as membe_point,
+      	a.remarks
+      from 
+      	`tb_points_consumption` as a 
+      left join  
+      	`tb_member` as b on a.member_id = b.member_id
+      left join
+		 tb_experts as c on c.experts_id = b.fk_experts_id       
+      where b.`phone_number` = #{pd.phoneNum} and c.experts_code = #{pd.experts_code} 
+       
+            union all  
+            
+      select 
+      	0 as points_type, 
+      	a.id as points_id,
+      	a.points_number as number,
+      	a.obtain_time as time,
+      	a.type as type,
+      	a.remain as membe_point,
+      	a.remarks
+      from 
+      	`tb_points_obtain` as a 
+      left join 
+      	`tb_member` as b on a.member_id = b.member_id   
+      left join
+		 tb_experts as c on c.experts_id = b.fk_experts_id        
+       where b.`phone_number` = #{pd.phoneNum} and c.experts_code = #{pd.experts_code} 
+       
+       order by time desc,points_type
+       limit #{currentResult} ,#{showCount}
+	</select>
+	
+	<insert id="savePointsObtain" parameterType="pd">
+		insert into tb_points_obtain(
+			id,member_id,points_number,obtain_time,type,remarks,remain
+		) values (
+			#{id},#{member_id},#{points_number},#{obtain_time},	#{type},	
+			#{remarks},#{remain}
+		)
+	</insert>
+	<insert id="savePointsConsumption" parameterType="pd">
+		insert into tb_points_consumption(
+			id,member_id,points_number,consume_time,type,remarks,remain
+		) values (
+			#{id},#{member_id},#{points_number},#{consume_time},#{type},	
+			#{remarks},#{remain}
+		)
+	</insert>
+	<!-- 获取当天有没有分享积分 -->
+	<select id="getPointsObtainDay" parameterType="pd" resultType="pd">
+		select 
+      	*
+      	from 
+      	`tb_points_obtain` as a 
+      left join 
+      	`tb_member` as b on a.member_id = b.member_id  
+      	where a.type = 1 and b.phone_number = #{phoneNum} 
+      		and  a.obtain_time like '%' #{time} '%'
+	</select>
+	
+		<select id="hasSharePoint" parameterType="pd" resultType="pd">
+		select 
+			a.* 
+		from 
+			`tb_points_obtain` as a 
+		where 
+			a.member_id = #{member_id}  
+		and 
+			a.obtain_time  like '%' #{nowDate} '%'
+		and 
+			a.type = 1
+	</select>
+	
+	<select id="getExchangeList" resultType="string">
+		SELECT CONCAT(LEFT(b.phone_number,3),"****",RIGHT(b.phone_number,4)," 成功兑换",a.remarks)
+		FROM tb_points_consumption a
+		LEFT JOIN tb_member b ON a.member_id=b.member_id
+		WHERE TYPE=3
+		AND consume_time>'2017-01-05 12:00:00'
+		ORDER BY consume_time DESC 
+		LIMIT 100
+	</select>
+	<!-- 获取总记录数 -->
+	<select id="getTotalCount" resultType="integer">
+	SELECT COUNT(1)
+	FROM (
+		SELECT
+			1 AS points_type, a.*,
+			b.member_name,b.membe_point,b.phone_number,c.experts_name
+		FROM
+			`tb_points_consumption` AS a
+		LEFT JOIN
+			`tb_member` AS b ON a.member_id = b.member_id
+		LEFT JOIN
+			tb_experts AS c ON b.`fk_experts_id` = c.experts_id
+	
+		WHERE 1=1
+	
+		UNION ALL
+	
+		SELECT
+			0 AS points_type, d.*,
+			e.member_name,e.membe_point,e.phone_number,f.experts_name
+		FROM
+			`tb_points_obtain` AS d
+		LEFT JOIN
+			`tb_member` AS e ON d.member_id = e.member_id
+		LEFT JOIN
+			tb_experts AS f ON e.`fk_experts_id` = f.experts_id
+	
+		WHERE 1=1 ) temp_count
+</select>
+<!-- 获取支出积分 -->
+<select id="getPointDes" resultType="integer">
+		SELECT SUM(points_number)
+	FROM (
+		SELECT
+			1 AS points_type, a.*,
+			b.member_name,b.membe_point,b.phone_number,c.experts_name
+		FROM
+			`tb_points_consumption` AS a
+		LEFT JOIN
+			`tb_member` AS b ON a.member_id = b.member_id
+		LEFT JOIN
+			tb_experts AS c ON b.`fk_experts_id` = c.experts_id
+	
+		WHERE 1=1
+		 
+      UNION ALL  
+      
+      SELECT 
+      	0 AS points_type, d.*, e.member_name,e.membe_point,e.phone_number,f.experts_name 
+      FROM 
+      	`tb_points_obtain` AS d 
+      LEFT JOIN 
+      	`tb_member` AS e ON d.member_id = e.member_id 
+      LEFT JOIN 
+      	 tb_experts AS f ON e.`fk_experts_id` = f.experts_id
+ 	
+ 	WHERE 1=1  ORDER BY consume_time DESC
+	) temp_table WHERE points_type = 1
+</select>
+<!-- 收入积分 -->
+<select id="getPointIns" resultType="integer">
+	SELECT SUM(points_number)
+	FROM (
+		SELECT
+			1 AS points_type, a.*,
+			b.member_name,b.membe_point,b.phone_number,c.experts_name
+		FROM
+			`tb_points_consumption` AS a
+		LEFT JOIN
+			`tb_member` AS b ON a.member_id = b.member_id
+		LEFT JOIN
+			tb_experts AS c ON b.`fk_experts_id` = c.experts_id
+	
+		WHERE 1=1
+		 
+      UNION ALL  
+      
+      SELECT 
+      	0 AS points_type, d.*, e.member_name,e.membe_point,e.phone_number,f.experts_name 
+      FROM 
+      	`tb_points_obtain` AS d 
+      LEFT JOIN 
+      	`tb_member` AS e ON d.member_id = e.member_id 
+      LEFT JOIN 
+      	 tb_experts AS f ON e.`fk_experts_id` = f.experts_id
+ 	
+ 	WHERE 1=1  ORDER BY consume_time DESC
+	) temp_table WHERE points_type = 0 
+</select>
+
+<select id="getConsumptionById" parameterType="string" resultType="pd">
+		 SELECT a.*,b.`membe_point`
+		 FROM tb_points_consumption a
+		 LEFT JOIN tb_member b ON a.`member_id`=b.`member_id`
+		 WHERE a.id=#{id}  
+</select>
+</mapper>

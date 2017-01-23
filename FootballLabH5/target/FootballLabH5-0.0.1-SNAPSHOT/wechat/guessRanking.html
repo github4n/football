@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>盈利榜</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/iscroll.js"></script>
+    <script src="js/iscroll-probe.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/joinRanking.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/marquee.css" />
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+    </style>
+	<body>
+		<div class="banner" id="banner">
+        	<div class="bannerCon">
+        		<span class="icon-arrow icon-leftArrow" onclick="refreshRanking(-1)"></span>
+	            <table id="bannerBox" class="bannerBox">
+	            	<tr>
+	            		<td width="100%" colspan="3">
+	            			<p class="btTxt" id="gameDateTime"></p>  
+	            		</td>
+	            	</tr>
+	            	<tr>
+		            	<td class="leftCell" id="homeName"></td>
+		            	<td class="centerCell" id="scoreInfo"></td>
+		            	<!-- <td class="centerCell">3:0</td> -->
+		            	<td class="rightCell" id="awayName"></td>	            		
+	            	</tr>
+	            </table>
+	            <span class="icon-arrow icon-rightArrow" onclick="refreshRanking(1)"></span>
+        	</div>
+        </div>
+        
+        <div class="content">
+            <div class="integralBox">
+                <ul>
+                    <li class="integralNum">*盈利排在前3名可以获得相应的奖励</li>
+                    <li class="tochange pull-right"><a href="javascript:GoToUrl_T('pointExchange.html')">积分兑换>></a></li>
+                </ul>
+            </div>       	
+        	<div class="rankingList" id="rankingList1" style="display:none">
+	      		<ul class="rankingList_title">
+	      			<li class="clearfix">
+		    			<div class="rank">排名</div>
+		    			<div class="userName">用户名</div>
+		    			<div class="intergal" id="intergal">投注积分</div>	      				
+	      			</li>
+	    		</ul> 
+	    		<div id="" class="tab-content wrapper1" >
+        			<div id="" class="tab-pane fade in active scroller1">
+			        	<ul class="rankingList_con " id="rankingUl">
+			        	</ul>
+		        	</div>
+	        	</div>
+        	</div>
+        	<div class="rankingList rankingList2" id="rankingList2" style="display:none">
+	            <ul class="rankingList_title">
+	                <li class="clearfix">
+	                    <div class="rank">排名</div>
+	                    <div class="userName">用户名</div>
+	                    <div class="intergal">盈利积分</div>
+	 					 <div class="rewardIntgl">奖励积分</div>
+	                </li>
+	            </ul>
+	            <div id="" class="tab-content wrapper2">
+	                <div id="" class="tab-pane fade in active scroller2">
+	                    <ul class="rankingList_con " id="rankingUl2">
+	                        
+	                    </ul>
+	                </div>
+	            </div>
+	        </div>
+        </div>
+		<script src="js/common.js"></script>
+	    <script src="js/data.js"></script>
+	    <script src="js/weixin_com.js"></script>
+	    <script src="js/iscroll.init.js"></script>
+		<script>
+			var guessGameId;
+			var targetGuessGameId;
+			var index = 1;
+			var gameStatus;
+			var profitAmount = null;
+			var rankingRewardMap = null;
+			var ulName="#rankingUl";
+			
+			$(function(){
+				showCount = 100;// 显示的条数
+				guessGameId = getQueryString("guessGameId");
+			
+				var guessGame = GetData(fl_url.getGuessGame,{guessGameId:guessGameId});
+				BindGuessGameInfo(guessGame);
+				
+				dataUrl = fl_url.guessRanking;
+	            dataParam = {
+	               guessGameId:guessGameId,
+	               showCount: showCount,
+	               currentPage: currentPage
+	            };
+				loaded();
+				
+			
+				sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+	            shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+	            Init();
+			});
+			
+			function BindData(data) {
+				data = JSON.parse(data);
+				html="";
+				for(var i in data){
+					var amount = data[i].profitAmount;
+					if(!gameStatus){
+						amount = data[i].inputAmount;
+					}
+					if(profitAmount!=null && profitAmount>amount){
+						index = parseInt(i)+currentPage*10+1;
+					}
+					profitAmount = amount;
+					html+="<li class='clearfix'>";
+					if(index<=3){
+						var img = "";
+						if(index==1){
+							img="icon-rankFirst.png";
+						}else if(index==2){
+							img="icon-rankSecond.png";
+						}else if(index==3){
+							img="icon-rankThird.png";
+						}
+						html+="<div class='rank'><img class='icon-rankJp' src='img/"+img+"' width='20'/></div>";
+					}else{
+						html+="<div class='rank'>"+index+"</div>";
+					}
+					
+		         	html+="<div class='userName'>"+data[i].phoneNumber+"</div>";
+	         		html+="<div class='intergal'>"+amount+"</div>";	
+	         		if(gameStatus && targetGuessGameId>40){
+	         			var rewardAmount = rankingRewardMap[index]==undefined?"":rankingRewardMap[index];
+	         			html+="<div class='rewardIntgl'>"+rewardAmount+"</div>";	
+	         		}	
+		         	html+="</li>";	
+		         	//index++;	
+				}
+				$(ulName).append(html);
+				var high=($('.rankingList_con li').size()+1)*36;
+				var highmax=$(window).height()-$("#banner").height()-90;
+				if(high>highmax){
+					$(".rankingList").height(highmax);
+				}else{
+					$(".rankingList").height(high-1)
+				}    
+			}
+			
+			function BindGuessGameInfo(data){
+				var guessGame = data.guessGame;
+				$("#gameDateTime").html("比赛时间&nbsp;"+GetDateYMDHMS2(guessGame.gameDateTime.time));
+				$("#homeName").html(guessGame.homeName.substring(0,4)+"<i>[主]</i>");
+				$("#awayName").html(guessGame.awayName.substring(0,4));
+				if(guessGame.status){
+					$("#scoreInfo").html(guessGame.homeScore+":"+guessGame.awayScore);
+					$("#rankingList2").show();
+					$("#rankingList1").hide();
+					$(".scroller2").attr("id","scroller");
+					$(".wrapper2").attr("id","wrapper");
+					$(".scroller1").attr("id","");
+					$(".wrapper1").attr("id","");
+					ulName="#rankingUl2";
+				}else{
+					$("#scoreInfo").html("<img width='100%' src='img/vsIcon.png'/>");
+					$("#rankingList1").show();
+					$("#rankingList2").hide();
+					$(".scroller1").attr("id","scroller");
+					$(".wrapper1").attr("id","wrapper");
+					$(".scroller2").attr("id","");
+					$(".wrapper2").attr("id","");
+					ulName="#rankingUl";
+				}
+				targetGuessGameId = guessGame.id;
+				gameStatus = guessGame.status;
+				rankingRewardMap = data.rankingRewardMap;
+			}
+			
+			function refreshRanking(page){
+				if((page==1 && targetGuessGameId==guessGameId)){
+					return;
+				}
+				var guessGame = GetData(fl_url.getGuessGame,{guessGameId:targetGuessGameId,page:page});
+				if(guessGame== undefined){
+					return;
+				}
+				BindGuessGameInfo(guessGame);
+				$(ulName).empty();
+				index = 1;
+				currentPage = 0;
+				profitAmount = null;
+	            dataParam = {
+	               guessGameId:targetGuessGameId,
+	               showCount: showCount,
+	               currentPage: currentPage
+	            };
+				loaded();
+				/* BindGuessGameInfo(guessGame);
+				if(guessGame.status){
+					currentPage = 0;
+					var data = GetData(fl_url.guessRanking,{guessGameId:targetGuessGameId,showCount:showCount,currentPage:currentPage});
+					BindData(data);
+					myScroll.destroy();
+					myScroll = new IScroll('#wrapper', {
+				        probeType: 3,
+				        mouseWheel: true,//鼠标滑轮开启
+				        click: true,
+				    }); 
+				}else{
+					dataUrl = fl_url.guessRanking;
+		            dataParam = {
+		               guessGameId:targetGuessGameId,
+		               showCount: showCount,
+		               currentPage: currentPage
+		            };
+					loaded();
+				} */
+			}
+			
+			// 加载数据
+			function updatePosition() {
+			    // 上拉加载数据
+			    if (this.y < (this.maxScrollY - pagetop)) {
+			        currentPage = parseInt(currentPage)+1;
+			        dataParam.currentPage = currentPage;
+			        var data;
+			        if (isGetData) {
+			            // 获取数据字符集集合
+			            data = GetData(dataUrl, dataParam);
+			
+			            // 进行验证使用
+			            var data_r = JSON.parse(data);
+			            if (typeof (data_r) != undefined && data_r != null) {
+			                if (data_r.length > 0 || data_r.varList != undefined && data_r.varList.length > 0) {
+			                    // 绑定下拉数据
+			                    BindData(data);
+			                    myScroll.refresh();
+			                }
+			            } else {
+			                isGetData = false;
+			            }
+			        }
+			    }
+			}
+		</script>
+	</body>
+</html>

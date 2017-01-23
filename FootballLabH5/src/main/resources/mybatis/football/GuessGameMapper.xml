@@ -312,4 +312,11 @@
     limit 1
   </select>
   
+  <select id="getAutoGuessMemberIdList" parameterType="java.lang.Integer" resultType="string">
+  	SELECT member_id
+	FROM tb_member
+	WHERE member_name LIKE "机器人%"
+	AND member_id NOT IN( SELECT member_id FROM tb_member_guess WHERE guess_game_id=#{guessGameId})
+  </select>
+  
 </mapper>

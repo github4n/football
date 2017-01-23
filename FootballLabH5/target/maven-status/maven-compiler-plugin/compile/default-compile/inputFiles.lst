@@ -2,14 +2,15 @@ D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\h5\mapper\Loveques
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\entity\MemberGuessInfo.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\util\CreateRandom.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\h5\mapper\FashionMapper.java
+D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\controller\football\guessprofit\GuessProfitController.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\entity\CompanyOdds.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\h5\mapper\VillageApartmentOrientationTypeMapper.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\util\football\HttpClientUtil.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\util\GetPinyin.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\util\UuidUtil.java
+D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\controller\football\guess\GuessController.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\service\football\memberVisit\MemberVisitService.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\entity\dto\BettingGameDTO.java
-D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\controller\football\guess\GuessController.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\h5\entity\DesignerUserType.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\controller\football\ad\AdPageController.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\util\FileUtil.java
@@ -44,9 +45,9 @@ D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\h5\service\thermom
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\service\football\viewRecord\ViewRecordService.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\h5\entity\DesignerLayoutType.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\entity\BettingGameCompanyOdds.java
+D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\h5\mapper\FeedbackMapper.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\util\ReflectHelper.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\util\ImageAnd64Binary.java
-D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\h5\mapper\FeedbackMapper.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\entity\dto\OtherLeagueTwoOnOneStrategyDTO.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\controller\football\otherleague\OtherLeagueController.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\h5\mapper\DesignerProjectGalleryMapper.java
@@ -176,6 +177,7 @@ D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\h5\controller\user
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\util\WebSocket.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\listener\WebAppContextListener.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\h5\entity\VillageApartmentGallery.java
+D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\entity\MemberGuessProfitInfo.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\service\football\guess\GuessService.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\h5\controller\optimization\OptimizationController.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\util\ObjectExcelView.java
@@ -189,6 +191,7 @@ D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\entity\BettingGame
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\h5\service\campaign\CampaignApplyService.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\entity\MemberVisitInfo.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\h5\entity\Customer.java
+D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\entity\dto\GuessProfitResultDTO.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\entity\dto\OtherLeagueSingleEditDTO.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\service\football\wechat\WXOrderQuery.java
 D:\Workspaces-kepler\FootballLabH5\src\main\java\com\visolink\service\information\line\LineService.java

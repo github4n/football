@@ -1670,3 +1670,6 @@ html body table.caiguo > tbody > tr:nth-child(1) {
 	font-size: 1.2rem;
     color: #333;  	
 }
+.top_block p{
+	font-size: 1.2rem;
+}

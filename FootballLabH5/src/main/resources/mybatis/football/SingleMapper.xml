@@ -21,6 +21,8 @@
 			b.game_date_time &gt; #{beginTime}
 		and 
 			b.game_date_time &lt;= #{endTime}
+		and 
+			b.is_delay = 0
 		and
 			a.service_id = #{serviceId}
 		and 
@@ -34,6 +36,8 @@
 			b.game_date_time &gt; #{beginTime}
 		and 
 			b.game_date_time &lt;= #{endTime}
+		and 
+			b.is_delay = 0
 		and
 			a.service_id = #{serviceId}
 		and 
@@ -51,6 +55,8 @@
 					b.game_date_time &gt; #{beginTime}
 				and 
 					b.game_date_time &lt;= #{endTime}
+				and 
+					b.is_delay = 0
 				and
 					a.service_id = #{serviceId}
 				and 
@@ -77,6 +83,8 @@
 				   		<include refid="singleBaseSql" />	
 				   		where 
 				   			b.game_date_time = #{gameDate}
+				   		and 
+							b.is_delay = 0
 						and
 							a.service_id = #{serviceId}
 						and 

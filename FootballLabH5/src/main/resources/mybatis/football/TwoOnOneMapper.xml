@@ -30,6 +30,10 @@
 			b1.game_date_time &gt; #{beginTime}
 		and 
 			b1.game_date_time &lt;= #{endTime}
+		and 
+			b1.is_delay = 0
+		and 
+			b2.is_delay = 0
 		and
 			m.service_id = #{serviceId}
 		order by m.id	
@@ -45,6 +49,10 @@
 					b1.game_date_time &gt; #{beginTime}
 				and 
 					b1.game_date_time &lt;= #{endTime}
+				and 
+					b1.is_delay = 0
+				and 
+					b2.is_delay = 0
 				and
 					m.service_id = #{serviceId}
 			) as aa
@@ -72,6 +80,10 @@
 				   		<include refid="twoOnOneBaseSql" />	
 				   		where 
 				   			b1.game_date_time = #{gameDate}
+				   		and 
+							b1.is_delay = 0
+						and 
+							b2.is_delay = 0
 						and
 							m.service_id = #{serviceId}
 					 ) as aa

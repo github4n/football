@@ -1,0 +1,16 @@
+.list_shigong li{
+	display: table;
+	padding: 5px;
+	margin-bottom: 10px;
+}
+.list_shigong li div{
+	display: table-cell;
+	vertical-align: top;
+	text-align: center;
+}
+.list_shigong li div p:nth-child(1){
+	margin-bottom: 5px;
+}
+.highColor{
+	color: RGB(215,185,71);
+}

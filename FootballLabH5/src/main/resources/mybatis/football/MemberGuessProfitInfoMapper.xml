@@ -196,7 +196,7 @@
     <if test="pd.endDate != null and pd.endDate!=''" >
         and a.guess_time &lt;= #{pd.endDate} 
     </if>
-	ORDER BY a.`guess_time`
+	ORDER BY a.`guess_time` desc
   </select>
   
   <select id="getGuessProfitList" parameterType="map" resultMap="BaseResultMap">

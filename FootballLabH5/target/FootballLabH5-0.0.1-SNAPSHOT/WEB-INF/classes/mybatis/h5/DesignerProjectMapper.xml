@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.visolink.h5.mapper.DesignerProjectMapper" >
+  <resultMap id="BaseResultMap" type="com.visolink.h5.entity.DesignerProject" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="Project_Name" property="projectName" jdbcType="VARCHAR" />
+    <result column="Img_Path" property="imgPath" jdbcType="VARCHAR" />
+    <result column="Description" property="description" jdbcType="VARCHAR" />
+    <result column="Square_ID" property="squareId" jdbcType="INTEGER" />
+    <result column="Square_Name" property="squareName" jdbcType="VARCHAR" />
+    <result column="Style_ID" property="styleId" jdbcType="INTEGER" />
+    <result column="Style_Name" property="styleName" jdbcType="VARCHAR" />
+    <result column="Fav_Total" property="favTotal" jdbcType="INTEGER" />
+    <result column="Comment_Total" property="commentTotal" jdbcType="INTEGER" />
+    <result column="Click_Total" property="clickTotal" jdbcType="INTEGER" />
+    <result column="Province_ID" property="provinceId" jdbcType="INTEGER" />
+    <result column="Province_Name" property="provinceName" jdbcType="VARCHAR" />
+    <result column="City_ID" property="cityId" jdbcType="INTEGER" />
+    <result column="City_Name" property="cityName" jdbcType="VARCHAR" />
+    <result column="Area_ID" property="areaId" jdbcType="INTEGER" />
+    <result column="Area_Name" property="areaName" jdbcType="VARCHAR" />
+    <result column="Community_ID" property="communityId" jdbcType="INTEGER" />
+    <result column="Community_Name" property="communityName" jdbcType="VARCHAR" />
+    <result column="Apartment_ID" property="apartmentId" jdbcType="INTEGER" />
+    <result column="Apartment_Name" property="apartmentName" jdbcType="VARCHAR" />
+    <result column="Layout_ID" property="layoutId" jdbcType="INTEGER" />
+    <result column="Layout_Name" property="layoutName" jdbcType="VARCHAR" />
+    <result column="BuildType_ID" property="buildtypeId" jdbcType="INTEGER" />
+    <result column="BuildType_Name" property="buildtypeName" jdbcType="VARCHAR" />
+    <result column="Designer_ID" property="designerId" jdbcType="INTEGER" />
+    <result column="Designer_Name" property="designerName" jdbcType="VARCHAR" />
+    <result column="Creator_ID" property="creatorId" jdbcType="VARCHAR" />
+    <result column="Shop_ID" property="shopId" jdbcType="VARCHAR" />
+    <result column="Create_Date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="Publish_Time" property="publishTime" jdbcType="TIMESTAMP" />
+    <result column="Is_Del" property="isDel" jdbcType="INTEGER" />
+    <result column="Status" property="status" jdbcType="INTEGER" />
+    <result column="Update_Time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="Like_Total" property="likeTotal" jdbcType="INTEGER" />
+    <result column="Recommend" property="recommend" jdbcType="INTEGER" />
+    
+    <result column="styleCount" property="styleCount" jdbcType="INTEGER" />
+    <result column="Designer_Avatar" property="designerAvatar" jdbcType="VARCHAR" />
+    
+    <result column="areaCount" property="areaCount" jdbcType="VARCHAR" />
+    <result column="projectCount" property="projectCount" jdbcType="VARCHAR" />
+    <result column="layoutCount" property="layoutCount" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, Project_Name, Img_Path, Description, Square_ID, Square_Name, Style_ID, Style_Name, 
+    Fav_Total, Comment_Total, Click_Total, Province_ID, Province_Name, City_ID, City_Name, 
+    Area_ID, Area_Name, Community_ID, Community_Name, Apartment_ID, Apartment_Name, Layout_ID, 
+    Layout_Name, BuildType_ID, BuildType_Name, Designer_ID, Designer_Name, Creator_ID, 
+    Shop_ID, Create_Date, Publish_Time, Is_Del, Status, Update_Time, Like_Total, Recommend
+  </sql>
+  
+  <!-- 查询设计师的案例风格及数量 -->
+  <select id="selectProjectNameAndCount" resultMap="BaseResultMap"  parameterType="java.lang.Integer" >
+    select Style_ID ,Style_Name ,count(Style_ID) styleCount  from Designer_Project 
+left join Designer_Style_Type on Designer_Project.Style_ID=Designer_Style_Type.id
+where Is_Del=0 and Designer_Project.Status=1
+and Designer_Style_Type.Status=1
+and Designer_ID=#{designerId,jdbcType=INTEGER}
+group by Style_ID
+order by Order_No
+  </select>
+  
+  <!-- 查询设计师下该风格的案例 -->
+  <select id="selectProjectImg" resultMap="BaseResultMap"   parameterType="com.visolink.h5.entity.DesignerProject" >
+    select ID,Img_Path,Project_Name
+    from designer_project
+where Is_Del=0 and Designer_Project.Status=1
+and Designer_ID=#{designerId,jdbcType=INTEGER}
+and Style_ID=#{styleId,jdbcType=INTEGER}
+
+  </select>
+  
+  <!-- 案例全局搜索 -->
+  <select id="findProjectBySearch" resultMap="BaseResultMap"   parameterType="com.visolink.h5.entity.DesignerProject" >
+    select 
+designer_project.ID, designer_project.Project_Name, designer_project.Img_Path, designer_project.Description, 
+designer_project.Square_ID, designer_project.Square_Name, designer_project.Style_ID, designer_project.Style_Name, 
+    designer_project.Fav_Total, designer_project.Comment_Total, designer_project.Click_Total, 
+    designer_project.Province_ID, designer_project.Province_Name, designer_project.City_ID, designer_project.City_Name, 
+    designer_project.Area_ID, designer_project.Area_Name, designer_project.Community_ID, 
+    designer_project.Community_Name, designer_project.Apartment_ID,designer_project. Apartment_Name, designer_project.Layout_ID, 
+    designer_project.Layout_Name, designer_project.BuildType_ID, designer_project.BuildType_Name, 
+    designer_project.Designer_ID, designer_project.Designer_Name, 
+    designer_project.Shop_ID, designer_project.Is_Del, designer_project.Status, designer_project.Like_Total, designer_project.Recommend
+    ,designer_user.Designer_Avatar
+    from designer_project
+    left join designer_user on designer_project.Designer_ID=designer_user.id
+where designer_project.Is_Del=0 and designer_project.Status=1
+and designer_project.City_ID = ${cityId }
+<if test="designerName != null  and designerName != ''" >
+        and designer_project.Designer_Name like CONCAT('%','${designerName}','%' )
+</if>
+<if test="layoutId != null  and layoutId != 999" >
+        and designer_project.Layout_ID = ${layoutId }
+</if>
+<if test="squareId != null  and squareId!= 999" >
+        and designer_project.Square_ID = ${squareId }
+</if>
+<if test="buildtypeId != null  and buildtypeId != 999" >
+        and designer_project.BuildType_ID = ${buildtypeId }
+</if>
+order by designer_project.Create_Date desc
+        limit #{p},#{pageSize}
+
+  </select>
+  
+   <!-- 查询案例 -->
+  <select id="findAllProject" resultMap="BaseResultMap"   parameterType="com.visolink.h5.entity.DesignerProject"   >
+    select 
+designer_project.ID, designer_project.Project_Name, designer_project.Img_Path, designer_project.Description, 
+designer_project.Square_ID, designer_project.Square_Name, designer_project.Style_ID, designer_project.Style_Name, 
+    designer_project.Fav_Total, designer_project.Comment_Total, designer_project.Click_Total, 
+    designer_project.Province_ID, designer_project.Province_Name, designer_project.City_ID, designer_project.City_Name, 
+    designer_project.Area_ID, designer_project.Area_Name, designer_project.Community_ID, 
+    designer_project.Community_Name, designer_project.Apartment_ID,designer_project. Apartment_Name, designer_project.Layout_ID, 
+    designer_project.Layout_Name, designer_project.BuildType_ID, designer_project.BuildType_Name, 
+    designer_project.Designer_ID, designer_project.Designer_Name, 
+    designer_project.Shop_ID, designer_project.Is_Del, designer_project.Status, designer_project.Like_Total, designer_project.Recommend
+    ,designer_user.Designer_Avatar
+    from designer_project
+    left join designer_user on designer_project.Designer_ID=designer_user.id
+where designer_project.Is_Del=0 and designer_project.Status=1
+order by designer_project.Create_Date desc
+	limit #{p},#{pageSize}
+
+  </select>
+  
+   <!-- 通过shopId查询该门店下的设计师的案例 -->
+  <select id="findDesignerProjectByShopId" resultMap="BaseResultMap"   parameterType="java.lang.Integer"   >
+    select 
+designer_project.ID, designer_project.Project_Name, designer_project.Img_Path, designer_project.Description, 
+designer_project.Square_ID, designer_project.Square_Name, designer_project.Style_ID, designer_project.Style_Name, 
+    designer_project.Fav_Total, designer_project.Comment_Total, designer_project.Click_Total, 
+    designer_project.Province_ID, designer_project.Province_Name, designer_project.City_ID, designer_project.City_Name, 
+    designer_project.Area_ID, designer_project.Area_Name, designer_project.Community_ID, 
+    designer_project.Community_Name, designer_project.Apartment_ID,designer_project. Apartment_Name, designer_project.Layout_ID, 
+    designer_project.Layout_Name, designer_project.BuildType_ID, designer_project.BuildType_Name, 
+    designer_project.Designer_ID, designer_project.Designer_Name, 
+    designer_project.Shop_ID, designer_project.Is_Del, designer_project.Status, designer_project.Like_Total, designer_project.Recommend
+    ,designer_user.Designer_Avatar
+    from designer_project
+    left join designer_user on designer_project.Designer_ID=designer_user.id
+where designer_project.Is_Del=0 and designer_project.Status=1
+and designer_user.Is_Del=0 and designer_user.Status=1
+ and designer_user.Shop_ID = #{shopId}
+
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from designer_project
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from designer_project
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  
+   <select id="findDesignerProjectByIdList"  resultMap="BaseResultMap"  parameterType="list">
+    select 
+designer_project.ID, designer_project.Project_Name, designer_project.Img_Path, designer_project.Description, 
+designer_project.Square_ID, designer_project.Square_Name, designer_project.Style_ID, designer_project.Style_Name, 
+    designer_project.Fav_Total, designer_project.Comment_Total, designer_project.Click_Total, 
+    designer_project.Province_ID, designer_project.Province_Name, designer_project.City_ID, designer_project.City_Name, 
+    designer_project.Area_ID, designer_project.Area_Name, designer_project.Community_ID, 
+    designer_project.Community_Name, designer_project.Apartment_ID,designer_project. Apartment_Name, designer_project.Layout_ID, 
+    designer_project.Layout_Name, designer_project.BuildType_ID, designer_project.BuildType_Name, 
+    designer_project.Designer_ID, designer_project.Designer_Name, 
+    designer_project.Shop_ID, designer_project.Is_Del, designer_project.Status, designer_project.Like_Total, designer_project.Recommend
+    ,designer_user.Designer_Avatar
+    from designer_project
+    left join designer_user on designer_project.Designer_ID=designer_user.id
+where designer_project.Is_Del=0 and designer_project.Status=1
+    and designer_project.ID in  
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+  </select>
+  
+    <!-- 获取当前城市的区县数量 -->
+     <!--原来版本
+     <select id="findOptimizationAreaByCity" resultMap="BaseResultMap"   parameterType="com.visolink.h5.entity.DesignerProject" >
+  select 
+    Area_ID,Area_Name,count(Area_ID) areaCount
+    from designer_project
+    where Recommend = 1 and Status = 1 and Is_Del = 0
+    <if test="cityId != null" >
+        and designer_project.City_ID = ${cityId }
+	</if>
+	<if test="areaId != null" >
+        and designer_project.Area_ID = ${areaId }
+	</if>
+	<if test="communityName != null" >
+        and designer_project.Community_Name like  CONCAT('%','${communityName }','%' ) 
+	</if>
+	group by Area_ID
+  </select>  --> 
+  <select id="findOptimizationAreaByCity" resultMap="BaseResultMap"   parameterType="com.visolink.h5.entity.DesignerProject" >
+  select 
+    Area_ID,Area_Name,count(DISTINCT(Community_ID)) areaCount
+    from designer_project
+    where Recommend = 1 and Status = 1 and Is_Del = 0
+    <if test="cityId != null" >
+        and designer_project.City_ID = ${cityId }
+	</if>
+	<if test="areaId != null" >
+        and designer_project.Area_ID = ${areaId }
+	</if>
+	<if test="communityName != null" >
+        and designer_project.Community_Name like  CONCAT('%','${communityName }','%' ) 
+	</if>
+	group by Area_ID
+  </select>
+  
+  <!-- 获取当前城市的每个小区及户型数量等 -->
+  <select id="findOptimizationCommunityByCity" resultMap="BaseResultMap"   parameterType="com.visolink.h5.entity.DesignerProject" >
+  select City_ID, City_Name, Area_ID, Area_Name,tmpa.Community_ID,tmpa.Community_Name,projectCount ,layoutCount,Img_Path
+from (
+select designer_project.City_ID, designer_project.City_Name, designer_project.Area_ID,designer_project. Area_Name,designer_project.Community_ID,
+designer_project.Community_Name,count(designer_project.Community_ID) projectCount,
+ Designer_Shop.Img_Path
+FROM designer_project
+left join Designer_Shop on designer_project.Shop_ID=Designer_Shop.id
+where designer_project.Recommend = 1 and designer_project.Status = 1 and designer_project.Is_Del = 0
+    <if test="cityId != null" >
+        and designer_project.City_ID = ${cityId }
+	</if>
+	<if test="areaId != null" >
+        and designer_project.Area_ID = ${areaId }
+	</if>
+	<if test="communityName != null" >
+        and Community_Name like  CONCAT('%','${communityName }','%' ) 
+	</if>
+group by designer_project.Community_ID) tmpa 
+left join (
+select Community_ID,count(Layout_ID) layoutCount FROM designer_project
+where Recommend = 1 and Status = 1 and Is_Del = 0
+    <if test="cityId != null" >
+        and City_ID = ${cityId }
+	</if>
+	<if test="areaId != null" >
+        and designer_project.Area_ID = ${areaId }
+	</if>
+	<if test="communityName != null" >
+        and Community_Name like  CONCAT('%','${communityName }','%' ) 
+	</if>
+group by Community_ID
+) tmpb
+on tmpa.Community_ID=tmpb.Community_ID
+  </select>
+  <!-- 251行 group by Community_ID,Layout_ID -->
+  
+  <!-- 获取小区信息 -->
+  <select id="findProjectByCommunityId" resultMap="BaseResultMap"   parameterType="java.lang.Integer" >
+  select 
+    ID, Project_Name, Img_Path, Description, Square_ID, Square_Name, Style_ID, Style_Name, 
+    Fav_Total, Comment_Total, Click_Total, Province_ID, Province_Name, City_ID, City_Name, 
+    Area_ID, Area_Name, designer_project.Community_ID, Community_Name, Apartment_ID, Apartment_Name, Layout_ID, 
+    Layout_Name, BuildType_ID, BuildType_Name, Designer_ID, Designer_Name, Creator_ID, 
+    Shop_ID,     Like_Total, Recommend,projectCount
+    from designer_project 
+    left join (
+select Community_ID,count(Community_ID) projectCount FROM designer_project
+where Recommend = 1 and Status = 1 and Is_Del = 0
+group by Community_ID  
+    ) tmpa  on designer_project.Community_ID=tmpa.Community_ID
+    where Recommend = 1 and Status = 1 and Is_Del = 0
+        and designer_project.Community_ID = #{communityId }
+        limit 1
+  </select>
+  
+  <!-- 获取小区信息 -->
+  <select id="findProjectApartmentByCommunityId" resultMap="BaseResultMap"   parameterType="java.lang.Integer" >
+  select 
+    Community_ID,Apartment_ID,Apartment_Name,Layout_ID,Layout_Name,count(Layout_ID)  layoutCount
+    from designer_project 
+    where Recommend = 1 and Status = 1 and Is_Del = 0
+        and designer_project.Community_ID = #{communityId }
+        group by Apartment_ID,Layout_ID
+  </select>
+  
+   <!-- 获取小区案例图片 -->
+  <select id="findProjectPicByCommunityId" resultMap="BaseResultMap"   parameterType="java.lang.Integer" >
+  select 
+    ID, Project_Name, Img_Path, Description, Square_ID, Square_Name, Style_ID, Style_Name, 
+    Fav_Total, Comment_Total, Click_Total, Province_ID, Province_Name, City_ID, City_Name, 
+    Area_ID, Area_Name, Community_ID, Community_Name, Apartment_ID, Apartment_Name, Layout_ID, 
+    Layout_Name, BuildType_ID, BuildType_Name, Designer_ID, Designer_Name, Creator_ID, 
+    Shop_ID,     Like_Total, Recommend
+    from designer_project 
+    where Recommend = 1 and Status = 1 and Is_Del = 0
+        and Community_ID = #{communityId }
+  </select>
+  
+  </mapper>

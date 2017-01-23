@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>选择优惠券</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/iscroll.js"></script>
+    <script src="js/zepto.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/listPage.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+
+        .list_shigongB li {
+            border: 0;
+        }
+    </style>
+</head>
+<body style="padding: 0;">
+    <!--<p class="headerTou"><a href="javascript:history.go(-1);" class="pull-left"></a>选择优惠券<img src="img/home.png" onclick="GoToUrl_T('index.html')" style="float:right;margin-top:10px;width:24px;height:24px;" /></p>-->
+    <div id="wrapper" style="top: 0px; bottom: 70px;">
+        <div id="scroller">
+            <ul class="list_shigong list_shigongB" id="list">
+            </ul>
+        </div>
+    </div>
+    <a class="dbtn dbtn123" href="javascript:GoToUrl();" style="position:fixed;bottom:0px;left:3%;">确定</a>
+
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+        $(function () {
+            var dataUrl = fl_url.myCoupon;
+            var dataParam = {
+                phoneNum: fl_user.Mobile(),
+                type: 0,
+                showCount: 1000,
+                currentPage: 0
+            };
+            var data = GetData(dataUrl, dataParam);
+            BindData(data);
+            loaded();
+        });
+
+        function loaded() {
+            myScroll = new IScroll('#wrapper');
+            document.addEventListener('touchmove', function (e) {
+                e.preventDefault();
+            }, false);
+        }
+
+        // 绑定数据html
+        function BindData(data) {
+            var html = "";
+            data = JSON.parse(data);
+            console.log(data);
+
+            var coupon_type = getQueryString("coupon_type");
+            if (typeof (data) != undefined && data != null && data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+
+                    if (data[i].coupon_type == "01" || data[i].coupon_type == "02" || data[i].coupon_type == "03" || data[i].coupon_type == "04" || data[i].coupon_type == "05" || data[i].coupon_type == "06") {
+                        if (data[i].coupon_type == coupon_type) {
+                            html += "<li class=\"mTop10\">";
+                            html += "<div class=\"content_shigong flexBox clearBoth\">";
+                            html += "<div class=\"conLeft flexBox_zi1\">";
+                            html += "<span class=\"pull-left\" style=\"display: inline-block; width: 20px; height: 60px;\">";
+                            html += "<input style=\"margin-top: 20px\" type=\"radio\" name=\"aa\" id=\"rdoBtn" + i + "\" value=\"" + data[i].mcid + "\"></span>";
+                            html += "<h3 class=\"colorh\" style=\"color: #fff; line-height: 40px; font-size: 1.2rem;\">" + data[i].coupon_name + "</h3>";
+                            html += "</div>";
+                            html += "</div>";
+                            html += "<span class=\"posiButton\" style=\"border: 0; width: 115px;\">有效期至" + data[i].invalid_time + "</span>";
+                            html += "<div style=\"clear: both;\"></div>";
+                            html += "</li>";
+                        }
+                    } else {
+                        html += "<li class=\"mTop10\">";
+                        html += "<div class=\"content_shigong flexBox clearBoth\">";
+                        html += "<div class=\"conLeft flexBox_zi1\">";
+                        html += "<span class=\"pull-left\" style=\"display: inline-block; width: 20px; height: 60px;\">";
+                        html += "<input style=\"margin-top: 20px\" type=\"radio\" name=\"aa\" id=\"rdoBtn" + i + "\" value=\"" + data[i].mcid + "\"></span>";
+                        html += "<h3 class=\"colorh\" style=\"color: #fff; line-height: 40px; font-size: 1.2rem;\">" + data[i].coupon_name + "</h3>";
+                        html += "</div>";
+                        html += "</div>";
+                        html += "<span class=\"posiButton\" style=\"border: 0; width: 115px;\">有效期至" + data[i].invalid_time + "</span>";
+                        html += "<div style=\"clear: both;\"></div>";
+                        html += "</li>";
+                    }
+                }
+            } else {
+                html += "";
+            }
+            $("#list").append(html);
+        }
+
+        function GoToUrl_T(u) {
+            location.href = u + "?experts_code=" + getQueryString("experts_code");
+        }
+
+        function GoToUrl() {
+            var mcid = $('#wrapper input[name="aa"]:checked').val();
+            if (mcid == undefined || mcid.length == 0) {
+                tishi_error("请选择优惠券。");
+                return;
+            }
+
+            location.href = "addCustomizedInfo.html?mcid=" + mcid + "&serviceId=" + getQueryString("serviceId") + "&service_code=" + getQueryString("service_code")+"&experts_code=" + getQueryString("experts_code");
+        }
+    </script>
+</body>
+</html>

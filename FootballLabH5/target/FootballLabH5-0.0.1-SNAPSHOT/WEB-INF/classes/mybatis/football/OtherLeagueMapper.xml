@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OtherLeagueMapper">
+
+	<!-- 查询所有联赛 -->
+	<select id="selectAllLeague" resultType="pd">
+		select * 
+		from t_league
+	</select>
+	
+	<insert id="insertBettingGame" parameterType="com.visolink.entity.dto.BettingGameDTO" useGeneratedKeys="true" keyProperty="gameId">
+		<selectKey resultType="java.lang.Long" keyProperty="gameId" order="BEFORE" >
+	      select RIGHT(UUID_SHORT(), 8)
+	    </selectKey>
+		insert into tb_betting_game(id,league_id,league_name,home_name,away_name,game_serial_number,game_date_time,status,type)
+		values(#{gameId},#{leagueId},#{leagueName},#{homeName},#{awayName},#{serialNumber},#{gameDateTime},#{status},2)
+	</insert>
+	
+	<insert id="insertSingleOdds" parameterType="com.visolink.entity.dto.OtherLeagueOddsDTO">
+		insert into tb_company_odds(win_odds,draw_odds,lose_odds,fk_betting_game_id,fk_company_id,type)
+		values(#{winOdds},#{drawOdds},#{loseOdds},#{gameId},#{companyId},#{type})
+	</insert>
+	
+	<insert id="insertAsianOdds" parameterType="com.visolink.entity.dto.OtherLeagueOddsDTO">
+		insert into tb_company_odds_asian_handicap(win_odds,lose_odds,handicap,handicap_name,fk_betting_game_id,company_id)
+		values(#{winOdds},#{loseOdds},#{handicap},#{handicapName},#{gameId},#{companyId})
+	</insert>
+	
+	<insert id="insertSingleStrategy" parameterType="com.visolink.entity.BettingStrategyForSingle">
+		insert into tb_betting_strategy_for_single(strategy,create_time,betting_amount,fk_betting_game_id,fk_company_id,service_id)
+		values(#{strategy},#{create_time},#{betting_amount},#{fk_betting_game_id},#{fk_company_id},#{service_id})
+	</insert>
+	
+	<insert id="insertAsianStrategy" parameterType="com.visolink.entity.BettingStrategyForSingle">
+		insert into tb_asian_handicap_betting_strategy(strategy,create_time,betting_amount,fk_betting_game_id,fk_company_id,service_id)
+		values(#{strategy},#{create_time},#{betting_amount},#{fk_betting_game_id},#{fk_company_id},#{service_id})
+	</insert>
+	
+	<insert id="insertTwoOnOneMatch" parameterType="com.visolink.entity.TwoOnOne" useGeneratedKeys="true" keyProperty="id">
+		insert into tb_two_on_one_matches(match_one_id,match_two_id,company_id,create_time,service_id)
+		values(#{match_one_id},#{match_two_id},#{company_id},#{create_time},#{service_id});
+	</insert>
+	
+	<insert id="inserTwoOnOneStrategy" parameterType="com.visolink.entity.dto.OtherLeagueTwoOnOneStrategyDTO">
+		insert into tb_two_on_one_betting_strategy(strategy_one,strategy_two,betting_amount,fk_t_two_on_one_matches)
+		values(#{strategyOne},#{strategyTwo},#{bettingAmount},#{twoOnOneMatchId})
+	</insert>
+	
+	<select id="selectBettingGameById" parameterType="java.lang.Integer" resultType="com.visolink.entity.dto.BettingGameDTO">
+		select id as gameId,
+			league_id as leagueId,
+			home_name as homeName,
+			away_name as awayName,
+			game_serial_number as serialNumber,
+			league_name as leagueName,
+			game_date_time as gameDateTime,
+			home_score as homeScore,
+			away_score as awayScore
+		from tb_betting_game
+		where id=#{gameId}
+		and type=2
+	</select>
+	
+	<select id="selectSingleOdds" parameterType="java.lang.Integer" resultType="com.visolink.entity.dto.OtherLeagueOddsDTO">
+		select win_odds as winOdds,
+			draw_odds as drawOdds,
+			lose_odds as loseOdds
+		from tb_company_odds
+		where fk_betting_game_id=#{gameId}
+	</select>
+	
+	<select id="selectAsianOdds" parameterType="java.lang.Integer" resultType="com.visolink.entity.dto.OtherLeagueOddsDTO">
+		select win_odds as winOdds,
+			lose_odds as loseOdds,
+			handicap as handicap
+		from tb_company_odds_asian_handicap
+		where fk_betting_game_id=#{gameId}
+	</select>
+	
+	<select id="selectSingleStrategy" parameterType="java.lang.Integer" resultType="pd">
+		select strategy,betting_amount as bettingAmount
+		from tb_betting_strategy_for_single
+		where fk_betting_game_id=#{gameId}
+	</select>
+	
+	<select id="selectAsianStrategy" parameterType="java.lang.Integer" resultType="pd">
+		select strategy,betting_amount as bettingAmount
+		from tb_asian_handicap_betting_strategy
+		where fk_betting_game_id=#{gameId}
+	</select>
+	
+	<select id="selectTwoOnOneStrategy" parameterType="java.lang.Integer" resultType="pd">
+		select strategy_one as strategyOne,strategy_two as strategyTwo,betting_amount as bettingAmount
+		from tb_two_on_one_betting_strategy
+		where fk_t_two_on_one_matches=#{twoOnOneMatchId}
+	</select>
+	
+	<update id="updateBettingGame" parameterType="com.visolink.entity.dto.BettingGameDTO">
+		update tb_betting_game
+		set
+			home_score = #{homeScore},
+			away_score = #{awayScore},
+			league_id = #{leagueId},
+			league_name = #{leagueName},
+			away_name = #{awayName},
+			home_name = #{homeName},
+			game_serial_number = #{serialNumber},
+			game_date_time = #{gameDateTime},
+			status = #{status}
+		where id=#{gameId}
+	</update>
+	
+	<update id="updateSingleOdds" parameterType="com.visolink.entity.dto.OtherLeagueOddsDTO">
+		update tb_company_odds
+		set win_odds = #{winOdds},
+			draw_odds = #{drawOdds},
+			lose_odds = #{loseOdds}
+		where fk_betting_game_id=#{gameId}
+	</update>
+	
+	<update id="updateAsianOdds" parameterType="com.visolink.entity.dto.OtherLeagueOddsDTO">
+		update tb_company_odds_asian_handicap
+		set win_odds = #{winOdds},
+			lose_odds = #{loseOdds},
+			handicap = #{handicap},
+			handicap_name = #{handicapName}
+		where fk_betting_game_id=#{gameId}
+	</update>
+	
+	
+	<delete id="deleteBettingGame" parameterType="java.lang.Integer">
+		delete from tb_betting_game  where id=#{gameId}
+	</delete>
+	
+	<delete id="deleteSingleOdds" parameterType="java.lang.Integer">
+		delete from tb_company_odds  where fk_betting_game_id=#{gameId}
+	</delete>
+	
+	<delete id="deleteAsianOdds" parameterType="java.lang.Integer">
+		delete from tb_company_odds_asian_handicap where fk_betting_game_id=#{gameId}
+	</delete>
+	
+	<delete id="deleteSingleStrategy" parameterType="java.lang.Integer">
+		delete from tb_betting_strategy_for_single  where fk_betting_game_id=#{gameId}
+	</delete>
+	
+	<delete id="deleteAsianStrategy" parameterType="java.lang.Integer">
+		delete from tb_asian_handicap_betting_strategy where fk_betting_game_id=#{gameId}
+	</delete>
+	
+	<delete id="deleteTwoOnOneStrategy" parameterType="java.lang.Integer">
+		delete from tb_two_on_one_betting_strategy where fk_t_two_on_one_matches=#{twoOnOneMacthId}
+	</delete>
+	
+	<delete id="deleteTwoOnOne" parameterType="java.lang.Integer">
+		delete from tb_two_on_one_matches where id=#{twoOnOneMacthId}
+	</delete>
+	
+	
+</mapper>

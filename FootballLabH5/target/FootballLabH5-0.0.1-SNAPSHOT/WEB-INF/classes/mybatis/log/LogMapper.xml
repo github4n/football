@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LogMapper">
+	
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into h5_member_log(
+			LOG_MEMBER_ID,	
+			LOG_VISITOR,
+			LOG_IP,
+			LOG_CITY,
+			LOG_URI,	
+			LOG_PARM,	
+			LOG_RESULT,	
+			LOG_STARTTIME,	
+			LOG_ENDTIME,	
+			LOG_LONGITUDE,	
+			LOG_LATITUDE ,	
+			LOG_SOURCE,
+			LOG_DEVICE
+		) values (
+			#{LOG_MEMBER_ID},	
+			#{LOG_VISITOR},	
+			#{LOG_IP},	
+			#{LOG_CITY},	
+			#{LOG_URI},	
+			#{LOG_PARM},	
+			#{LOG_RESULT},	
+			#{LOG_STARTTIME},	
+			#{LOG_ENDTIME},	
+			#{LOG_LONGITUDE},	
+			#{LOG_LATITUDE},	
+			#{LOG_SOURCE},
+			#{LOG_DEVICE}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from h5_member_log
+		where 
+			id = #{id}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  h5_member_log
+			set 
+			id = id
+			where 
+				id = #{id}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+			ID, 
+			LOG_MEMBER_ID,	
+			LOG_VISITOR,
+			LOG_IP,
+			LOG_CITY,
+			LOG_URI,	
+			LOG_PARM,	
+			LOG_RESULT,	
+			LOG_STARTTIME,	
+			LOG_ENDTIME,	
+			LOG_LONGITUDE,	
+			LOG_LATITUDE ,	
+			LOG_SOURCE,
+			LOG_DEVICE
+		from 
+			h5_member_log
+		where 
+			id = #{id}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+			ID, 
+			LOG_MEMBER_ID,	
+			LOG_VISITOR,
+			LOG_IP,
+			LOG_CITY,
+			LOG_URI,	
+			LOG_PARM,	
+			LOG_RESULT,	
+			LOG_STARTTIME,	
+			LOG_ENDTIME,	
+			LOG_LONGITUDE,	
+			LOG_LATITUDE ,	
+			LOG_SOURCE,
+			LOG_DEVICE
+		from 
+				h5_member_log
+				
+				where 1=1 and  LOG_URI  not  like "%/pc/%"
+		<if test="pd.LOG_SOURCE!=null and pd.LOG_SOURCE!=''"><!-- 是否精选 -->
+			and LOG_SOURCE = #{pd.LOG_SOURCE} 
+		</if>
+		<if test="pd.City_NAME!=null and pd.City_NAME!=''"><!-- 城市 -->
+			and LOG_CITY = #{pd.City_NAME} 
+		</if>
+		<if test="pd.LOG_IP!=null and pd.LOG_IP!=''"><!-- IP -->
+			and LOG_IP = #{pd.LOG_IP} 
+		</if>
+		<if test="pd.LOG_VISITOR!=null and pd.LOG_VISITOR!=''"><!-- 用户 -->
+			and LOG_VISITOR like CONCAT(CONCAT('%', #{pd.LOG_VISITOR}),'%')
+		</if>
+		<if test="pd.LOG_DEVICE!=null and pd.LOG_DEVICE!=''"><!-- 设备 -->
+			and LOG_DEVICE like CONCAT(CONCAT('%', #{pd.LOG_DEVICE}),'%')
+		</if>
+		
+		<if test="pd.LOG_MEMBER_TYPE!=null and pd.LOG_MEMBER_TYPE!='' and pd.LOG_MEMBER_TYPE==0"><!-- 城市 -->
+			and LOG_MEMBER_ID = 0 
+		</if>
+		<if test="pd.LOG_MEMBER_TYPE!=null and pd.LOG_MEMBER_TYPE!='' and pd.LOG_MEMBER_TYPE==1"><!-- 城市 -->
+			and LOG_MEMBER_ID &lt;&gt; 0 
+		</if>
+		
+		<if test="pd.LOG_URI!=null and pd.LOG_URI!=''"><!-- 是否精选 -->
+			and LOG_URI like CONCAT(CONCAT('%', #{pd.LOG_URI}),'%')
+		</if>
+		<if test="pd.lastLoginStart!=null and pd.lastLoginStart!=''"><!-- 到期时间检索 -->
+			and LOG_STARTTIME &gt;=#{pd.lastLoginStart} 
+		</if>
+		<if test="pd.lastLoginEnd!=null and pd.lastLoginEnd!=''"><!-- 到期时间检索 -->
+			and LOG_STARTTIME &lt;=#{pd.lastLoginEnd} 
+		</if>
+		order by LOG_STARTTIME desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+			ID, 
+			LOG_MEMBER_ID,	
+			LOG_VISITOR,
+			LOG_IP,
+			LOG_CITY,
+			LOG_URI,	
+			LOG_PARM,	
+			LOG_RESULT,	
+			LOG_STARTTIME,	
+			LOG_ENDTIME,	
+			LOG_LONGITUDE,	
+			LOG_LATITUDE ,	
+			LOG_SOURCE,
+			LOG_DEVICE
+		from 
+				h5_member_log 
+				
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from h5_member_log
+		where 
+			id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

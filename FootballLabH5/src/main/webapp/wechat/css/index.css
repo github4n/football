@@ -408,7 +408,7 @@ ul.marquee li {
 	position: absolute; 
 	height: 30px;
 	line-height: 30px;
-	top: 0px;
+	top: -999em;
 	left: 0;
 	display: block;  
 	white-space: nowrap;

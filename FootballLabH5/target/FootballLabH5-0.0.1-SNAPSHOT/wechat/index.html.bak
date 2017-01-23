@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>专家方案</title>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/swiper.min.js"></script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/mui.css" rel="stylesheet" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/index_header.css" rel="stylesheet" type="text/css" />
+    <link href="css/swiper.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/index.css" rel="stylesheet" />
+    <style type="text/css">
+       body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 980px) {
+        }
+
+        @media screen and (max-width: 650px) {
+        }
+
+        @media screen and (max-width: 480px) {
+
+            html {
+                -webkit-text-size-adjust: none;
+            }
+        }
+
+        @media screen and (max-width: 560px) {
+        }
+        
+        header.header img{
+        	width:100%!important;
+        }
+    </style>
+</head>
+<body style="padding: 0">
+    <!--<p class="headerTou"><a href="javascript:history.go(-1);" class="pull-left"></a>专家方案<img src="img/home.png" onclick="GoToUrl_T('index.html')" style="float: right; margin-top: 10px; width: 24px; height: 24px;" /></p>-->
+    <p class="headerTou" id="pGuanZhu" style="background: #fff; color: #000; display: none;">
+        <label style="position: relative; left: 12%; font-size: 1.4rem; color: #000;">专家方案</label><label class="pull-right round"><a id="aGuanZhu" href="http://mp.weixin.qq.com/s?__biz=MzIxODQ5MTY4Mw==&mid=2247483666&idx=1&sn=2c38aac6da365d49afc1f468d99bff1e&scene=0#wechat_redirect" style="display: initial; color: #FF8000;">+关注</a></label>
+    </p>
+    <div style="padding: 0 0px">
+        <!--<h3 style="padding: 6px 0; font-size: 1.2rem">资金历史曲线</h3>-->
+        <header class="header" style="padding: 0 0 0 0;">
+            <div id="ifocus">
+                <div id="ifocus_pic">
+                   	<div class='swiper-container'>
+						<div id="piclist" class="swiper-wrapper">
+                        	<!-- 轮播图 -->
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+		<!-- <marquee scrollamount="3" bgcolor="#35528c" style=" height:25px;" > -->
+			<!-- <div style="margin-top:3px" id="caption"><font size="1rem" color="#edc33e" >提示：以下玩法针对欧洲五大联赛、欧冠、欧联、巴甲赛事进行方案预测</font></div> -->
+			<div id="scrollText"  style="margin-top:3px;height:25px;background:#35528c;margin-bottom:2px"></div>
+		<!-- </marquee> -->
+		<div style="padding: 0 8px">
+            <section class="quick" style="margin-bottom: 40px;">
+                <ul id="DataList">
+                </ul>
+                <div style="clear: both;"></div>
+            </section>
+        </div>
+    </div>
+    <footer class="footer">
+        <ul class="clearfix">
+            <li class="footer_show" onclick="GoToUrl_T('index.html');">
+                <a href="#">专家方案</a>
+            </li>
+            <li onclick="GoToUrl_T('my.html');">
+                <a href="#">我的</a>
+            </li>
+        </ul>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/weixin_com.js"></script>
+    <script src="js/marquee.js"></script>
+    <script>
+
+        var url = "";
+        var sharttitle, shartcontent;
+        $(function () {
+        
+        	if (getQueryString("experts_code") == "yingying") {
+                $(".footer_show").attr("onclick", "GoToUrl_T('indexNew.html');");
+            }
+
+            if (getQueryString("experts_code") == "jinghu") {
+                $("#aGuanZhu").attr("href", "http://mp.weixin.qq.com/s?__biz=MzAxMjk1NjYwMA==&mid=2247483654&idx=1&sn=66ed8863ea21271f03880c7338e8bad4&scene=0#wechat_redirect");
+            }
+
+            if (fl_user.focus_status() != 1) {
+                $("#pGuanZhu").show();
+            }
+
+            // 绑定轮播图
+            var datapic = GetData(fl_url.indexLink, {});
+            datapic = JSON.parse(datapic);
+            var p_c = "";
+            var pichtml = "";
+            for (var i = 0; i < datapic.length; i++) {
+                pichtml = "";
+                if(i == 0){
+                    p_c = "current";
+                }else{
+                    p_c = "normal";
+                }
+                pichtml = "<div class='swiper-slide'><a href=\"" + decodeURI(datapic[i].tourl) + "\">";
+                pichtml += "<img height='180' width='100%' src=\"" + datapic[i].stieurl + "\" alt=\"" + datapic[i].stiename + "\" /></a></div>";
+                $("#piclist").append(pichtml);
+            }
+
+            // 绑定方案
+            var data = GetData(fl_url.index, {});
+            data = JSON.parse(data);
+            console.log(data);
+            var html = "";
+            var ndays, number3;
+            for (var i = 0; i < data.length; i++) {
+                ndays = data[i].ndays;
+                number3 = data[i].number3;
+                if (ndays == undefined) {
+                    ndays = 0;
+                }
+                if (number3 == undefined) {
+                    number3 = 0;
+                }
+                //if (i == 0) {
+                //    sessionStorage.setItem("selectPlanName", data[i].service_name);
+                //    url = "expertPlan.html?serviceType=" + data[i].service_type + "&type=" + data[i].type + "&serviceId=" + data[i].id + "&service_code=" + data[i].service_code + "&experts_code=" + getQueryString("experts_code") + "&companyId=" + data[i].fk_company_id + "&experts_code=" + getQueryString("experts_code");
+                //    sessionStorage.setItem("selectPlanUrl", url);
+                //}
+                if (data[i].service_code == "JCSPF") {
+                    sessionStorage.setItem("selectPlanName", data[i].service_name);
+                    url = "expertPlan.html?serviceType=" + data[i].service_type + "&type=" + data[i].type + "&serviceId=" + data[i].id + "&service_code=" + data[i].service_code + "&experts_code=" + getQueryString("experts_code") + "&companyId=" + data[i].fk_company_id + "&experts_code=" + getQueryString("experts_code") + "&service_name=" + escape(data[i].service_name);
+                    sessionStorage.setItem("selectPlanUrl", url);
+                }
+
+
+                html += "<li onclick=\"GoToNextUrl('expertPlan.html?serviceType=" + data[i].service_type + "&type=" + data[i].type + "&serviceId=" + data[i].id + "&service_code=" + data[i].service_code + "&companyId=" + data[i].fk_company_id + "&experts_code=" + getQueryString("experts_code")+ "&service_name=" + escape(data[i].service_name) + "','" + data[i].service_name + "')\">";
+
+               	 /* if (getQueryString("experts_code")=="caishen" && (data[i].service_code == "JCSPF" || data[i].service_code == "DC" || data[i].service_code == "YP")) {
+                    html += "<span style=\"position:relative;\"><img src=\"img/yingli.png\" class=\"jiaobiao\"></span>";
+                }  */
+                
+                html += "<a>";
+                html += "<span>" + data[i].rule + "方案</span>";
+                html += "<h3>" + data[i].service_name + "</h3>";
+                html += "<span class=\"yingli\">" + ndays + "天盈利<i class=\"colorh\">" + parseInt(number3) + "</i></span>";
+                html += "</a>";
+                
+                html += "</li>"; 
+            }
+            $("#DataList").html(html);
+
+            sharttitle = "把梦想投进现实，你的钱不会再有去无回了！";
+            shartcontent = "欧洲五大联赛及欧冠赛事的精准预测，最直接的竞彩方案推荐，“斗球老料”带你盈利！";
+            Init();
+           ScrollText($('#scrollText'),23,350,'<font size="2" color="#edc33e" >提示：以下玩法针对欧洲五大联赛、欧冠、欧联、巴甲赛事进行方案预测</font>','left',1,30);//滚动字幕
+        	addVisitInfo();
+        });
+
+	
+
+        function GoToNextUrl(nexurl, name) {
+            sessionStorage.setItem("selectPlanName", name);
+            sessionStorage.setItem("selectPlanUrl", nexurl);
+            window.open(nexurl, "_top");
+        }
+
+        function GoToUrl() {
+            if (url.length > 0) {
+                location.href = url;
+            }
+        }
+        function GoToUrl_T(u) {
+            location.href = u + "?experts_code=" + getQueryString("experts_code");
+        }
+
+        $(document).ready(function () {
+            var swiper = new Swiper('.swiper-container', {
+		        pagination: '.swiper-pagination',
+		        paginationClickable: true,
+		        autoplay:5000,
+		        autoplayDisableOnInteraction : false
+		    });
+        });
+    </script>
+</body>
+</html>

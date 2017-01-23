@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.visolink.h5.mapper.DesignerShopMapper" >
+  <resultMap id="BaseResultMap" type="com.visolink.h5.entity.DesignerShop" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="Company_ID" property="companyId" jdbcType="INTEGER" />
+    <result column="Shop_Name" property="shopName" jdbcType="VARCHAR" />
+    <result column="Contacts" property="contacts" jdbcType="VARCHAR" />
+    <result column="Address" property="address" jdbcType="VARCHAR" />
+    <result column="Telephone1" property="telephone1" jdbcType="VARCHAR" />
+    <result column="Telephone2" property="telephone2" jdbcType="VARCHAR" />
+    <result column="Shop_Desc" property="shopDesc" jdbcType="VARCHAR" />
+    <result column="City_ID" property="cityId" jdbcType="INTEGER" />
+    <result column="City_Name" property="cityName" jdbcType="VARCHAR" />
+    <result column="Area_ID" property="areaId" jdbcType="INTEGER" />
+    <result column="Area_Name" property="areaName" jdbcType="VARCHAR" />
+    <result column="Designer_Total" property="designerTotal" jdbcType="INTEGER" />
+    <result column="Project_Total" property="projectTotal" jdbcType="INTEGER" />
+    <result column="Status" property="status" jdbcType="INTEGER" />
+    <result column="Img_Path" property="imgPath" jdbcType="VARCHAR" />
+    <result column="Log_Longitude" property="longitude" jdbcType="VARCHAR" />
+    <result column="Log_Latitude" property="dimensions" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, Company_ID, Shop_Name, Contacts, Address, Telephone1, Telephone2, Shop_Desc, 
+    City_ID, City_Name, Area_ID, Area_Name, Designer_Total, Project_Total, Status,Img_Path,Log_Longitude,Log_Latitude
+  </sql>
+  <select id="findShopById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  select
+  <include refid="Base_Column_List" />
+  from designer_shop
+  where Status=1 and id=#{shopId}
+  </select>
+  
+  <!-- 根据城市id获取店面 -->
+   <select id="findDesignerShopByCityId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  select
+  <include refid="Base_Column_List" />
+  from designer_shop
+  where Status=1 and city_id=#{cityId}
+  </select>
+  </mapper>

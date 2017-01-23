@@ -22,5 +22,12 @@
 		
 		order by b.service_order 
 	</select>
+	<!--获取单个service近30天的盈利-->
+	<select id="findById" parameterType="pd" resultType="pd">
+		SELECT earning_amount
+		FROM 
+			`tb_earning_amount`
+		WHERE service_id = #{service_id} 
+	</select>
 	
 </mapper>

@@ -8,21 +8,17 @@
 			service_id,
 			strategy_time,
 			input_amount,
-			win_amount,
-			profit_amount,
 			follow_time
 		) values(
 			#{member_id},
 			#{service_id},
-			#{strategy_time},
+			#{stragegy_time},
 			#{input_amount},
-			#{win_amount},
-			#{profit_amount},
 			#{follow_time}
 		)
 	</insert>
 	
-	<select id="dataPageList" parameterType="page" resultType="pd">
+	<select id="datalistPage" parameterType="page" resultType="pd">
 		SELECT 
 			a.id,a.follow_time,a.input_amount,a.win_amount,a.profit_amount,b.weixin,b.phone_number,c.service_name,c.service_code,c.play_type,d.experts_name
 		FROM 
@@ -49,6 +45,9 @@
 		</if>
 		<if test="pd.phone_number != null and pd.phone_number != ''"><!-- 手机号~~ -->
 			and b.phone_number = #{pd.phone_number}
+		</if>
+		<if test="pd.member_name != null and pd.member_name != ''"><!-- 用户名~~ -->
+			and b.member_name like CONCAT(CONCAT('%', #{pd.member_name}),'%') 
 		</if>
 			<if test="pd.create_timeStart!=null and pd.create_timeStart!=''"><!-- 创建时间检索 -->
 			and a.follow_time &gt;= #{pd.create_timeStart} 
@@ -91,25 +90,52 @@
 		SELECT COUNT(1)
 		FROM 
 			`tb_strategy_follow`
-		WHERE service_id = #{pd.serviceId}
+		WHERE service_id = #{id}
 	</select>
 	
 	<select id="getMemberList" parameterType="pd" resultType="pd">
 		SELECT DISTINCT b.member_id,b.`membe_point`
 		FROM 
 			`tb_strategy_follow` a,`tb_member` b
-		WHERE a.`member_id` = b.`member_id` AND service_id = #{pd.serviceId}
+		WHERE a.`member_id` = b.`member_id` AND service_id = #{id}
 	</select>
 	
 	<update id="updateWinAmount" parameterType="pd">
 		UPDATE `tb_strategy_follow` 
-		SET win_amount = #{pd.win_amount}
-		WHERE service_id = #{pd.serviceId}
+		SET win_amount = #{win_amount}
+		WHERE service_id = #{serviceId} and win_amount IS NULL
 	</update>
 	
 	<update id="updateProfit" parameterType="pd">
 		UPDATE `tb_strategy_follow`
 		SET profit_amount = (win_amount - input_amount)
-		WHERE service_id = #{pd.serviceId}
+		WHERE service_id = #{serviceId}
 	</update>
+	<select id="getMyFollowOrderById" parameterType="pd" resultType="pd">
+		SELECT b.service_id,b.follow_time,b.input_amount,b.strategy_time,b.win_amount
+		FROM 
+			`tb_strategy_follow` b
+		WHERE b.member_id = #{memberId}
+	</select>
+	<!-- 通过serviceId 获取service 投注总额 -->
+	<select id="getTotalCountByServiceId" parameterType="pd" resultType="integer">
+		SELECT SUM(input_amount)
+		FROM 
+			`tb_strategy_follow`
+		WHERE service_id = #{id}
+	</select>
+	
+	<select id="getOrderByServiceId" parameterType="pd" resultType="pd">
+		SELECT input_amount,follow_time,strategy_time,member_id,win_amount,profit_amount
+		FROM 
+			`tb_strategy_follow`
+		WHERE service_id = #{id}
+	</select>
+	
+	<select id="getFollowOrderAlearly" parameterType="pd" resultType="integer">
+		SELECT COUNT(1)
+		FROM 
+			`tb_strategy_follow`
+		WHERE service_id = #{service_id}
+	</select>
 </mapper>

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PkMapper">
+		
+	<!-- tb_pk详情 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select 
+			a.id as pk_id, a.add_time
+		from 
+			`tb_pk` as a 
+		where 
+			a.fk_member_id = #{pd.member_id} 
+		and 
+			a.fk_service_id = #{pd.service_id}
+			
+		<if test="pd.create_timeStart!=null and pd.create_timeStart!=''"><!-- 创建时间检索 -->
+			and a.add_time &gt;= #{pd.create_timeStart} 
+		</if>
+		<if test="pd.create_timeEnd!=null and pd.create_timeEnd!=''"><!-- 创建时间检索 -->
+			and a.add_time &lt;= #{pd.create_timeEnd} 
+		</if>	
+		order by a.add_time desc	
+	</select>
+	
+	<!-- 查定制的方案  有pk的 -->
+	<select id="listByMember" parameterType="pd" resultType="pd">
+	select
+		a.transaction_id as tid,a.`transaction_create_time` as create_time, a.service_start_time as start_time , a.`service_end_time` as end_time,
+		b.id as service_id,b.service_code,b.service_name,b.is_pk,b.service_type,b.fk_company_id,b.type
+	from 
+	     `tb_transaction` as a 
+	left join 
+	     `tb_service` as b on a.`fk_service_id` = b.`id`
+	left join 
+	     `tb_member` as c on a.`fk_memeber_id` = c.member_id
+	left join
+		 tb_experts as d on d.experts_id = c.fk_experts_id
+	where 
+			
+		 a.`transaction_status` = 1  and 
+		 
+		 b.service_code in('JCSPF','JCRQSPF','DC') and
+		
+		 c.`phone_number` = #{pd.phoneNum} and 
+		 
+		 d.experts_code = #{pd.experts_code} 
+		 
+		<!--  and a.service_end_time &gt;=#{pd.nowDate}  -->
+     
+	    order by a.transaction_create_time desc
+     	
+     	limit #{currentResult} ,#{showCount}
+	</select>
+	
+		<!-- 新增-->
+	<insert id="savePk" parameterType="pd">
+		insert into tb_pk(
+			id,	
+			add_time,	
+			fk_member_id,	
+			fk_service_id
+		) values (
+			#{id},	
+			#{add_time},	
+			#{fk_member_id},	
+			#{fk_service_id}
+		)
+	</insert>
+	
+			<!-- 新增-->
+	<insert id="savePkDetaile" parameterType="pd">
+		insert into tb_pk_detail(
+			id,	
+			fk_betting_game_id,	
+			betting_strategy,	
+			betting_amount,
+			fk_pk_id
+		) values (
+			#{id},	
+			#{fk_betting_game_id},	
+			#{betting_strategy},	
+			#{betting_amount},
+			#{fk_pk_id}
+		)
+	</insert>
+	
+	<sql id="singleBaseSql">
+		select 
+			 a.id as tb_pk_detail_id,a.betting_strategy,a.betting_amount,a.fk_betting_game_id,
+			 b.add_time,b.fk_service_id,
+			 c.id as tb_betting_game_id, c.league_id,c.league_name,c.away_name,c.home_name,c.game_date_time,c.home_score,c.away_score,c.league_time_id,c.league_time_name,c.round,c.home_score_half,c.away_score_half,c.let_the_count,
+			 d.id as tb_company_odds_pk_id,d.fk_company_id as company_id,d.lose_odds,d.draw_odds,d.win_odds
+		from 
+			tb_pk_detail as a 
+		left join 
+			tb_pk as b	on b.id = a.fk_pk_id
+		left join 
+			tb_betting_game as c on c.id = a.fk_betting_game_id
+		left join
+			tb_member as e on e.member_id = b.fk_member_id		
+		left join 
+			tb_company_odds_pk as d on d.fk_t_pk_detaile_id = a.id
+
+	</sql>
+	
+	<select id="singleDayList" parameterType="pd" resultType="com.visolink.entity.MyPlanVO">
+		<include refid="singleBaseSql" />
+		where 
+			c.game_date_time &gt; #{beginTime}
+		and 
+			c.game_date_time &lt;= #{endTime}
+		and
+			b.fk_service_id = #{serviceId}
+		and 
+			e.phone_number = #{phoneNum}	
+		and 
+			e.fk_experts_id = #{experts_id}	
+	</select>
+	
+	<select id="singleTimeList" parameterType="pd" resultType="com.visolink.entity.GameMapper">
+		select 
+			game_date_time,sum(1) as num 
+		from 
+			(
+				<include refid="singleBaseSql" />
+				where 
+					c.game_date_time &gt; #{beginTime}
+				and 
+					c.game_date_time &lt;= #{endTime}
+				and
+					b.fk_service_id = #{serviceId}
+				and 
+					e.phone_number = #{phoneNum}
+				and 
+					e.fk_experts_id = #{experts_id}				
+			) as aa
+		group 
+			by game_date_time 
+		order 
+			by game_date_time
+	</select>
+	
+		<!-- 比赛数据 -->
+	<select id="bettingGameList" parameterType="pd" resultType="com.visolink.entity.BettingGame">
+		select 
+			 b.id , b.league_id,b.league_name,b.away_name,b.home_name,b.game_date_time,b.home_score,b.away_score,b.league_time_id,b.league_time_name,b.round,b.home_score_half,b.away_score_half,b.let_the_count
+		from 
+			tb_betting_game as b
+		where  
+			b.id 
+		in 
+			(
+				select tb_betting_game_id from 
+					(
+				   		<include refid="singleBaseSql" />	
+						where 
+							c.game_date_time = #{gameDate}
+						and
+							b.fk_service_id = #{serviceId}
+						and 
+							e.phone_number = #{phoneNum}	
+						and 
+							e.fk_experts_id = #{experts_id}		
+					 ) as aa
+			  )
+	
+	</select>
+		<!-- 赔率数据 -->
+	<select id="getCompanyOdds" resultType="com.visolink.entity.CompanyOdds">
+		select 
+			a.id, a.fk_company_id as company_id,a.lose_odds,a.draw_odds,a.win_odds,a.fk_betting_game_id
+		from 
+			tb_company_odds_pk as a
+		left join
+			tb_member as b on b.member_id =  a.fk_member_id				
+		where 
+			a.fk_betting_game_id= #{betting_game_id}
+		and 
+			b.phone_number = #{phoneNum}
+		and	
+			b.fk_experts_id = #{experts_id}
+		limit 1		
+	</select>
+	
+	<!-- 比赛推荐情况-->
+	<select id="getGameStrategyList" resultType="com.visolink.entity.BettingStrategyForSingle">
+		select 
+			s.id,s.betting_strategy as strategy, s.betting_amount,b.add_time as create_time,s.fk_betting_game_id,b.fk_service_id as service_id
+		from 
+			tb_pk_detail s 
+		left join 
+			tb_pk as b on s.fk_pk_id = b.id	
+		left join
+			tb_member as c on c.member_id =  b.fk_member_id			
+		where 
+			s.fk_betting_game_id= #{betting_game_id}
+		and 
+			b.fk_service_id = #{serviceId}	
+		and 
+			c.phone_number= #{phoneNum}	
+	</select>
+
+	<select id="hasPk" parameterType="pd" resultType="pd">
+		select 
+			a.* 
+		from 
+			`tb_pk` as a 
+		where 
+			a.fk_member_id = #{member_id}  
+		and 
+			a.add_time &gt; #{beginTime} 
+		and
+			a.add_time &lt;= #{endTime} 
+		and 
+			a.fk_service_id	= #{serviceId}
+	</select>
+</mapper>

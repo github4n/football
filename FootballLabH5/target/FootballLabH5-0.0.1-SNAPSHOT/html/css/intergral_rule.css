@@ -1,0 +1,25 @@
+.contxt{
+	line-height: 2;
+	font-size: 12px;
+	text-indent: 2em;
+}
+.titletxt{
+	margin-bottom: 5px;
+}
+body{
+	padding: 0px;
+}
+.ruleTxt{
+	padding: 15px;
+	margin-top: 20px;
+}
+.highColor{
+	color:#edc33e ;
+}
+.largefont{
+	font-size: 16px;
+	color:#edc33e ;
+}
+.underLine{
+	text-decoration: underline;
+}

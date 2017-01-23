@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ApproveMapper">
+	
+	<insert id="save" parameterType="pd">
+		insert into tb_approve(approve_id,submit_userid,submit_time,submit_type,approve_time,approve_userid,approve_stauts,experts_id,business_id)
+		values(#{approve_id},#{submit_userid} ,#{submit_time},#{submit_type},#{approve_time},#{approve_userid},#{approve_stauts},#{experts_id},#{business_id})
+	</insert>
+	
+		<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+	select 
+		a.*,b.experts_name,c.username as submit_user
+	from tb_approve as a 
+	left join tb_experts as b on a.experts_id = b.experts_id
+	left join sys_user as c on a.submit_userid = c.USER_ID
+	
+	<!-- 
+	where a.approve_userid = #{pd.approve_userid}
+	-->
+		
+	<if test="pd.submit_type != null and pd.submit_type != ''">
+			and a.submit_type=#{pd.submit_type} 
+	</if>
+	<if test="pd.expert_id != null and pd.expert_id != ''">
+			and a.experts_id=#{pd.expert_id} 
+	</if>
+	<if test="pd.approve_stauts != null and pd.approve_stauts != ''">
+			and a.approve_stauts=#{pd.approve_stauts} 
+	</if>
+	<if test="pd.lastLoginStart != null and pd.lastLoginStart != ''">  <!-- 开始时间-->
+			and a.submit_time &gt;=#{pd.lastLoginStart} 
+	</if>	
+	
+	<if test="pd.lastLoginEnd != null and pd.lastLoginEnd != ''">  <!-- 结束时间 -->
+			and a.submit_time &lt;=#{pd.lastLoginEnd} 
+	</if>
+	<if test="pd.submit_user != null and pd.submit_user != ''">
+			and c.username like '%' #{pd.submit_user} '%'
+	</if>
+	
+	order by a.submit_time desc
+	
+	</select>
+	
+		<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+	select 
+		a.*,b.experts_name,c.username as submit_user
+	from tb_approve as a 
+		left join tb_experts as b on a.experts_id = b.experts_id
+		left join sys_user as c on a.submit_userid = c.USER_ID
+	where 
+		a.approve_id = #{approve_id}
+	</select>
+	
+	<update id="approve" parameterType="pd">
+	update tb_approve set
+			approve_stauts = #{approve_stauts},approve_time = #{approve_time},approve_userid = #{approve_userid}
+	where 	approve_id = #{approve_id}
+	</update>
+	
+		<!-- 删除-->
+	<delete id="delByBusinessId" parameterType="pd">
+		delete from tb_approve
+		where 
+			business_id = #{business_id} and approve_stauts = #{stauts} 
+	</delete>
+	
+</mapper>

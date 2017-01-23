@@ -1,0 +1,234 @@
+body{
+	margin: 0px;
+	padding: 0px;
+}
+a:hover{
+	text-decoration: none;
+	color: #333;
+}
+.blockCon{
+	text-align: center;
+	min-height: 300px;
+}
+.listLayout .item_block{
+	background: RGB(53,82,140);
+	padding:0px 10px 10px 0;
+	margin-bottom: 10px;
+}
+.align_right{
+	text-align: right;
+}
+.align_left{
+	text-align: left;
+}
+.listLayout .item_block .exper_name{
+	font-size: 1.25rem;
+	padding-left: 10px;
+	position: relative;
+}
+.listLayout .item_block .exper_name:after{
+	content: "";
+	position: absolute;
+	width: 5px;
+	height: 30px;
+	left: 0px;
+	top: 0px;
+}
+.listLayout .item_block.yapan .exper_name:after{
+	background:RGB(82,168,192) ;
+}
+.listLayout .item_block.yapan .exper_name{
+	color: RGB(82,168,192);
+}
+.listLayout .item_block.danc .exper_name:after{
+	background:RGB(215,185,71) ;
+}
+.listLayout .item_block.danc .exper_name{
+	color: RGB(215,185,71);
+
+}
+.listLayout .item_block.ecy .exper_name:after{
+	background:RGB(88,204,154) ;
+}
+.listLayout .item_block.ecy .exper_name{
+	color: RGB(88,204,154);
+}
+.header{
+	text-align: center;
+	font-size: 1.25rem;
+	padding: 10px 0;
+}
+.item_block_top p{
+	width: 50%;
+	height: 30px;
+	line-height: 30px;
+}
+.item_block_bt{
+	padding-top:10px;
+}
+.item_block_bt p{
+	width: 50%;
+	text-align: center;
+}
+.item_block_bt .exper_rate{
+	font-size: 1.8rem;
+	line-height: 1;
+}
+.exper_rate i{
+	line-height: 1.5;
+	display: block;
+	color: #999;
+}
+.goOrder{
+	height: 35px;
+	line-height: 35px;
+	display: block;
+	text-align: center;
+	color: #333;
+	width: 70%;
+	float: right;
+	background: RGB(215,185,71);
+	border-radius: 5px;
+}
+.mybtn{
+	display: block;
+    width: 94%;
+    height: 40px;
+    line-height: 40px;
+    margin-top: 10px; 
+    margin-left: 3%; 
+    margin-bottom: 0px; 
+    border-radius: 5px; 
+    text-decoration: none; 
+    background: RGB(215,185,71);
+    text-align: center;
+    font-size: 1.25rem;
+}
+.popTxt{
+	margin-top: 200px;
+}
+
+/*************立即跟投**************/
+.betting_pay .top_block{
+	display: table;
+	width: 100%;
+	text-align: center;
+	padding:10px;
+	box-sizing: border-box;
+	background: RGB(215,185,71);
+	margin: 10px 0;
+}
+
+.betting_pay .top_block p{
+	color: #333;
+	width: 40%;
+	display: table-cell;
+	vertical-align: middle;
+}
+.betting_pay .top_block p:nth-child(2){
+	width: 20%;
+}
+.betting_pay .con_block{
+	background: RGB(53,82,140);
+	text-align: center;
+	padding-top: 10px;
+}
+.betting_pay .con_block .checkPlan{
+	color: RGB(215,185,71);
+	float: right;
+	text-decoration: underline;
+	margin-right: 10px;
+}
+.betting_pay .con_block_middle{
+	margin: 10px 0;
+	color: RGB(215,185,71);
+	font-size: 2.8rem;
+}
+.betting_pay .con_block_middle span{
+	color: RGB(215,185,71);
+	font-size: 2.8rem;
+}
+.betting_pay .con_block_middle i{
+	display: block;
+}
+.betting_pay .con_block_bt{
+	height: 40px;
+	line-height: 40px;
+	border-top: 1px solid RGB(48,63,96);
+}
+.betting_pay .mySelect{
+	width: 120px;
+	padding: 0 35px 0 5px;
+
+	position: relative;	
+	height: 35px;
+	line-height: 35px;
+	border-radius: 5px;
+
+}
+.betting_pay .upIcon{
+	background:RGB(255,255,255) url(../img/downIcon.png) no-repeat;
+	background-size: 15px;
+	background-position: 94px center;	
+}
+.betting_pay .downIcon{
+	background:RGB(255,255,255) url(../img/upIcon.png) no-repeat;
+	background-size: 15px;
+	background-position: 94px center;	
+}
+
+.betting_pay .mySelect .selectVal{
+	color: #333;
+	height: 35px;
+	line-height: 35px;
+	border-right: 1px solid #ccc;
+}
+.betting_pay .mySelect .selectList li{
+	color: #333;
+	padding: 10px 5px;
+	border-bottom: 1px solid RGB(48,63,96);
+}
+.betting_pay .mySelect .selectList li i{
+	color: #333;
+}
+.betting_pay .mySelect .selectList{
+	position: absolute;
+	right: 0px;
+	left: 0px;
+	bottom:31px ;
+	background: RGB(255,255,255);
+	border-radius: 5px 5px 0 0;
+	padding-bottom: 3px;
+	display: none;
+	
+}
+.betting_pay .selectList .active{
+	background: RGB(204,204,204)!important;
+}
+.betting_pay .active i{
+	color: #333!important;
+}
+.betting_pay .selectVal i{
+	color: #333;
+}
+.betting_pay .betBtn{
+	font-size: 16px;
+	display: block;
+	width: 100%;
+	text-align: center;
+	background: #ccc;
+	padding:7px;
+	border-radius: 5px;
+	margin-top: 10px;
+	color: #333;
+	border: 0px;
+	background: #d8b847;
+	outline: none;
+}
+.betting_pay .rtTxt{
+	margin-top: 10px;
+}
+.betting_pay .footer_tap{
+	padding: 10px;
+	margin-top: 50px;
+}

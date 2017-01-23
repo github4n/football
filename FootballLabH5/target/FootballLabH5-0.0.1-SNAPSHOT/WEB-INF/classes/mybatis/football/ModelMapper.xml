@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ModelMapper">
+	
+	<!-- 列表(根据expertsIdservice取m的list) -->
+	<select id="datalist"  resultType="pd">
+		select 
+			a.model_id as id, a.model_name as name, b.member_name,
+			a.expected_profit_rate ,a.historical_profit_rate, 1 as models_type
+		from 
+			`t_model` as a 
+		left join 
+			t_member as b	
+		on 
+			a.member_id = b.member_id	
+		where a.type  = #{arrayData_type}
+		
+		<if test="name != null and name != ''">
+			and a.model_name like '%' #{name} '%'
+		</if>
+		<if test="member_name != null and member_name != ''">
+			and b.member_name like '%' #{member_name} '%'
+		</if>
+		
+		order by a.historical_profit_rate desc
+	</select>
+
+	<select id="modelGroupDatalist"  resultType="pd">
+		select 
+			a.model_group_id as id,a.model_group_name as name, b.member_name, 2 as models_type
+		from 
+			`t_model_group` as a 
+		left join 
+			t_member as b	
+		on 
+			a.member_id = b.member_id	
+		where a.type   = #{arrayData_type}
+		
+		<if test="name != null and name != ''">
+			and a.model_group_name like '%' #{name} '%'
+		</if>
+		<if test="member_name != null and member_name != ''">
+			and b.member_name like '%' #{member_name} '%'
+		</if>
+	</select>
+	
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			a.* 
+		from 
+			`t_model` as a 
+		where 
+			a.model_id = #{fk_models_id}
+	</select>
+</mapper>
